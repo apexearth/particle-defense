@@ -12,6 +12,11 @@ function Turret_Mini(level, player, blockX, blockY) {
         this.Weapon.update();
     }
 }
+Turret_Mini.Cost = {
+    Energy: 1000,
+    Metal: 500
+};
+
 Turret_Mini.canvas = document.createElement("canvas");
 (function () {
     Turret_Mini.canvas.width = Level.Settings.BlockSize;

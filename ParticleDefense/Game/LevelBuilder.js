@@ -6,6 +6,7 @@ var LevelBuilder = {
         level.Players.push(player);
         level.Player = player;
         var homeBase = new HomeBase(level, player, 5, 5);
+        player.Buildings.push(homeBase);
         level.Buildings.push(homeBase);
         player.HomeBase = homeBase;
 

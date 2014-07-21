@@ -6,7 +6,6 @@
 
     this.Level = level;
     this.Player = player;
-    this.Player.Buildings.push(this);
 
     this.X = blockX * Level.Settings.BlockSize + Level.Settings.BlockSize / 2;
     this.Y = blockY * Level.Settings.BlockSize + Level.Settings.BlockSize / 2;
@@ -19,6 +18,10 @@
     this.Block = this.Level.Map.Grid.getBlock(this.X, this.Y);
 
 }
+Building.Cost = {
+    Energy: 1000,
+    Metal: 500
+};
 
 Building.prototype.update = function () {
     if (this.Health <= 0) {

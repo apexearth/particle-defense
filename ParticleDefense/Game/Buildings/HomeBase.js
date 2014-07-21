@@ -12,6 +12,11 @@ function HomeBase(level, player, blockX, blockY) {
         this.Player.Resources.Metal += 1;
     };
 }
+HomeBase.Cost = {
+    Energy: 1000,
+    Metal: 500
+};
+
 HomeBase.canvas = document.createElement("canvas");
 (function () {
     HomeBase.canvas.width = Level.Settings.BlockSize;
