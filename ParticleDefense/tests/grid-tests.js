@@ -7,13 +7,13 @@ describe('Grid Tests', function () {
         expect(block.X).toBe(1);
         expect(block.Y).toBe(1);
     });
-    it('should return null if you attempt to get a block out of the range of blocks', function() {
+    it('should throw if you attempt to get a block out of the range of blocks', function () {
         var grid = new Grid(0, 0, 10, 10);
-        expect(grid.getBlock(-1, 0)).toBeNull();
-        expect(grid.getBlock(-1, -1)).toBeNull();
-        expect(grid.getBlock(0, -1)).toBeNull();
-        expect(grid.getBlock(11, 10)).toBeNull();
-        expect(grid.getBlock(11, 11)).toBeNull();
-        expect(grid.getBlock(10, 11)).toBeNull();
+        expect(function () { grid.getBlock(-1, 0); }).toThrow();
+        expect(function () { grid.getBlock(-1, -1); }).toThrow();
+        expect(function () { grid.getBlock(0, -1); }).toThrow();
+        expect(function () { grid.getBlock(11, 10); }).toThrow();
+        expect(function () { grid.getBlock(11, 11); }).toThrow();
+        expect(function () { grid.getBlock(10, 11); }).toThrow();
     });
 });

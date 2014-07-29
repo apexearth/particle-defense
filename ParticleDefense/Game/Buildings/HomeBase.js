@@ -11,6 +11,9 @@ function HomeBase(level, player, blockX, blockY) {
         this.Player.Resources.Energy += 3;
         this.Player.Resources.Metal += 1;
     };
+    this.draw = function (context) {
+        context.drawImage(HomeBase.canvas, this.TopLeft.X, this.TopLeft.Y);
+    };
 }
 HomeBase.Cost = {
     Energy: 1000,
@@ -24,10 +27,6 @@ HomeBase.canvas = document.createElement("canvas");
     var context = HomeBase.canvas.getContext("2d");
     context.fillStyle = '#ffffff';
     context.fillRect(0, 0, Level.Settings.BlockSize, Level.Settings.BlockSize);
-    context.strokeStyle = '#558855';
-    context.lineWidth = 4;
-    context.strokeRect(5, 5, Level.Settings.BlockSize - 10, Level.Settings.BlockSize - 10);
+    context.fillStyle = '#558855';
+    context.fillRect(5, 5, Level.Settings.BlockSize - 10, Level.Settings.BlockSize - 10);
 })();
-HomeBase.prototype.draw = function (context) {
-    context.drawImage(HomeBase.canvas, this.TopLeft.X, this.TopLeft.Y);
-};

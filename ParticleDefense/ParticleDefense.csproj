@@ -57,11 +57,13 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="angular\App.js" />
+    <Content Include="Angular\App.js" />
+    <Content Include="Angular\IndexController.js" />
+    <Content Include="Angular\MainMenuController.js" />
     <Content Include="Game\Buildings\Turret_Mini.js" />
     <Content Include="Game\Buildings\Building.js" />
     <Content Include="Game\Buildings\HomeBase.js" />
-    <Content Include="Game\LevelBuilder.js" />
+    <Content Include="Game\Levels\LevelOne.js" />
     <Content Include="Game\PlayerCommands.js" />
     <Content Include="Game\Projectile.js" />
     <Content Include="Game\Weapon.js" />
@@ -72,7 +74,9 @@
     <Content Include="js\jasmine.js" />
     <Content Include="js\jasmineBootstrap.js" />
     <Content Include="Game\Map.js" />
+    <Content Include="tests\play-tests.js" />
     <Content Include="tests\player-tests.js" />
+    <Content Include="tests\mainmenu-tests.js" />
     <Content Include="tests\projectile-tests.js" />
     <Content Include="tests\level-tests.js" />
     <Content Include="tests\building-tests.js" />
@@ -94,6 +98,7 @@
     <Content Include="Game\PathfindExample.js" />
     <Content Include="util\Pathfind.js" />
     <Content Include="Game\Player.js" />
+    <Content Include="views\mainmenu.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

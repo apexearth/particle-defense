@@ -32,20 +32,31 @@ function Level(width, height) {
     this.canvas.width = this.Map.PixelWidth;
     this.canvas.height = this.Map.PixelHeight;
     this.context = this.canvas.getContext("2d");
+
+    this.AddBuilding = function (building) {
+        this.Buildings.push(building);
+        building.Player.Buildings.push(building);
+        return building;
+    };
+    this.AddPlayer = function (player) {
+        this.Players.push(player);
+        return player;
+    };
+    this.createWave = function (unitArray, unitDelay) {
+        var wave = {
+            Units: unitArray,
+            UnitDelay: unitDelay,
+            UnitDelayCount: 0
+        };
+        this.Waves.push(wave);
+        return wave;
+    };
 }
 
 Level.Settings = function () { };
 Level.Settings.BlockSize = 50;
 
-Level.prototype.createWave = function (units, unitDelay) {
-    var wave = {
-        Units: units,
-        UnitDelay: unitDelay,
-        UnitDelayCount: 0
-    };
-    this.Waves.push(wave);
-    return wave;
-};
+
 
 Level.prototype.update = function () {
     if (this.Units.length === 0
@@ -61,7 +72,8 @@ Level.prototype.update = function () {
         && this.CurrentWave.UnitDelayCount++ >= this.CurrentWave.UnitDelay) {
         unit = this.CurrentWave.Units.pop();
         this.Units.push(unit);
-        unit.setDestination(this.Players[0].Buildings[0]);
+        if (this.Player.HomeBase.Health > 0)
+            unit.setDestination(this.Player.HomeBase);
         this.CurrentWave.UnitDelayCount = 0;
     }
 
@@ -119,22 +131,3 @@ Level.prototype.checkLossConditions = function () {
     return true;
 };
 
-Level.create = function (width, height, waves) {
-    var level = new Level(11, 11);
-
-    var homeBase = new HomeBase(level, 5, 0);
-    level.Buildings.push(homeBase);
-    level.HomeBase = homeBase;
-
-
-    var i = 10;
-    while (i--) {
-        var k = 10;
-        var wave = level.createWave([], 30);
-        while (k--)
-            wave.Units.push(new Unit());
-        level.Waves.push(wave);
-    }
-
-    return level;
-};

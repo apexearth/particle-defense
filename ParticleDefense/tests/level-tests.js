@@ -1,17 +1,18 @@
 ﻿/// <reference path="~/js/jasmine.js" />
-/// <reference path="~/Game/LevelBuilder.js"/>
+/// <reference path="~/Game/Levels/LevelOne.js"/>
 /// <reference path="~/Game/Level.js"/>
 /// <reference path="~/util/Keyboard.js"/>
 describe('Level Tests', function () {
     it('should have win conditions and the conditions should be checkable', function () {
-        var level = LevelBuilder.Create();
+        var level = Level.LevelOne();
         expect(level.WinConditions).toBeDefined();
-        expect(level.checkWinConditions()).toBeTruthy();
+        expect(level.checkWinConditions()).toBeFalsy();
     });
     it('should release waves of units', function () {
-        var level = LevelBuilder.Create();
+        var level = Level.LevelOne();
         var homeBase = new HomeBase(level, level.Players[0], 5, 5);
         level.Buildings.push(homeBase);
+        level.Waves = [];
         level.createWave([new Unit(level)], 1);
         level.WaveDelay = 2;
         level.update();
@@ -25,7 +26,7 @@ describe('Level Tests', function () {
     });
 
     it('should have loss conditions and the conditions should be checkable', function () {
-        var level = LevelBuilder.Create();
+        var level = Level.LevelOne();
         var homeBase = level.Player.HomeBase;
         level.Buildings.push(homeBase);
         expect(level.LossConditions).toBeDefined();
@@ -36,9 +37,8 @@ describe('Level Tests', function () {
     });
 
     it('should have the homebase lose health when a unit reaches it', function () {
-        var level = LevelBuilder.Create();
-        var homeBase = new HomeBase(level, level.Players[0], 0, 0);
-        level.Buildings.push(homeBase);
+        var level = Level.LevelOne();
+        var homeBase = level.Player.HomeBase;
         homeBase.Health = 1;
         var unit = new Unit(level);
         level.Units.push(unit);

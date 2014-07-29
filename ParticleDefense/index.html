@@ -10,31 +10,42 @@
     <script type="text/javascript" src="js/Modernizr.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/pd.css" />
-</head>
-<body>
-    <div style="color: #ddd" ng-show="Modernizr.canvas == false">You need a browser supporting HTML5 in order to view this page. <br />Please try a browser such as <a href=\"google.com/chrome\">Google Chrome</a>.</div>
 
-    <canvas id="canvas" width="800" height="600"></canvas>
     <script type="text/javascript" src="util/Keyboard.js"></script>
     <script type="text/javascript" src="util/Display.js"></script>
     <script type="text/javascript" src="util/General.js"></script>
     <script type="text/javascript" src="util/Grid.js"></script>
 
+    <script type="text/javascript" src="Angular/App.js"></script>
+    <script type="text/javascript" src="Angular/IndexController.js"></script>
+    <script type="text/javascript" src="Angular/MainMenuController.js"></script>
+
     <script type="text/javascript" src="util/Pathfind.js"></script>
+    <script type="text/javascript" src="Game/Player.js"></script>
     <script type="text/javascript" src="Game/Level.js"></script>
+    <script type="text/javascript" src="Game/Levels/LevelOne.js"></script>
     <script type="text/javascript" src="Game/Map.js"></script>
     <script type="text/javascript" src="Game/Unit.js"></script>
+    <script type="text/javascript" src="Game/Projectile.js"></script>
+    <script type="text/javascript" src="Game/Weapon.js"></script>
     <script type="text/javascript" src="Game/ParticleDefense.js"></script>
     <script type="text/javascript" src="Game/Buildings/Building.js"></script>
     <script type="text/javascript" src="Game/Buildings/HomeBase.js"></script>
+    <script type="text/javascript" src="Game/Buildings/Turret_Mini.js"></script>
 
+</head>
+<body ng-app="ParticleDefense" ng-controller="IndexController">
+
+    <div ng-include="View"></div>
+    <canvas id="canvas" width="800" height="600"></canvas>
     <script type="text/javascript">
         (function () {
             var canvas = document.getElementById("canvas");
             if (Modernizr.canvas) {
-                ParticleDefense.initialize(canvas);
+                //ParticleDefense.initialize(canvas);
             }
         })();
     </script>
+
 </body>
 </html>

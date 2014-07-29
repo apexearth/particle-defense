@@ -32,13 +32,12 @@ Grid.prototype.getBlockFromVector = function (vector) {
 };
 
 Grid.prototype.getBlock = function (x, y) {
-    if (isNaN(x) || isNaN(y)) return null;
-    if (x < this.MinX || x > this.MaxX) return null;
-    if (y < this.MinY || y > this.MaxY) return null;
     x -= this.MinX;
     y -= this.MinY;
-
-    return this.Block[x][y];
+    var block = this.Block[x][y];
+    if (block === undefined)
+        throw new Error();
+    return block;
 };
 Grid.prototype.getAdjacentBlocks = function (blockX, blockY, diagonal) {
     var adjacentBlocks = [];
@@ -46,7 +45,8 @@ Grid.prototype.getAdjacentBlocks = function (blockX, blockY, diagonal) {
         for (var y = blockY - 1; y <= blockY + 1; y++) {
             if ((x != blockX || y != blockY)
                 && (diagonal || (x == blockX || y == blockY))
-            ) {
+                && x >= this.MinX && x <= this.MaxX
+                && y >= this.MinY && y <= this.MaxY) {
                 var block = this.getBlock(x, y);
                 adjacentBlocks.push(block);
             }

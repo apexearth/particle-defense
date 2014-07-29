@@ -11,6 +11,9 @@ function Turret_Mini(level, player, blockX, blockY) {
         Building.prototype.update.call(this);
         this.Weapon.update();
     }
+    this.draw = function (context) {
+        context.drawImage(Turret_Mini.canvas, this.TopLeft.X, this.TopLeft.Y);
+    };
 }
 Turret_Mini.Cost = {
     Energy: 1000,
@@ -28,6 +31,3 @@ Turret_Mini.canvas = document.createElement("canvas");
     context.lineWidth = 4;
     context.strokeRect(5, 5, Level.Settings.BlockSize - 10, Level.Settings.BlockSize - 10);
 })();
-Turret_Mini.prototype.draw = function (context) {
-    context.drawImage(Turret_Mini.canvas, this.TopLeft.X, this.TopLeft.Y);
-};

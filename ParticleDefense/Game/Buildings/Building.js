@@ -13,10 +13,12 @@
         X: blockX * Level.Settings.BlockSize,
         Y: blockY * Level.Settings.BlockSize
     };
-    this.BlockX = blockX;
-    this.BlockY = blockY;
-    this.Block = this.Level.Map.Grid.getBlock(this.X, this.Y);
+    this.Block = this.Level.Map.Grid.getBlock(blockX, blockY);
+    this.Block.IsBlocked = true;
+    this.BlockX = this.Block.X;
+    this.BlockY = this.Block.Y;
 
+    this.draw = function () { };
 }
 Building.Cost = {
     Energy: 1000,

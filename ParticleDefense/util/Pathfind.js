@@ -21,7 +21,7 @@ Pathfind.getPathByBlock = function (grid, blockStart, blockTarget) {
     if (start.IsBlocked) return [];
     var current = start;
     var target = blockTarget;
-    if (target.IsBlocked) return [];
+    //if (target.IsBlocked) return [];
 
     Pathfind.calculate(current, null, current, target);
     open.push(current);
@@ -73,7 +73,10 @@ Pathfind.processBestScorer = function (grid, current, start, target, open, close
     var i = adjacentBlocks.length;
     while (i--) {
         var adjacentBlock = adjacentBlocks[i];
-        if (adjacentBlock != null && !adjacentBlock.IsBlocked && closed.indexOf(adjacentBlock) == -1 && Pathfind.diagonalScreen(current, adjacentBlock)) {
+        if (adjacentBlock != null
+            && (!adjacentBlock.IsBlocked || adjacentBlock == target)
+            && closed.indexOf(adjacentBlock) == -1
+            && Pathfind.diagonalScreen(current, adjacentBlock)) {
             if (open.indexOf(adjacentBlock) == -1) {
                 open.push(adjacentBlock);
                 Pathfind.calculate(adjacentBlock, current, start, target);

@@ -88,7 +88,6 @@ Display.initialize = function (canvas) {
     };
     window.onresize = function () { Display.setCanvasSize(); };
 
-    Display.update();
     Display.setCanvasSize();
 };
 Display.setDrawCanvas = function (canvasName) {
@@ -215,7 +214,6 @@ Display.setFont = function (fontSize, fontType) {
 };
 
 Display.update = function () {
-
     Display.setCenterXY();
 
     if (Keyboard.keys[187] || Keyboard.keys[107] || Keyboard.keys[61]) {
@@ -226,7 +224,6 @@ Display.update = function () {
 
     Display.updateDrawOffset();
     Display.updateDrawScale();
-    requestAnimationFrame(Display.update);
 };
 
 Display.updateDrawScale = function () {
