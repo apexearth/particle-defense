@@ -53,8 +53,9 @@ function Level(width, height) {
     };
 }
 
-Level.Settings = function () { };
-Level.Settings.BlockSize = 50;
+Level.Settings = {
+    BlockSize: 50
+};
 
 
 
@@ -108,6 +109,11 @@ Level.prototype.draw = function () {
     while (u--)
         this.Units[u].draw(this.context);
 
+    var p = this.Projectiles.length;
+    while (p-- > 0) {
+        var projectile = this.Projectiles[p];
+        projectile.draw(this.context);
+    }
     this.context.drawImage(this.Map.canvas, 0, 0);
 };
 

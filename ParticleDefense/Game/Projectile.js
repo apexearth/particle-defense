@@ -12,7 +12,7 @@ function Projectile(level, x, y, direction, speed, damage) {
 
 Projectile.prototype.draw = function (context) {
     context.fillStyle = '#aaa';
-    context.drawRect(this.X, this.X, 1, 1);
+    context.fillRect(this.X - 1, this.Y - 1, 2, 2);
 };
 
 Projectile.prototype.update = function () {

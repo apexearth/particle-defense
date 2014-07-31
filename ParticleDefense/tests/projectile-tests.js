@@ -2,13 +2,13 @@
 /// <reference path="~/Game/Unit.js"/>
 /// <reference path="~/Game/Buildings/Turret_Mini.js"/>
 /// <reference path="~/Game/Level.js"/>
-/// <reference path="~/Game/Levels/LevelOne.js"/>
+/// <reference path="~/Game/Levels/LevelTest.js"/>
 /// <reference path="~/Game/Projectile.js"/>
 /// <reference path="~/Game/Map.js"/>
 /// <reference path="~/util/Keyboard.js"/>
 describe('Projectile Tests', function () {
     it('should move', function () {
-        var level = Level.LevelOne();
+        var level = Level.LevelTest();
         var projectile = new Projectile(level,
             0,
             0,
@@ -22,8 +22,8 @@ describe('Projectile Tests', function () {
     });
 
     it('should die on impact, by default', function () {
-        var level = Level.LevelOne();
-        var unit = new Unit(level, level.Width / 2, level.Height / 2);
+        var level = Level.LevelTest();
+        var unit = new Unit(level, level.Player.HomeBase.X - 50, level.Player.HomeBase.Y);
         level.Units.push(unit);
 
         var projectile = new Projectile(level,
@@ -34,7 +34,7 @@ describe('Projectile Tests', function () {
             0);
         level.Projectiles.push(projectile);
 
-        var i = 18;
+        var i = 30;
         while (i--) level.update();
         expect(level.Projectiles.length).toBe(0);
     });

@@ -1,6 +1,6 @@
-﻿///<reference path="~/util/General.js" />
+﻿///<reference path="~/Game/Level.js" />
+///<reference path="~/util/General.js" />
 ///<reference path="~/Game/Map.js" />
-///<reference path="~/Game/Level.js" />
 ///<reference path="~/util/Pathfind.js" />
 function Unit(level, x, y) {
     this.X = (x == null ? 0 : x);
@@ -11,7 +11,8 @@ function Unit(level, x, y) {
     this.Level = level;
     this.Destination = null;
     this.Path = null;
-    this.UpdateBlockLocation = function() {
+
+    this.UpdateBlockLocation = function () {
         this.BlockX = Math.floor(this.X / Level.Settings.BlockSize);
         this.BlockY = Math.floor(this.Y / Level.Settings.BlockSize);
     }
@@ -57,6 +58,7 @@ function Unit(level, x, y) {
             && this.BlockX == this.Destination.BlockX
             && this.BlockY == this.Destination.BlockY) {
             this.Destination.Health--;
+            this.Health = 0;
             this.Level.Units.splice(this.Level.Units.indexOf(this), 1);
         }
 
@@ -74,8 +76,7 @@ function Unit(level, x, y) {
         this.Path = this.Level.getPath(this);
     };
 }
-Unit.Array = function(unitFunction, count) {
-    var i = count;
+Unit.Array = function (unitFunction, count) {
     var array = [];
     while (count--) array.push(unitFunction());
     return array;

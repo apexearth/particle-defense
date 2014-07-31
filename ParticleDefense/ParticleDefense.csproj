@@ -63,7 +63,7 @@
     <Content Include="Game\Buildings\Turret_Mini.js" />
     <Content Include="Game\Buildings\Building.js" />
     <Content Include="Game\Buildings\HomeBase.js" />
-    <Content Include="Game\Levels\LevelOne.js" />
+    <Content Include="Game\Levels\LevelTest.js" />
     <Content Include="Game\PlayerCommands.js" />
     <Content Include="Game\Projectile.js" />
     <Content Include="Game\Weapon.js" />
