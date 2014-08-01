@@ -1,4 +1,32 @@
-﻿<div ng-controller="MainMenuController">
-    {{Title}}<br/>  
-    <button ng-repeat="level in Levels" ng-click="BeginLevel(level)">{{level.Name}}</button>  
+﻿<style>
+    .list {
+        list-style: none;
+    }
+
+        .list li {
+            cursor: default;
+            padding: 8px 15px 8px 15px;
+            margin-bottom: 1px;
+            background-color: rgba(100, 100, 100, .1);
+        }
+
+        .list .title {
+            font-weight: bold;
+        }
+
+        .list .button {
+            cursor: pointer;
+        }
+
+            .list .button:hover {
+                background-color: rgba(150, 120, 100, .15);
+            }
+</style>
+<div ng-controller="MainMenuController"
+     style="background-color: transparent">
+    <div style="font-size: 64px; width: 300px; height: 100px; position: fixed; left: 50%; margin-left: -200px;">{{Title}}</div><br />
+    <ul class="list" style="width: 250px;">
+        <li class="title">Choose Level</li>
+        <li class="button" ng-repeat="level in Levels" ng-click="BeginLevel(level)">{{level.Name}}</li>
+    </ul>
 </div>

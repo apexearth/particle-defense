@@ -9,6 +9,12 @@ function Level(width, height) {
 
     this.Width = this.Map.PixelWidth;
     this.Height = this.Map.PixelHeight;
+    this.Bounds = {
+        Left: 0,
+        Top: 0,
+        Right: this.Width,
+        Bottom: this.Height
+    };
 
     this.Player = null;
     this.Players = [];
@@ -51,11 +57,15 @@ function Level(width, height) {
         this.Waves.push(wave);
         return wave;
     };
+    this.hitTest = function (vector) {
+        return vector.X >= this.Bounds.Left && vector.X <= this.Bounds.Right && vector.Y >= this.Bounds.Top && vector.Y <= this.Bounds.Bottom;
+    }
 }
 
 Level.Settings = {
     BlockSize: 50
 };
+
 
 
 

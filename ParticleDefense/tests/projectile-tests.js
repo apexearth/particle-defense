@@ -38,4 +38,23 @@ describe('Projectile Tests', function () {
         while (i--) level.update();
         expect(level.Projectiles.length).toBe(0);
     });
+
+    it('should die when outside of level', function () {
+        var level = new Level(10, 10);
+        var projectile = new Projectile(level,
+            25,
+            25,
+            180,
+            5,
+            0);
+        level.Projectiles.push(projectile);
+
+        expect(level.Projectiles.length).toBe(1);
+        level.update();
+        expect(level.Projectiles.length).toBe(1);
+
+        var i = 6;
+        while (i--) level.update();
+        expect(level.Projectiles.length).toBe(0);
+    });
 });

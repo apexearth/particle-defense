@@ -1,9 +1,11 @@
 ﻿///<reference path="~/util/Display.js" />
 ///<reference path="~/Game/Level.js" />
 function ParticleDefense() { }
+ParticleDefense.View = "views/mainmenu.html";
 
 ParticleDefense.Level = null;
 ParticleDefense.TimeoutId = null;
+
 ParticleDefense.update = function () {
     ParticleDefense.TimeoutId = setTimeout('ParticleDefense.update();', 1000 / Display.Settings.FpsTarget);
 
@@ -32,3 +34,4 @@ ParticleDefense.startLevel = function (level, canvas) {
 
     ParticleDefense.update();
 };
+

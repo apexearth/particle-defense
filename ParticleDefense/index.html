@@ -36,16 +36,8 @@
 </head>
 <body ng-app="ParticleDefense" ng-controller="IndexController">
 
-    <div ng-include="View"></div>
+    <div ng-include="ParticleDefense.View"></div>
     <canvas id="canvas" width="800" height="600"></canvas>
-    <script type="text/javascript">
-        (function () {
-            var canvas = document.getElementById("canvas");
-            if (Modernizr.canvas) {
-                //ParticleDefense.initialize(canvas);
-            }
-        })();
-    </script>
 
 </body>
 </html>

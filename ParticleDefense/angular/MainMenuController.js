@@ -12,5 +12,6 @@ angular.module('ParticleDefense')
         ];
         $scope.BeginLevel = function (level) {
             ParticleDefense.startLevel(level, canvas);
+            ParticleDefense.View = "";
         };
     }]);

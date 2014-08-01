@@ -3,6 +3,6 @@
 angular.module('ParticleDefense')
     .controller('IndexController', [
         '$scope', function ($scope) {
-            $scope.View = 'views/mainmenu.html';
+            $scope.ParticleDefense = ParticleDefense;
         }
     ]);

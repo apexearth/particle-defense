@@ -18,12 +18,19 @@ Projectile.prototype.draw = function (context) {
 Projectile.prototype.update = function () {
     this.X += Math.cos(this.Direction) * this.Speed;
     this.Y += Math.sin(this.Direction) * this.Speed;
-    var u = this.Level.Units.length;
-    while (u--) {
-        var unit = this.Level.Units[u];
-        if (unit.hitTest(this)) {
-            unit.damage(this.Damage);
-            if (this.onHit != null) this.onHit();
+
+    if (!this.Level.hitTest(this)) // Die if outside of level.
+    {
+        this.onHit();
+    }
+    else {
+        var u = this.Level.Units.length;
+        while (u--) {
+            var unit = this.Level.Units[u];
+            if (unit.hitTest(this)) {
+                unit.damage(this.Damage);
+                if (this.onHit != null) this.onHit();
+            }
         }
     }
 }
