@@ -1,4 +1,6 @@
-﻿function Display() { }
+﻿/// <reference path="~/util/Mouse.js"/>
+/// <reference path="~/util/Keyboard.js"/>
+function Display() { }
 
 Display.canvas = null;
 Display.context = null;
@@ -137,6 +139,16 @@ Display.translateCoordinate = function (x, y) {
         "y": Display.centerY + Display.drawScale * (y + Display.drawOffsetY)
     };
 };
+Display.inverseTranslateCoordinate = function (x, y) {
+    if (Display.Settings.DisableTranslation) return {
+        "x": x / Display.Settings.Quality,
+        "y": y / Display.Settings.Quality
+    };
+    return {
+        "x": (x - Display.centerX) / Display.drawScale - Display.drawOffsetX,
+        "y": (y - Display.centerY) / Display.drawScale - Display.drawOffsetY
+    };
+};
 Display.translateScale = function (s) {
     if (Display.Settings.DisableTranslation) return s * Display.Settings.Quality;
     return s * Display.drawScale * Display.Settings.Quality;
@@ -224,6 +236,7 @@ Display.update = function () {
 
     Display.updateDrawOffset();
     Display.updateDrawScale();
+    Mouse.update();
 };
 
 Display.updateDrawScale = function () {

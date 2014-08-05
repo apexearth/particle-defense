@@ -8,8 +8,8 @@ function HomeBase(level, player, blockX, blockY) {
     player.HomeBase = this;
     this.update = function () {
         Building.prototype.update.call(this);
-        this.Player.Resources.Energy += 3;
-        this.Player.Resources.Metal += 1;
+        this.Player.Resources.Energy += .03;
+        this.Player.Resources.Metal += .01;
     };
     this.draw = function (context) {
         context.drawImage(HomeBase.canvas, this.TopLeft.X, this.TopLeft.Y);

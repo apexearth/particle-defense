@@ -16,8 +16,8 @@ function Turret_Mini(level, player, blockX, blockY) {
     };
 }
 Turret_Mini.Cost = {
-    Energy: 1000,
-    Metal: 500
+    Energy: 1,
+    Metal: 1
 };
 
 Turret_Mini.canvas = document.createElement("canvas");

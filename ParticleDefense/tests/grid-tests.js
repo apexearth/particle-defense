@@ -15,5 +15,11 @@ describe('Grid Tests', function () {
         expect(function () { grid.getBlock(11, 10); }).toThrow();
         expect(function () { grid.getBlock(11, 11); }).toThrow();
         expect(function () { grid.getBlock(10, 11); }).toThrow();
+        expect(grid.getBlockOrNull(-1, 0)).toBeNull();
+        expect(grid.getBlockOrNull(0, -1)).toBeNull();
+        expect(grid.getBlockOrNull(0, 11)).toBeNull();
+        expect(grid.getBlockOrNull(11, 0)).toBeNull();
+        expect(grid.getBlockOrNull(0, 0)).not.toBeNull();
+        expect(grid.getBlockOrNull(10, 10)).not.toBeNull();
     });
 });

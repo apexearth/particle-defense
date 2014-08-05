@@ -11,6 +11,7 @@ function Unit(level, x, y) {
     this.Level = level;
     this.Destination = null;
     this.Path = null;
+    this.Score = 0;
 
     this.UpdateBlockLocation = function () {
         this.BlockX = Math.floor(this.X / Level.Settings.BlockSize);
@@ -44,12 +45,9 @@ function Unit(level, x, y) {
     };
     this.damage = function (amount) {
         this.Health -= amount;
+        if (this.Health <= 0) this.die();
     };
     this.update = function () {
-        if (this.Health <= 0) {
-            var i = this.Level.Units.indexOf(this);
-            if (i !== -1) this.Level.Units.splice(i, 1);
-        }
         this.move();
         this.UpdateBlockLocation();
 
@@ -63,6 +61,11 @@ function Unit(level, x, y) {
         }
 
     };
+    this.die = function () {
+        var i = this.Level.Units.indexOf(this);
+        if (i !== -1) this.Level.Units.splice(i, 1);
+        this.Level.Player.Score += this.Score;
+    }
     this.draw = function (context) {
         context.strokeStyle = '#fff';
         context.lineWidth = 2;
@@ -75,7 +78,13 @@ function Unit(level, x, y) {
         this.Destination = target;
         this.Path = this.Level.getPath(this);
     };
+
+    this.calculateScore();
 }
+
+Unit.prototype.calculateScore = function () {
+    this.Score = this.Health * this.MoveSpeed;
+};
 Unit.Array = function (unitFunction, count) {
     var array = [];
     while (count--) array.push(unitFunction());

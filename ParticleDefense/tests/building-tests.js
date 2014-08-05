@@ -27,10 +27,11 @@ describe('Building Tests', function () {
 
     it('should not attack units out of range', function () {
         var level = Level.LevelTest();
-        var unit = new Unit(level, level.Width / 2, level.Height / 2);
+        var unit = new Unit(level, level.Player.HomeBase.X - 50, level.Player.HomeBase.Y - 50);
         unit.setDestination(level.Player.HomeBase);
         level.Units.push(unit);
         var turret = new Turret_Mini(level, level.Player, 5, 9);
+        turret.Weapon.Range = 10;
         level.Buildings.push(turret);
 
         var health = unit.Health;

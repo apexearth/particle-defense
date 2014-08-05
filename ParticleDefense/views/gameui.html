@@ -1,0 +1,43 @@
+﻿<style>
+    .topbar {
+        margin: 0;padding: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        list-style: none;
+        border-bottom: solid 1px;
+    }
+
+        .topbar li {
+            display: inline-block;
+            padding: 3px 8px 3px 8px;
+            background-color: #646464;
+            background-color: rgba(100, 100, 100, .3);
+            height: 30px;
+            width: 100px;
+            line-height: 30px;
+            text-align: center;
+        }
+</style>
+<div ng-controller="GameUiController">
+    <ul class="topbar">
+        <li>Score: {{Player.Score}}</li>
+        <li ng-repeat="(key, value) in Player.Resources">{{key}}: {{value | number : 0}}</li>
+    </ul>
+    <br />
+    <br/>
+    <ul>
+        <li ng-click="CreateBuilding()">Building</li>
+    </ul>
+    <br />
+    Display X: {{Mouse.DisplayX}}
+    <br />
+    Display Y: {{Mouse.DisplayY}}
+    <br />
+    Test
+    <br />
+    Display Offset X: {{Display.drawOffsetX}}
+    <br />
+    Display Offest Y: {{Display.drawOffsetY}}
+</div>

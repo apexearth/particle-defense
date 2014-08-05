@@ -1,7 +1,10 @@
-﻿/// <reference path="~/Util/Grid.js" />
+﻿/// <reference path="~/Util/Mouse.js" />
+/// <reference path="~/Util/Display.js" />
+/// <reference path="~/Util/Grid.js" />
 /// <reference path="~/Game/Map.js" />
 /// <reference path="~/util/Pathfind.js" />
 /// <reference path="~/Game/Unit.js" />
+/// <reference path="~/Game/PlayerCommands.js" />
 /// <reference path="~/Game/Buildings/HomeBase.js" />
 function Level(width, height) {
     var me = this;
@@ -60,6 +63,11 @@ function Level(width, height) {
     this.hitTest = function (vector) {
         return vector.X >= this.Bounds.Left && vector.X <= this.Bounds.Right && vector.Y >= this.Bounds.Top && vector.Y <= this.Bounds.Bottom;
     }
+
+    this.PlacementBuilding = null;
+    this.BeginBuildingPlacement = function (building) {
+        this.PlacementBuilding = building;
+    };
 }
 
 Level.Settings = {
@@ -67,7 +75,9 @@ Level.Settings = {
 };
 
 
-
+Level.prototype.GetBlockOrNull = function (x, y) {
+    return this.Map.getBlockOrNullFromVector({ X: x, Y: y });
+}
 
 Level.prototype.update = function () {
     if (this.Units.length === 0
@@ -106,6 +116,18 @@ Level.prototype.update = function () {
         projectile.update();
     }
 
+    if (this.PlacementBuilding != null) {
+        if (Mouse.LeftButton) {
+            var block = this.GetBlockOrNull(Mouse.DisplayX, Mouse.DisplayY);
+            if (block != null) {
+                var buildResult = PlayerCommands.CreateBuilding(this.Player, this.PlacementBuilding, block.X, block.Y);
+                if (buildResult != null && !Keyboard.CheckKey(Keys.Shift)) this.PlacementBuilding = null;
+            }
+        } else if (Mouse.RightButton || Keyboard.CheckKey(Keys.Escape)) {
+            this.PlacementBuilding = null;
+        }
+    }
+
 };
 
 Level.prototype.draw = function () {
@@ -124,6 +146,16 @@ Level.prototype.draw = function () {
         var projectile = this.Projectiles[p];
         projectile.draw(this.context);
     }
+
+    if (this.PlacementBuilding != null) {
+        var block = this.GetBlockOrNull(Mouse.DisplayX, Mouse.DisplayY);
+        if (block != null) {
+            this.context.globalAlpha = .75;
+            this.context.drawImage(this.PlacementBuilding.canvas, block.X * Level.Settings.BlockSize, block.Y * Level.Settings.BlockSize);
+            this.context.globalAlpha = 1;
+        }
+    }
+
     this.context.drawImage(this.Map.canvas, 0, 0);
 };
 

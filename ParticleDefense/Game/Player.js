@@ -7,4 +7,8 @@ function Player(level) {
         Energy: 0,
         Metal: 0
     };
+    this.Score = 0;
+    this.AddScore = function (score) {
+        this.Score += score;
+    }
 }

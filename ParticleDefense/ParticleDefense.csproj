@@ -59,6 +59,7 @@
   <ItemGroup>
     <Content Include="Angular\App.js" />
     <Content Include="Angular\IndexController.js" />
+    <Content Include="Angular\GameUiController.js" />
     <Content Include="Angular\MainMenuController.js" />
     <Content Include="Game\Buildings\Turret_Mini.js" />
     <Content Include="Game\Buildings\Building.js" />
@@ -74,6 +75,7 @@
     <Content Include="js\jasmine.js" />
     <Content Include="js\jasmineBootstrap.js" />
     <Content Include="Game\Map.js" />
+    <Content Include="tests\gameui-tests.js" />
     <Content Include="tests\play-tests.js" />
     <Content Include="tests\player-tests.js" />
     <Content Include="tests\mainmenu-tests.js" />
@@ -96,8 +98,10 @@
     <Content Include="Game\Level.js" />
     <Content Include="Game\ParticleDefense.js" />
     <Content Include="Game\PathfindExample.js" />
+    <Content Include="util\Mouse.js" />
     <Content Include="util\Pathfind.js" />
     <Content Include="Game\Player.js" />
+    <Content Include="views\gameui.html" />
     <Content Include="views\mainmenu.html" />
     <Content Include="Web.config" />
   </ItemGroup>

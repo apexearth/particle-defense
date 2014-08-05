@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="css/pd.css" />
 
+    <script type="text/javascript" src="util/Mouse.js"></script>
     <script type="text/javascript" src="util/Keyboard.js"></script>
     <script type="text/javascript" src="util/Display.js"></script>
     <script type="text/javascript" src="util/General.js"></script>
@@ -19,9 +20,11 @@
     <script type="text/javascript" src="Angular/App.js"></script>
     <script type="text/javascript" src="Angular/IndexController.js"></script>
     <script type="text/javascript" src="Angular/MainMenuController.js"></script>
+    <script type="text/javascript" src="Angular/GameUiController.js"></script>
 
     <script type="text/javascript" src="util/Pathfind.js"></script>
     <script type="text/javascript" src="Game/Player.js"></script>
+    <script type="text/javascript" src="Game/PlayerCommands.js"></script>
     <script type="text/javascript" src="Game/Level.js"></script>
     <script type="text/javascript" src="Game/Levels/LevelTest.js"></script>
     <script type="text/javascript" src="Game/Map.js"></script>
@@ -36,8 +39,8 @@
 </head>
 <body ng-app="ParticleDefense" ng-controller="IndexController">
 
-    <div ng-include="ParticleDefense.View"></div>
     <canvas id="canvas" width="800" height="600"></canvas>
+    <div ng-include="ParticleDefense.View"></div>
 
 </body>
 </html>

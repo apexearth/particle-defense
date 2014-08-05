@@ -16,9 +16,15 @@
 Map.prototype.getBlockFromVector = function (vector) {
     return this.getBlock(vector.X, vector.Y);
 };
-
 Map.prototype.getBlock = function (x, y) {
     return this.Grid.getBlock(Math.floor(x / this.BlockSize), Math.floor(y / this.BlockSize));
+};
+
+Map.prototype.getBlockOrNullFromVector = function (vector) {
+    return this.getBlockOrNull(vector.X, vector.Y);
+};
+Map.prototype.getBlockOrNull = function (x, y) {
+    return this.Grid.getBlockOrNull(Math.floor(x / this.BlockSize), Math.floor(y / this.BlockSize));
 };
 Map.prototype.getPathByBlock = function (blockStart, blockTarget) {
     var path = Pathfind.getPathByBlock(this.Grid, blockStart, blockTarget);
@@ -34,7 +40,7 @@ Map.prototype.getPathByBlock = function (blockStart, blockTarget) {
 Map.prototype.draw = function () {
     if (!this.RequiresDraw) return;
     this.RequiresDraw = false;
-    
+
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.strokeStyle = '#fff';
     this.context.lineWidth = 2;

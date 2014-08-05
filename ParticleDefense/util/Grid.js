@@ -39,6 +39,16 @@ Grid.prototype.getBlock = function (x, y) {
         throw new Error();
     return block;
 };
+Grid.prototype.getBlockOrNull = function (x, y) {
+    x -= this.MinX;
+    y -= this.MinY;
+    if (x >= 0 && y>=0 && x < this.Block.length) {
+        var subarr = this.Block[x];
+        if (y < subarr.length)
+            return subarr[y];
+    }
+    return null;
+};
 Grid.prototype.getAdjacentBlocks = function (blockX, blockY, diagonal) {
     var adjacentBlocks = [];
     for (var x = blockX - 1; x <= blockX + 1; x++) {

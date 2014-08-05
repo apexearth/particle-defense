@@ -1,14 +1,18 @@
-﻿function Keyboard() {
-    this.keys = new Array();
-    document.onkeydown = this.keyDown;
-    document.onkeyup = this.keyUp;
-}
-
-Keyboard.prototype.keyDown = function (event) {
+﻿Keyboard = {
+    keys: new Array(),
+    CheckKey: function (keyCode) {
+        if (this.keys[keyCode] != undefined) return this.keys[keyCode];
+        return false;
+    }
+};
+document.onkeydown = function (event) {
     Keyboard.keys[event.keyCode] = true;
 };
-Keyboard.prototype.keyUp = function (event) {
+document.onkeyup = function (event) {
     Keyboard.keys[event.keyCode] = false;
 };
 
-var Keyboard = new Keyboard();
+Keys = {
+    Shift: 16,
+    Escape: 27
+};

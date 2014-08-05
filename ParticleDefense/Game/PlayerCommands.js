@@ -1,5 +1,5 @@
 ﻿/// <reference path="~/Game/Level.js" />
-var PlayerCommands = {
+PlayerCommands = {
     CreateBuilding: function (player, buildingConstructor, blockX, blockY) {
         if (player.Resources.Metal >= buildingConstructor.Cost.Metal
             && player.Resources.Energy >= buildingConstructor.Cost.Energy) {
