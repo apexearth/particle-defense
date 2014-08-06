@@ -28,12 +28,3 @@ document.addEventListener('mouseup', function (e) {
     if (e.button == 1) Mouse.MiddleButton = false;
     if (e.button == 2) Mouse.RightButton = false;
 }, false);
-
-document.addEventListener('contextmenu', function () {
-    window.focus();
-    return false;
-});
-document.addEventListener('dblclick', function () {
-    window.focus();
-    return false;
-});
