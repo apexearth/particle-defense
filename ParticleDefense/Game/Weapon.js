@@ -7,6 +7,7 @@ function Weapon(building) {
     this.Range = 200;
     this.Damage = 4;
     this.ProjectileSpeed = 3;
+    this.AmmoConsumption = 1;
     this.Interval = 10;
     this.IntervalCount = 10;
     this.ResetTarget = function () {
@@ -37,10 +38,11 @@ Weapon.prototype.update = function () {
     }
     if (this.IntervalCount < this.Interval) this.IntervalCount++;
     if (this.Target != null
-        && this.IntervalCount >= this.Interval) {
+        && this.IntervalCount >= this.Interval
+        && this.Building.Player.Resources.Ammo >= this.AmmoConsumption) {
 
-        var velocityX = this.TargetLastX - this.Target.X;
-        var velocityY = this.TargetLastY - this.Target.Y;
+        var velocityX = this.Target.VelocityX;
+        var velocityY = this.Target.VelocityY;
         var a = Math.pow(velocityX, 2) + Math.pow(velocityY, 2) - Math.pow(this.ProjectileSpeed, 2);
         var b = 2 * (velocityX * (this.Target.X - this.Building.X) + velocityY * (this.Target.Y - this.Building.Y));
         var c = Math.pow(this.Target.X - this.Building.X, 2) + Math.pow(this.Target.Y - this.Building.Y, 2);
@@ -50,8 +52,8 @@ Weapon.prototype.update = function () {
             var t1 = (-b + Math.sqrt(disc)) / (2 * a);
             var t2 = (-b - Math.sqrt(disc)) / (2 * a);
             var t = (t1 < t2 && t1 > 0 ? t1 : t2);
-            var aimTargetX = -t * velocityX + this.Target.X;
-            var aimTargetY = -t * velocityY + this.Target.Y;
+            var aimTargetX = t * velocityX + this.Target.X;
+            var aimTargetY = t * velocityY + this.Target.Y;
             var angle = General.AngleRad(this.Building.X, this.Building.Y, aimTargetX, aimTargetY);
             var projectile = new Projectile(
                 this.Building.Level,
@@ -61,6 +63,7 @@ Weapon.prototype.update = function () {
                 this.ProjectileSpeed,
                 this.Damage
             );
+            this.Building.Player.Resources.Ammo -= this.AmmoConsumption;
             this.IntervalCount = 0;
             this.Building.Level.Projectiles.push(projectile);
         }

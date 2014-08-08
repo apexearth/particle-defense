@@ -5,7 +5,7 @@
 /// <reference path="~/Game/Buildings/Building.js" />
 function Turret_Mini(level, player, blockX, blockY) {
     Building.call(this, level, player, blockX, blockY);
-    this.Health = 1000;
+    this.Health = 5;
     this.Weapon = new Weapon(this);
     this.update = function () {
         Building.prototype.update.call(this);
@@ -15,9 +15,10 @@ function Turret_Mini(level, player, blockX, blockY) {
         context.drawImage(Turret_Mini.canvas, this.TopLeft.X, this.TopLeft.Y);
     };
 }
+Building.List.Turret_Mini = Turret_Mini;
 Turret_Mini.Cost = {
-    Energy: 1,
-    Metal: 1
+    Energy: 50,
+    Metal: 25
 };
 
 Turret_Mini.canvas = document.createElement("canvas");

@@ -58,12 +58,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Angular\App.js" />
+    <Content Include="Angular\GameOverController.js" />
     <Content Include="Angular\IndexController.js" />
     <Content Include="Angular\GameUiController.js" />
     <Content Include="Angular\MainMenuController.js" />
+    <Content Include="Game\Buildings\AmmoFab.js" />
+    <Content Include="Game\Buildings\EnergyCollector.js" />
+    <Content Include="Game\Buildings\MetalFab.js" />
     <Content Include="Game\Buildings\Turret_Mini.js" />
     <Content Include="Game\Buildings\Building.js" />
     <Content Include="Game\Buildings\HomeBase.js" />
+    <Content Include="Game\Levels\LevelOne.js" />
     <Content Include="Game\Levels\LevelTest.js" />
     <Content Include="Game\PlayerCommands.js" />
     <Content Include="Game\Projectile.js" />
@@ -101,6 +106,7 @@
     <Content Include="util\Mouse.js" />
     <Content Include="util\Pathfind.js" />
     <Content Include="Game\Player.js" />
+    <Content Include="views\gameover.html" />
     <Content Include="views\gameui.html" />
     <Content Include="views\mainmenu.html" />
     <Content Include="Web.config" />

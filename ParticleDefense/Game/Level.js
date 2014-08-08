@@ -1,4 +1,5 @@
-﻿/// <reference path="~/Util/Mouse.js" />
+﻿/// <reference path="~/Game/ParticleDefense.js" />
+/// <reference path="~/Util/Mouse.js" />
 /// <reference path="~/Util/Display.js" />
 /// <reference path="~/Util/Grid.js" />
 /// <reference path="~/Game/Map.js" />
@@ -35,12 +36,14 @@ function Level(width, height) {
             && me.Units.length === 0;
     }];
     this.LossConditions = [function () {
-        return me.Player.Buildings.length == 0;
+        return me.Player.HomeBase.Health <= 0;
     }];
     this.canvas = document.createElement("canvas");
     this.canvas.width = this.Map.PixelWidth;
     this.canvas.height = this.Map.PixelHeight;
     this.context = this.canvas.getContext("2d");
+
+    this.CheckCount = 0;
 
     this.AddBuilding = function (building) {
         this.Buildings.push(building);
@@ -57,7 +60,7 @@ function Level(width, height) {
             UnitDelay: unitDelay,
             UnitDelayCount: 0
         };
-        this.Waves.push(wave);
+        this.Waves.unshift(wave);
         return wave;
     };
     this.hitTest = function (vector) {
@@ -68,10 +71,11 @@ function Level(width, height) {
     this.BeginBuildingPlacement = function (building) {
         this.PlacementBuilding = building;
     };
+
 }
 
 Level.Settings = {
-    BlockSize: 50
+    BlockSize: 35
 };
 
 
@@ -98,22 +102,28 @@ Level.prototype.update = function () {
         this.CurrentWave.UnitDelayCount = 0;
     }
 
-    var u = this.Units.length;
-    while (u-- > 0) {
-        unit = this.Units[u];
+    var i = this.Units.length;
+    while (i-- > 0) {
+        unit = this.Units[i];
         unit.update();
     }
 
-    var b = this.Buildings.length;
-    while (b-- > 0) {
-        var building = this.Buildings[b];
+    i = this.Buildings.length;
+    while (i-- > 0) {
+        var building = this.Buildings[i];
         building.update();
     }
 
-    var p = this.Projectiles.length;
-    while (p-- > 0) {
-        var projectile = this.Projectiles[p];
+    i = this.Projectiles.length;
+    while (i-- > 0) {
+        var projectile = this.Projectiles[i];
         projectile.update();
+    }
+
+    i = this.Players.length;
+    while (i-- > 0) {
+        var player = this.Players[i];
+        player.update();
     }
 
     if (this.PlacementBuilding != null) {
@@ -121,10 +131,27 @@ Level.prototype.update = function () {
             var block = this.GetBlockOrNull(Mouse.DisplayX, Mouse.DisplayY);
             if (block != null) {
                 var buildResult = PlayerCommands.CreateBuilding(this.Player, this.PlacementBuilding, block.X, block.Y);
-                if (buildResult != null && !Keyboard.CheckKey(Keys.Shift)) this.PlacementBuilding = null;
+                if (buildResult != null) {
+                    i = this.Units.length;
+                    while (i--) this.Units[i].findPath();
+                    if (!Keyboard.CheckKey(Keys.Shift)) {
+                        this.PlacementBuilding = null;
+                    }
+                }
             }
         } else if (Mouse.RightButton || Keyboard.CheckKey(Keys.Escape)) {
             this.PlacementBuilding = null;
+        }
+    }
+
+    if (this.CheckCount++ > ParticleDefense.Second) {
+        var win = this.checkWinConditions();
+        var loss = this.checkLossConditions();
+        if (win || loss) {
+            this.Result = {
+                Victory: win
+            };
+            ParticleDefense.stop();
         }
     }
 

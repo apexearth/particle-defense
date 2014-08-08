@@ -3,18 +3,22 @@
 /// <reference path="~/js/angular.min.js" />
 function ParticleDefense() { }
 
+ParticleDefense.Second = 1000 / Display.Settings.FpsTarget;
 ParticleDefense.Views = {
     MainMenu: "views/mainmenu.html",
-    GameUi: "views/gameui.html"
+    GameUi: "views/gameui.html",
+    GameOver: "views/gameover.html"
 };
 ParticleDefense.View = ParticleDefense.Views.MainMenu;
 ParticleDefense.UiScope = null;
+ParticleDefense.IndexScope = null;
 ParticleDefense.Level = null;
 ParticleDefense.TimeoutId = null;
 ParticleDefense.TimeoutIdUi = null;
 
 ParticleDefense.update = function () {
-    ParticleDefense.TimeoutId = setTimeout('ParticleDefense.update();', 1000 / Display.Settings.FpsTarget);
+    if (ParticleDefense.View != ParticleDefense.Views.GameUi) return;
+    setTimeout('ParticleDefense.update();', ParticleDefense.Second);
 
     ParticleDefense.Level.update();
 
@@ -22,14 +26,11 @@ ParticleDefense.update = function () {
     ParticleDefense.draw();
 };
 ParticleDefense.updateUi = function () {
-    ParticleDefense.TimeoutIdUi = setTimeout('ParticleDefense.updateUi();', 250);
+    if (ParticleDefense.View != ParticleDefense.Views.GameUi) return;
+    setTimeout('ParticleDefense.updateUi();', 1000);
     ParticleDefense.UiScope.$apply();
 };
 
-ParticleDefense.stop = function () {
-    clearTimeout(ParticleDefense.TimeoutId);
-    clearTimeout(ParticleDefense.TimeoutIdUi);
-};
 ParticleDefense.draw = function () {
     ParticleDefense.Level.draw();
     Display.setDrawCanvas('Main');
@@ -38,7 +39,6 @@ ParticleDefense.draw = function () {
 };
 
 ParticleDefense.startLevel = function (level, canvas) {
-    ParticleDefense.stop();
     ParticleDefense.Level = level();
 
     Display.initialize(canvas);
@@ -48,3 +48,16 @@ ParticleDefense.startLevel = function (level, canvas) {
     ParticleDefense.View = ParticleDefense.Views.GameUi;
     ParticleDefense.update();
 };
+ParticleDefense.stop = function () {
+    ParticleDefense.View = ParticleDefense.Views.GameOver;
+    ParticleDefense.IndexScope.$apply();
+};
+
+(function () {
+    if (localStorage.User != null) {
+        localStorage.User = {
+            LifetimeScore: 0
+        }
+    }
+})();
+ParticleDefense.User = localStorage.User

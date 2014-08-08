@@ -6,7 +6,8 @@ Level.LevelTest = function () {
     var player = new Player(level);
     level.AddPlayer(player);
     level.Player = player;
-
+    player.Resources.Energy = 50;
+    player.Resources.Metal = 25;
     level.AddBuilding(new HomeBase(level, player, 5, 5));
     var turret = level.AddBuilding(new Turret_Mini(level, level.Player, 4, 5));
     

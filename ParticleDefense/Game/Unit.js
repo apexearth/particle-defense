@@ -5,6 +5,8 @@
 function Unit(level, x, y) {
     this.X = (x == null ? 0 : x);
     this.Y = (y == null ? 0 : y);
+    this.VelocityX = 0;
+    this.VelocityY = 0;
     this.Radius = 3;
     this.MoveSpeed = 1;
     this.Health = 10;
@@ -28,6 +30,9 @@ function Unit(level, x, y) {
         var moveAmount = General.normalize(this.X, this.Y, moveTarget.X, moveTarget.Y);
         moveAmount.X *= this.MoveSpeed;
         moveAmount.Y *= this.MoveSpeed;
+
+        this.VelocityX = Math.abs(moveAmount.X);
+        this.VelocityY = Math.abs(moveAmount.Y);
 
         if (Math.abs(this.X - moveTarget.X) > Math.abs(moveAmount.X))
             this.X += moveAmount.X;
@@ -76,9 +81,11 @@ function Unit(level, x, y) {
     };
     this.setDestination = function (target) {
         this.Destination = target;
-        this.Path = this.Level.getPath(this);
+        this.findPath();
     };
-
+    this.findPath = function () {
+        this.Path = this.Level.getPath(this);
+    }
     this.calculateScore();
 }
 

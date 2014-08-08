@@ -18,17 +18,35 @@
     this.BlockX = this.Block.X;
     this.BlockY = this.Block.Y;
 
+    this.ResourceStorage = {
+        Energy: 0,
+        Metal: 0,
+        Ammo: 0
+    }
+
     this.draw = function () { };
 }
-Building.Cost = {
-    Energy: 1000,
-    Metal: 500
-};
+Building.List = {};
 
 Building.prototype.update = function () {
     if (this.Health <= 0) {
         this.Level.Buildings.splice(this.Level.Buildings.indexOf(this), 1);
         this.Player.Buildings.splice(this.Player.Buildings.indexOf(this), 1);
+
+    }
+};
+Building.prototype.addStorageToPlayer = function () {
+    for (var key in this.ResourceStorage) {
+        if (this.ResourceStorage.hasOwnProperty(key)) {
+            this.Player.ResourceStorage[key] += this.ResourceStorage[key];
+        }
+    }
+};
+Building.prototype.removeStorageToPlayer = function () {
+    for (var key in this.ResourceStorage) {
+        if (this.ResourceStorage.hasOwnProperty(key)) {
+            this.Player.ResourceStorage[key] -= this.ResourceStorage[key];
+        }
     }
 };
 

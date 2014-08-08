@@ -6,16 +6,13 @@
 /// <reference path="/Game/Level.js" />
 /// <reference path="/Game/Levels/LevelTest.js" />
 angular.module('ParticleDefense')
-    .controller('GameUiController', ['$scope', 'Canvas', function ($scope, canvas) {
+    .controller('GameOverController', ['$scope', function ($scope) {
         $scope.Level = ParticleDefense.Level;
         $scope.Player = ParticleDefense.Level.Player;
-
-        $scope.Buildings = Building.List;
-
-        $scope.CreateBuilding = function (building) {
-            $scope.Level.BeginBuildingPlacement(building);
-        }
-
-        ParticleDefense.UiScope = $scope;
-        setTimeout(ParticleDefense.updateUi, 100);
+        $scope.Result = ParticleDefense.Level.Result;
+        $scope.Title = ($scope.Result.Victory ? "Victory!" : "Failure!");
+        $scope.MainMenu = function () {
+            ParticleDefense.View = ParticleDefense.Views.MainMenu;
+            ParticleDefense.IndexScope.$apply();
+        };
     }]);

@@ -4,5 +4,6 @@ angular.module('ParticleDefense')
     .controller('IndexController', [
         '$scope', function ($scope) {
             $scope.ParticleDefense = ParticleDefense;
+            ParticleDefense.IndexScope = $scope;
         }
     ]);

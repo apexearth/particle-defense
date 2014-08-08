@@ -42,12 +42,15 @@ Map.prototype.draw = function () {
     this.RequiresDraw = false;
 
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.strokeStyle = '#fff';
-    this.context.lineWidth = 2;
+    this.context.strokeStyle = 'rgba(50,50,50,.5)';
+    this.context.lineWidth = 1;
     var x = this.Width;
     while (x--) {
         var y = this.Height;
         while (y--)
             this.context.strokeRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
     }
+    this.context.strokeStyle = 'rgba(50,50,50,1)';
+    this.context.lineWidth = 2;
+    this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height);
 };

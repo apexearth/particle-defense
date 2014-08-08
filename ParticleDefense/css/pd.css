@@ -3,7 +3,8 @@
     margin: 0;
     overflow: hidden;
     background-color: #000;
-    color: #fff;
+    color: #eee;
+    font-family: Audiowide;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -17,5 +18,50 @@
     position: fixed;
     left: 0;
     top: 0;
-    z-index: -20;
+    z-index: -2;
 }
+
+#bg {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .85);
+    z-index: -1;
+}
+
+
+.list {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+    list-style-type: none;
+    border-right: solid 8px rgba(150,120,100,.15);
+}
+
+    .list li {
+        cursor: default;
+        padding: 8px 15px 8px 15px;
+        margin-bottom: 1px;
+        background-color: rgba(100, 100, 100, .1);
+    }
+
+    .list .title {
+        font-weight: bold;
+        background-color: rgba(150, 120, 100, .15);
+        text-align: center;
+    }
+
+    .list .button {
+        cursor: pointer;
+        text-align: right;
+    }
+
+        .list .button:hover {
+            background-color: rgba(150, 120, 100, .15);
+        }
+
+        .list .button:active {
+            background-color: rgba(160, 120, 100, .19);
+        }

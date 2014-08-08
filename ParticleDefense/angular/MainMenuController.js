@@ -4,11 +4,13 @@
 /// <reference path="/Game/ParticleDefense.js" />
 /// <reference path="/Game/Level.js" />
 /// <reference path="/Game/Levels/LevelTest.js" />
+/// <reference path="/Game/Levels/LevelOne.js" />
 angular.module('ParticleDefense')
     .controller('MainMenuController', ['$scope', 'Canvas', function ($scope, canvas) {
-        $scope.Title = "Particle Sandbox";
+        $scope.Title = "Particle Defense";
         $scope.Levels = [
-            Level.LevelTest
+            Level.LevelTest,
+            Level.LevelOne
         ];
         $scope.BeginLevel = function (level) {
             ParticleDefense.startLevel(level, canvas);
