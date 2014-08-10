@@ -50,7 +50,7 @@ ParticleDefense.startLevel = function (level, canvas) {
 };
 ParticleDefense.stop = function () {
     ParticleDefense.View = ParticleDefense.Views.GameOver;
-    ParticleDefense.IndexScope.$apply();
+    if (ParticleDefense.IndexScope != null) ParticleDefense.IndexScope.$apply();
 };
 
 (function () {

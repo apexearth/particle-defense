@@ -1,17 +1,19 @@
 ﻿/// <reference path="~/js/jasmine.js" />
 /// <reference path="~/Game/Unit.js"/>
-/// <reference path="~/Game/Buildings/Turret_Mini.js"/>
+/// <reference path="~/Game/Buildings/Turret_Gun.js"/>
+/// <reference path="~/Game/Levels/LevelEmpty.js"/>
 /// <reference path="~/Game/Levels/LevelTest.js"/>
+/// <reference path="~/Game/PlayerCommands.js"/>
 /// <reference path="~/Game/Level.js"/>
 /// <reference path="~/Game/Map.js"/>
 /// <reference path="~/util/Keyboard.js"/>
 describe('Building Tests', function () {
     it('should attack units in range of any of it\'s weapons', function () {
-        var level = Level.LevelTest();
-        level.Waves = [];
+        var level = Level.LevelEmpty();
         var unit = new Unit(level, level.Width / 2, level.Height / 2);
         level.Units.push(unit);
-        var turret = new Turret_Mini(level, level.Player, unit.BlockX, unit.BlockY + 1);
+        var turret = new Turret_Gun(level, level.Player, unit.BlockX, unit.BlockY + 1);
+        
         level.Buildings.push(turret);
         var health = unit.Health;
 
@@ -30,7 +32,7 @@ describe('Building Tests', function () {
         var unit = new Unit(level, level.Player.HomeBase.X - 50, level.Player.HomeBase.Y - 50);
         unit.setDestination(level.Player.HomeBase);
         level.Units.push(unit);
-        var turret = new Turret_Mini(level, level.Player, 5, 9);
+        var turret = new Turret_Gun(level, level.Player, 5, 9);
         turret.Weapon.Range = 10;
         level.Buildings.push(turret);
 
@@ -46,5 +48,13 @@ describe('Building Tests', function () {
         level.update();
         expect(energy).toBeLessThan(level.Player.Resources.Energy);
         expect(metal).toBeLessThan(level.Player.Resources.Metal);
+    });
+    it('can be sold', function() {
+        var level = Level.LevelEmpty();
+        level.Player.Resources.Energy = Turret_Gun.Cost.Energy;
+        level.Player.Resources.Metal = Turret_Gun.Cost.Metal;
+        var building = PlayerCommands.CreateBuilding(level.Player, Turret_Gun, 1, 1);
+        PlayerCommands.SellBuilding(building);
+        expect(level.Player.Resources.Metal).toBeGreaterThan(0);
     });
 });

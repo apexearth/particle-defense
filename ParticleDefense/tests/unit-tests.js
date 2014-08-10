@@ -55,4 +55,16 @@ describe('Unit Tests', function () {
         expect(units.length).toBe(10);
         expect(units[0].constructor).toBe(Unit);
     });
+    it('should have no velocity when it is not moving', function() {
+        var level = Level.LevelTest();
+        level.Buildings = [];
+        level.Player.Buildings = [];
+        var unit = new Unit(level);
+        unit.VelocityX = 10;
+        unit.VelocityY = 10;
+        unit.update();
+
+        expect(unit.VelocityX).toBe(0);
+        expect(unit.VelocityY).toBe(0);
+    });
 });

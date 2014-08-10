@@ -25,14 +25,18 @@ function Unit(level, x, y) {
         return General.Distance(this.X - other.X, this.Y - other.Y) < this.Radius + other.Radius;
     };
     this.move = function () {
-        if (this.Path == null || this.Path.length == 0) return;
+        if (this.Path == null || this.Path.length == 0) {
+            this.VelocityX = 0;
+            this.VelocityY = 0;
+            return;
+        }
         var moveTarget = this.Path[0];
         var moveAmount = General.normalize(this.X, this.Y, moveTarget.X, moveTarget.Y);
         moveAmount.X *= this.MoveSpeed;
         moveAmount.Y *= this.MoveSpeed;
 
-        this.VelocityX = Math.abs(moveAmount.X);
-        this.VelocityY = Math.abs(moveAmount.Y);
+        this.VelocityX = moveAmount.X;
+        this.VelocityY = moveAmount.Y;
 
         if (Math.abs(this.X - moveTarget.X) > Math.abs(moveAmount.X))
             this.X += moveAmount.X;

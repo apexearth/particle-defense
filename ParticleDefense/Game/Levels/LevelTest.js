@@ -1,5 +1,5 @@
 ﻿/// <reference path="/Game/Level.js" />
-/// <reference path="/Game/Buildings/Turret_Mini.js" />
+/// <reference path="/Game/Buildings/Turret_Gun.js" />
 Level.LevelTest = function () {
     var level = new Level(11, 11);
 
@@ -9,7 +9,7 @@ Level.LevelTest = function () {
     player.Resources.Energy = 50;
     player.Resources.Metal = 25;
     level.AddBuilding(new HomeBase(level, player, 5, 5));
-    var turret = level.AddBuilding(new Turret_Mini(level, level.Player, 4, 5));
+    var turret = level.AddBuilding(new Turret_Gun(level, level.Player, 4, 5));
     
     level.WaveDelay = 0;
     level.createWave(Unit.Array(function () { return new Unit(level, turret.X - 50, turret.Y); }, 5), 30);

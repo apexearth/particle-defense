@@ -1,9 +1,9 @@
-﻿/// <reference path="~/js/jasmine.js" />
-/// <reference path="~/Game/Level.js"/>
+﻿/// <reference path="~/Game/Level.js"/>
 /// <reference path="~/Game/Levels/LevelTest.js"/>
 /// <reference path="~/util/Keyboard.js"/>
+/// <reference path="~/js/jasmine.js" />
 describe('Level Tests', function () {
-    it('should have settings', function() {
+    it('should have settings', function () {
         expect(Level.Settings).toBeDefined();
     });
     it('should have win conditions and the conditions should be checkable', function () {
@@ -51,7 +51,7 @@ describe('Level Tests', function () {
         var i = 10;
         while (i--) level.update();
         expect(homeBase.Health).toBe(1);
-        i = 16;
+        i = 30;
         while (i--) level.update();
         expect(homeBase.Health).toBe(0);
     });

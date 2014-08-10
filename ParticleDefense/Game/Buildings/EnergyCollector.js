@@ -5,6 +5,9 @@
 function EnergyCollector(level, player, blockX, blockY) {
     Building.call(this, level, player, blockX, blockY);
     this.Health = 15;
+    this.ResourceStorage.Energy = 100;
+    Building.prototype.addStorageToPlayer.call(this);
+
     this.update = function () {
         Building.prototype.update.call(this);
         this.Player.Resources.Energy += .05;

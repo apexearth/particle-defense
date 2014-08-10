@@ -1,6 +1,6 @@
 ﻿/// <reference path="~/js/jasmine.js" />
 /// <reference path="~/Game/Unit.js"/>
-/// <reference path="~/Game/Buildings/Turret_Mini.js"/>
+/// <reference path="~/Game/Buildings/Turret_Gun.js"/>
 /// <reference path="~/Game/Level.js"/>
 /// <reference path="~/Game/Levels/LevelTest.js"/>
 /// <reference path="~/Game/Projectile.js"/>
@@ -9,7 +9,7 @@
 describe('Projectile Tests', function () {
     it('should move', function () {
         var level = Level.LevelTest();
-        var projectile = new Projectile(level,
+        var projectile = new Bullet(level,
             0,
             0,
             General.AngleRad(0, 0, 50, 50),
@@ -26,7 +26,7 @@ describe('Projectile Tests', function () {
         var unit = new Unit(level, level.Player.HomeBase.X - 50, level.Player.HomeBase.Y);
         level.Units.push(unit);
 
-        var projectile = new Projectile(level,
+        var projectile = new Bullet(level,
             unit.X + 20,
             unit.Y,
             General.AngleRad(unit.X + 20, unit.Y, unit.X, unit.Y),
@@ -41,7 +41,7 @@ describe('Projectile Tests', function () {
 
     it('should die when outside of level', function () {
         var level = new Level(10, 10);
-        var projectile = new Projectile(level,
+        var projectile = new Bullet(level,
             25,
             25,
             180,
@@ -53,7 +53,7 @@ describe('Projectile Tests', function () {
         level.update();
         expect(level.Projectiles.length).toBe(1);
 
-        var i = 6;
+        var i = 20;
         while (i--) level.update();
         expect(level.Projectiles.length).toBe(0);
     });

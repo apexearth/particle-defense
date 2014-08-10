@@ -5,6 +5,9 @@
 function MetalFab(level, player, blockX, blockY) {
     Building.call(this, level, player, blockX, blockY);
     this.Health = 15;
+    this.ResourceStorage.Metal = 50;
+    Building.prototype.addStorageToPlayer.call(this);
+
     this.update = function () {
         Building.prototype.update.call(this);
         this.Player.Resources.Metal += .025;

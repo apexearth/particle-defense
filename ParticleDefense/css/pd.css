@@ -31,13 +31,39 @@
     z-index: -1;
 }
 
+.left-border10 {
+    border-left: solid 10px rgba(150,120,100,.15);
+}
+
+.left-border20 {
+    border-left: solid 20px rgba(150,120,100,.15);
+}
+
+.right-border10 {
+    border-right: solid 10px rgba(150,120,100,.15);
+}
+
+.right-border20 {
+    border-right: solid 20px rgba(150,120,100,.15);
+}
+
+.left {
+    text-align: left;
+}
+
+.right {
+    text-align: right;
+}
+
+.smaller {
+    font-size: smaller;
+}
 
 .list {
     margin: 0;
     padding-left: 0;
     list-style: none;
     list-style-type: none;
-    border-right: solid 8px rgba(150,120,100,.15);
 }
 
     .list li {
@@ -55,7 +81,6 @@
 
     .list .button {
         cursor: pointer;
-        text-align: right;
     }
 
         .list .button:hover {
