@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Created by Christopher Jacobs - http://apexearth.info -->
+    <title>Particle Defense</title>
+    <meta name="description" content="Particle defense real time strategy game." />
+
+    <link href='http://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/pd.css" />
+
+    <script type="text/javascript" src="lib/require.js" data-main="bootstrap"></script>
+    <script type="text/javascript" src="requireConfig.js"></script>
+
+</head>
+<body ng-controller="IndexController" oncontextmenu="return false;">
+
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div ng-include="ParticleDefense.View"></div>
+
+</body>
+</html>
