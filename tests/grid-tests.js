@@ -10,12 +10,11 @@
             return Grid;
         });
     });
-    it('should be the master who controls the passage of time', function () {
+    it('should be able to deliver blocks', function () {
         var grid = new Grid(0, 0, 10, 10);
         var block = grid.getBlock(1, 1);
         expect(block.X).toBe(1);
         expect(block.Y).toBe(1);
-        alert("test");
     });
     it('should throw if you attempt to get a block out of the range of blocks', function () {
         var grid = new Grid(0, 0, 10, 10);
