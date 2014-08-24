@@ -1,4 +1,4 @@
-﻿define("game/Unit", ["util/General","game/Settings"], function (General, Settings) {
+﻿define("game/Unit", ["util/General", "game/Settings"], function (General, Settings) {
     function Unit(level, x, y) {
         this.X = (x == null ? 0 : x);
         this.Y = (y == null ? 0 : y);
@@ -15,7 +15,7 @@
         this.UpdateBlockLocation = function () {
             this.BlockX = Math.floor(this.X / Settings.BlockSize);
             this.BlockY = Math.floor(this.Y / Settings.BlockSize);
-        }
+        };
         this.UpdateBlockLocation();
 
         this.hitTest = function (other) {
@@ -54,6 +54,8 @@
             if (this.Health <= 0) this.die();
         };
         this.update = function () {
+            if (this.Score === 0) this.calculateScore();
+
             this.move();
             this.UpdateBlockLocation();
 
@@ -71,7 +73,7 @@
             var i = this.Level.Units.indexOf(this);
             if (i !== -1) this.Level.Units.splice(i, 1);
             this.Level.Player.Score += this.Score;
-        }
+        };
         this.draw = function (context) {
             context.strokeStyle = '#fff';
             context.lineWidth = 2;
@@ -87,16 +89,10 @@
         this.findPath = function () {
             this.Path = this.Level.getPath(this);
         };
-        this.calculateScore();
+        this.calculateScore = function () {
+            this.Score = this.Health * this.MoveSpeed;
+        };
     }
 
-    Unit.prototype.calculateScore = function () {
-        this.Score = this.Health * this.MoveSpeed;
-    };
-    Unit.Array = function (unitFunction, count) {
-        var array = [];
-        while (count--) array.push(unitFunction());
-        return array;
-    };
     return Unit;
 });

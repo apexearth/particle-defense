@@ -1,17 +1,25 @@
 define("game/Buildings", [
+    "game/Buildings/Wall",
     "game/Buildings/AmmoFab",
     "game/Buildings/EnergyCollector",
     "game/Buildings/HomeBase",
     "game/Buildings/MetalFab",
-    "game/Buildings/Turret_Gun"
-], function (AmmoFab, EnergyCollector, HomeBase, MetalFab, Turret_Gun) {
+    "game/Buildings/Gun",
+    "game/Buildings/Autogun",
+    "game/Buildings/Shotgun",
+    "game/Buildings/Cannon"
+], function (Wall, AmmoFab, EnergyCollector, HomeBase, MetalFab, Gun, Autogun, Shotgun, Cannon) {
 
-    return {
-        AmmoFab: AmmoFab,
-        EnergyCollector: EnergyCollector,
-        HomeBase: HomeBase,
-        MetalFab: MetalFab,
-        Turret_Gun: Turret_Gun
-    };
+    var list = {};
+    list.Wall = Wall;
+    list.AmmoFab = AmmoFab;
+    list.EnergyCollector = EnergyCollector;
+    list.HomeBase = HomeBase;
+    list.MetalFab = MetalFab;
+    list.Gun = Gun;
+    list.Autogun = Autogun;
+    list.Shotgun = Shotgun;
+    list.Cannon = Cannon;
+    return list;
 
 });

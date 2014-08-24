@@ -33,17 +33,21 @@
 
     return {
         Projectile: Projectile,
-        Bullet: function (level, x, y, direction, speed, damage) {
+        Bullet: function (level, x, y, direction, speed, damage, size) {
             Projectile.call(this, level, x, y, damage);
             this.Direction = direction;
             this.Speed = speed;
-
+            this.Radius = size / 2;
             this.inheritedUpdate = this.update;
             this.update = function () {
                 this.inheritedUpdate();
                 this.X += Math.cos(this.Direction) * this.Speed;
                 this.Y += Math.sin(this.Direction) * this.Speed;
             }
+            this.draw = function (context) {
+                context.fillStyle = '#aaa';
+                context.fillRect(this.X - this.Radius, this.Y - this.Radius, this.Radius * 2, this.Radius * 2);
+            };
         }
     };
 });

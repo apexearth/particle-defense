@@ -1,14 +1,14 @@
 ﻿describe('Building Tests', function () {
     var Levels, Buildings, Unit, PlayerCommands;
-    var Turret_Gun;
+    var Gun;
     beforeEach(function () {
         runs(function () {
-            require(["game/Levels", "../src/game/Buildings", "game/Unit", "game/PlayerCommands"], function (levels, buildings, unit, playerCommands) {
+            require(["game/Levels", "game/Buildings", "game/Unit", "game/PlayerCommands"], function (levels, buildings, unit, playerCommands) {
                 Levels = levels;
                 Buildings = buildings;
                 Unit = unit;
                 PlayerCommands = playerCommands;
-                Turret_Gun = Buildings.Turret_Gun;
+                Gun = Buildings.Gun;
             });
         });
         waitsFor(function () {
@@ -30,7 +30,7 @@
         level.Player.Resources.Ammo = 10;
         var unit = new Unit(level, level.Width / 2, level.Height / 2);
         level.Units.push(unit);
-        var turret = new Turret_Gun(level, level.Player, unit.BlockX, unit.BlockY + 2);
+        var turret = new Gun(level, level.Player, unit.BlockX, unit.BlockY + 2);
         turret.Weapon.Range = 1000;
 
         level.Buildings.push(turret);
@@ -52,7 +52,7 @@
         var unit = new Unit(level, level.Player.HomeBase.X - 50, level.Player.HomeBase.Y - 50);
         unit.setDestination(level.Player.HomeBase);
         level.Units.push(unit);
-        var turret = new Turret_Gun(level, level.Player, 5, 9);
+        var turret = new Gun(level, level.Player, 5, 9);
         turret.Weapon.Range = 10;
         level.Buildings.push(turret);
 
@@ -72,9 +72,9 @@
 
     it('can be sold', function () {
         var level = Levels.LevelEmpty();
-        level.Player.Resources.Energy = Turret_Gun.Cost.Energy;
-        level.Player.Resources.Metal = Turret_Gun.Cost.Metal;
-        var building = PlayerCommands.CreateBuilding(level.Player, Turret_Gun, 1, 1);
+        level.Player.Resources.Energy = Gun.Cost.Energy;
+        level.Player.Resources.Metal = Gun.Cost.Metal;
+        var building = PlayerCommands.CreateBuilding(level.Player, Gun, 1, 1);
         PlayerCommands.SellBuilding(building);
         expect(level.Player.Resources.Metal).toBeGreaterThan(0);
     });
