@@ -1,6 +1,4 @@
-define("game/Units", [
-    "game/Unit"
-], function (Unit) {
+define("game/Units", [], function () {
 
     var list = {};
 
@@ -10,12 +8,10 @@ define("game/Units", [
         return array;
     };
 
-    list.UnitCircle = function (level, x, y) {
-        Unit.call(this, level, x, y);
-        this.StrokeColor = '#fff';
-        this.FillColor = '#fff';
-
-        this.draw = function (context) {
+    list.UnitCircle = {
+        StrokeColor: '#fff',
+        FillColor: '#fff',
+        draw: function (context) {
             context.strokeStyle = this.StrokeColor;
             context.fillStyle = this.FillColor;
             context.lineWidth = 2;
@@ -24,9 +20,8 @@ define("game/Units", [
             context.closePath();
             context.stroke();
             context.fill();
-        };
+        }
     };
-
 
     return list;
 

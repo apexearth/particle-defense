@@ -1,4 +1,35 @@
-﻿define("game/Levels", ["game/Level", "game/Settings", "game/Player", "game/Buildings", "game/Units"], function (Level, Settings, Player, Buildings, Units) {
+﻿define("game/Levels", ["game/Level", "game/Settings", "game/Player", "game/Buildings", "game/Units", "game/Unit"], function (Level, Settings, Player, Buildings, Units, Unit) {
+
+    function CreateLevel(json) {
+        var level = new Level(json.Width, json.Height);
+        var player = new Player(level);
+        level.AddPlayer(player);
+        level.Player = player;
+
+        for (var _b in json.Buildings) {
+            var b = json.Buildings[_b];
+            var building = new Buildings[b.constructor](level, player, 0, 0);
+            building.initialize(b.Template);
+            level.AddBuilding(building);
+        }
+        delete json.Buildings;
+        for (var _w in json.Waves) {
+            var w = json.Waves[_w];
+            var wave = Units.Array(function () {
+                var unit = new Unit(level);
+                unit.loadTemplate(Units[w.TemplateName]);
+                unit.loadTemplate(w.Customization);
+                unit.initialize();
+                return unit;
+            }, w.Count);
+            level.createWave(wave, w.SpawnInterval);
+        }
+        delete json.Waves;
+        level.initialize(json);
+
+        return level;
+    }
+
     var LevelEmpty = function () {
         var level = new Level(11, 11);
 
@@ -12,93 +43,40 @@
     LevelEmpty.Name = "Level Empty";
 
     var LevelTest = function () {
-        var level = new Level(11, 11);
-
-        var player = new Player(level);
-        level.AddPlayer(player);
-        level.Player = player;
-        player.Resources.Energy = 50;
-        player.Resources.Metal = 25;
-        level.AddBuilding(new Buildings.HomeBase(level, player, 5, 5));
-        var turret = level.AddBuilding(new Buildings.Gun(level, level.Player, 4, 5));
-
-        level.WaveDelay = 0;
-        level.createWave(Units.Array(function () {
-            var unit = new Units.UnitCircle(level, turret.X - 50, turret.Y);
-            unit.Radius = 3;
-            unit.Health = 10;
-            unit.MoveSpeed = 1;
-            return unit;
-        }, 5), 30);
-        level.createWave(Unit.Array(function () {
-            var unit = new Units.UnitCircle(level, turret.X - 50, turret.Y);
-            unit.Radius = 3;
-            unit.Health = 20;
-            unit.MoveSpeed = .5;
-            return unit;
-        }, 5), 30);
+        var level = CreateLevel({
+            Width: 11,
+            Height: 11,
+            Player: { Resources: {Ammo: 0, Energy: 200, Metal: 100 } },
+            WaveDelay: Settings.Second * 5,
+            Buildings: [
+                { constructor: "HomeBase", Template: { BlockX: 5, BlockY: 5 } },
+                { constructor: "Gun", Template: { BlockX: 4, BlockY: 5 } }
+            ],
+            Waves: [
+                { TemplateName: "UnitCircle", Count: 10, SpawnInterval: Settings.Second, Customization: { X: 3 * Settings.BlockSize, Y: 5 * Settings.BlockSize, Health: 10, Radius: 3, MoveSpeed: 1 } },
+                { TemplateName: "UnitCircle", Count: 10, SpawnInterval: Settings.Second, Customization: { X: 3 * Settings.BlockSize, Y: 5 * Settings.BlockSize, Health: 12, Radius: 3, MoveSpeed: 1 } }
+            ]
+        });
 
         return level;
     };
     LevelTest.Name = "Level Test";
 
     var LevelOne = function () {
-        var level = new Level(21, 21);
-
-        var player = new Player(level);
-        level.AddPlayer(player);
-        level.Player = player;
-        player.Resources.Energy = 100;
-        player.Resources.Metal = 50;
-        level.AddBuilding(new Buildings.HomeBase(level, player, 10, 10));
-
-        level.WaveDelay = Settings.Second * 2;
-        level.createWave(Units.Array(function () {
-            var unit = new Units.UnitCircle(level, level.Width / 2, 0);
-            unit.Radius = 3;
-            unit.Health = 10;
-            unit.MoveSpeed = 1;
-            return unit;
-        }, 10), Settings.Second * 2);
-        level.createWave(Units.Array(function () {
-            var unit = new Units.UnitCircle(level, level.Width / 2, 0);
-            unit.Radius = 6;
-            unit.Health = 30;
-            unit.MoveSpeed = .5;
-            unit.FillColor = '#afa';
-            return unit;
-        }, 20), Settings.Second * 2);
-        level.createWave(Units.Array(function () {
-            var unit = new Units.UnitCircle(level, level.Width / 2, 0);
-            unit.Radius = 4;
-            unit.Health = 15;
-            unit.MoveSpeed = 1;
-            unit.FillColor = '#aff';
-            return unit;
-        }, 40), Settings.Second);
-        level.createWave(Units.Array(function () {
-            var unit = new Units.UnitCircle(level, level.Width / 2, 0);
-            unit.Radius = 3;
-            unit.Health = 10;
-            unit.MoveSpeed = 1;
-            return unit;
-        }, 80), Settings.Second * .25);
-        level.createWave(Units.Array(function () {
-            var unit = new Units.UnitCircle(level, Math.random() * level.Width, 0);
-            unit.Radius = 3;
-            unit.Health = 12;
-            unit.MoveSpeed = 1;
-            unit.FillColor = '#faa';
-            return unit;
-        }, 80), Settings.Second * .25);
-        level.createWave(Units.Array(function () {
-            var unit = new Units.UnitCircle(level, Math.random() * level.Width, 0);
-            unit.Radius = 3 + Math.ceil(Math.random() * 3);
-            unit.Health = unit.Radius * 5;
-            unit.MoveSpeed = unit.Radius / 10;
-            unit.FillColor = '#ffa';
-            return unit;
-        }, 160), Settings.Second * .35);
+        var level = CreateLevel({
+            Width: 21,
+            Height: 21,
+            Player: { Resources: {Ammo: 0, Energy: 200, Metal: 100 } },
+            WaveDelay: Settings.Second * 5,
+            Buildings: [
+                { constructor: "HomeBase", Template: { BlockX: 10, BlockY: 10 } }
+            ],
+            Waves: [
+                { TemplateName: "UnitCircle", Count: 10, SpawnInterval: Settings.Second, Customization: { X: 10 * Settings.BlockSize, Y: 0, Health: 10, Radius: 3, MoveSpeed: 1 } },
+                { TemplateName: "UnitCircle", Count: 20, SpawnInterval: Settings.Second * 2, Customization: { X: 10 * Settings.BlockSize, Y: 0, Health: 50, Radius: 7, MoveSpeed: .5, FillColor: '#afa' } },
+                { TemplateName: "UnitCircle", Count: 40, SpawnInterval: Settings.Second * .75, Customization: { X: 10 * Settings.BlockSize, Y: 0, Health: 20, Radius: 4, MoveSpeed: 1.5, FillColor: '#afa' } }
+            ]
+        });
 
         return level;
     };

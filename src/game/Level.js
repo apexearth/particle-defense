@@ -1,4 +1,4 @@
-﻿define("game/Level", ["game/Map", "game/PlayerCommands", "util/Mouse", "util/Keyboard", "game/CommandQueue", "game/Settings"], function (Map, PlayerCommands, Mouse, Keyboard, CommandQueue, Settings) {
+﻿define("game/Level", ["game/Map", "game/PlayerCommands", "util/General", "util/Mouse", "util/Keyboard", "game/CommandQueue", "game/Settings"], function (Map, PlayerCommands, General, Mouse, Keyboard, CommandQueue, Settings) {
     var Level = function (width, height) {
         var me = this;
         this.Map = new Map(width, height);
@@ -75,6 +75,9 @@
         this.Deselect = function () {
             this.Selection = null;
         }
+        this.initialize = function (template) {
+            General.CopyTo(template,this);
+        };
     };
 
     Level.Settings = {

@@ -1,25 +1,40 @@
-define("game/Weapons", ["game/Projectiles", "util/General"], function (Projectiles, General) {
+define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], function (Projectiles, General, Settings) {
     function Weapon(building) {
         this.Building = building;
         this.Range = 200;
-        this.Damage = 4;
-        this.ProjectileSpeed = 3;
         this.AmmoConsumption = 1;
         this.FireRate = 10;
         this.FireRateCount = 10;
+        this.ShotsPerShot = 1;
+        this.ShotSpread = .05;
+        this.Projectile = Projectiles.Bullet;
+
+        this.ProjectileCustomization = {};
+
         this.ResetTarget = function () {
             this.Target = null;
-        }
+        };
         this.ResetTarget();
         this.CreateProjectile = function () {
-            return new Projectiles.Bullet(
+            var angle = (this.Projectile === Projectiles.Bullet
+                ? this.leadTargetAngle()
+                : General.AngleRad(this.Building.X, this.Building.Y, this.Target.X, this.Target.Y));
+            var projectile = new this.Projectile(
                 this.Building.Level,
                 this.Building.X,
                 this.Building.Y,
-                this.firingAngle.call(this),
-                this.ProjectileSpeed,
-                this.Damage
+                angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2))
             );
+            this.ProjectileCustomization(projectile);
+            return projectile;
+        };
+        this.fire = function () {
+            this.Building.Player.Resources.Ammo -= this.AmmoConsumption;
+            var shots = this.ShotsPerShot;
+            while (shots--) {
+                var projectile = this.CreateProjectile();
+                this.Building.Level.Projectiles.push(projectile);
+            }
         };
         this.update = function () {
             if (this.Target != null && this.Target.Health <= 0) {
@@ -43,12 +58,7 @@ define("game/Weapons", ["game/Projectiles", "util/General"], function (Projectil
                 this.FireRateCount = 0;
             }
         };
-        this.fire = function () {
-            var projectile = this.CreateProjectile();
-            this.Building.Player.Resources.Ammo -= this.AmmoConsumption;
-            this.Building.Level.Projectiles.push(projectile);
-        }
-        this.firingAngle = function () {
+        this.leadTargetAngle = function () {
             var velocityX = this.Target.VelocityX;
             var velocityY = this.Target.VelocityY;
             var a = Math.pow(velocityX, 2) + Math.pow(velocityY, 2) - Math.pow(this.ProjectileSpeed, 2);
@@ -68,89 +78,76 @@ define("game/Weapons", ["game/Projectiles", "util/General"], function (Projectil
     return {
         Gun: function (building) {
             Weapon.call(this, building);
+            this.Projectile = Projectiles.Bullet;
             this.Range = 100;
-            this.Damage = 5;
-            this.AmmoConsumption = this.Damage / 5;
-            this.Radius = this.Damage / 2;
+            this.AmmoConsumption = 2.5;
             this.FireRate = this.FireRateCount = 10;
-            this.CreateProjectile = function () {
-                return new Projectiles.Bullet(
-                    this.Building.Level,
-                    this.Building.X,
-                    this.Building.Y,
-                    this.firingAngle.call(this),
-                    this.ProjectileSpeed,
-                    this.Damage,
-                    this.Radius
-                );
-            };
+            this.ProjectileSpeed = 3;
+            this.ShotSpeedVariance = .2;
+            this.ProjectileCustomization = function(projectile){
+                projectile.Speed = this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2));
+                projectile.Damage = 5;
+                projectile.Width = 2.5;
+            }
         },
         Autogun: function (building) {
             Weapon.call(this, building);
+            this.Projectile = Projectiles.Bullet;
             this.Range = 100;
-            this.Damage = 3;
-            this.AmmoConsumption = this.Damage / 5;
-            this.Radius = this.Damage / 2;
+            this.AmmoConsumption = 1.5;
             this.FireRate = this.FireRateCount = 5;
-            this.CreateProjectile = function () {
-                return new Projectiles.Bullet(
-                    this.Building.Level,
-                    this.Building.X,
-                    this.Building.Y,
-                    this.firingAngle.call(this),
-                    this.ProjectileSpeed,
-                    this.Damage,
-                    this.Radius
-                );
-            };
+            this.ProjectileSpeed = 4;
+            this.ShotSpeedVariance = .2;
+            this.ProjectileCustomization = function(projectile){
+                projectile.Speed = 4 * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2));
+                projectile.Damage = 3;
+                projectile.Width = 1.5;
+            }
         },
         Cannon: function (building) {
             Weapon.call(this, building);
+            this.Projectile = Projectiles.Bullet;
             this.Range = 100;
-            this.Damage = 10;
-            this.AmmoConsumption = this.Damage / 5;
-            this.Radius = this.Damage / 2;
+            this.AmmoConsumption = 2;
             this.FireRate = this.FireRateCount = 30;
-            this.CreateProjectile = function () {
-                return new Projectiles.Bullet(
-                    this.Building.Level,
-                    this.Building.X,
-                    this.Building.Y,
-                    this.firingAngle.call(this),
-                    this.ProjectileSpeed,
-                    this.Damage,
-                    this.Radius
-                );
-            };
+            this.ProjectileSpeed = 2.3;
+            this.ShotSpeedVariance = .2;
+            this.ProjectileCustomization = function(projectile){
+                projectile.Speed = 2.3 * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2));
+                projectile.Damage = 10;
+                projectile.Width = 5;
+            }
         },
         Shotgun: function (building) {
             Weapon.call(this, building);
+            this.Projectile = Projectiles.Bullet;
             this.Range = 100;
             this.Damage = 5;
-            this.Shots = 5;
-            this.AmmoConsumption = this.Damage / 5 * this.Shots;
+            this.ShotsPerShot = 5;
+            this.ShotSpeedVariance = .05;
+            this.AmmoConsumption = 12.5;
             this.Radius = this.Damage / 2;
             this.FireRate = this.FireRateCount = 60;
-            this.CreateProjectile = function () {
-                var firingAngle = this.firingAngle.call(this) * (Math.random() * .1 + .95);
-                return new Projectiles.Bullet(
-                    this.Building.Level,
-                    this.Building.X,
-                    this.Building.Y,
-                    firingAngle,
-                    this.ProjectileSpeed * (Math.random() * .1 + .95),
-                    this.Damage,
-                    this.Radius
-                );
-            };
-            this.fire = function () {
-                this.Building.Player.Resources.Ammo -= this.AmmoConsumption;
-                var shots = this.Shots;
-                while (shots--) {
-                    var projectile = this.CreateProjectile();
-                    this.Building.Level.Projectiles.push(projectile);
-                }
-            };
+            this.ProjectileSpeed = 2.3;
+            this.ShotSpeedVariance = .2;
+            this.ProjectileCustomization = function(projectile){
+                projectile.Speed = this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2));
+                projectile.Damage = this.Damage;
+                projectile.Radius = this.Radius;
+            }
+        },
+        Laser: function (building) {
+            Weapon.call(this, building);
+            this.Projectile = Projectiles.Laser;
+            this.Lifespan = Settings.Second;
+            this.Range = 100;
+            this.ShotsPerShot = 1;
+            this.AmmoConsumption = 5;
+            this.FireRate = this.FireRateCount = Settings.Second * 2;
+            this.ProjectileCustomization = function(projectile){
+                projectile.Radius = 2;
+                projectile.Damage = .4;
+            }
         }
     };
 });

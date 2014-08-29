@@ -21,6 +21,12 @@
         this.hitTest = function (other) {
             return General.Distance(this.X - other.X, this.Y - other.Y) < this.Radius + other.Radius;
         };
+        this.hitTestLine = function (start, finish) {
+            var area2 = Math.abs((finish.X - start.X) * (this.Y - start.Y) - (this.X - start.X) * (finish.Y - start.Y));
+            var lab = Math.sqrt(Math.pow(finish.X-start.X,2) + Math.pow(finish.Y - start.Y,2));
+            var h = area2 / lab;
+            return h < this.Radius;
+        };
         this.move = function () {
             if (this.Path == null || this.Path.length == 0) {
                 this.VelocityX = 0;
@@ -67,7 +73,6 @@
                 this.Health = 0;
                 this.Level.Units.splice(this.Level.Units.indexOf(this), 1);
             }
-
         };
         this.die = function () {
             var i = this.Level.Units.indexOf(this);
@@ -92,6 +97,14 @@
         this.calculateScore = function () {
             this.Score = this.Health * this.MoveSpeed;
         };
+        this.loadTemplate = function(template){
+            General.CopyTo(template, this);
+        };
+        this.initialize = function () {
+            this.UpdateBlockLocation();
+            this.calculateScore();
+        };
+        this.initialize();
     }
 
     return Unit;
