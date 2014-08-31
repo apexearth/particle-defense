@@ -21,11 +21,14 @@
         this.hitTest = function (other) {
             return General.Distance(this.X - other.X, this.Y - other.Y) < this.Radius + other.Radius;
         };
-        this.hitTestLine = function (start, finish) {
+        this.hitTestLine = function (start, finish, width) {
+            if (width === undefined) width = 1;
             var area2 = Math.abs((finish.X - start.X) * (this.Y - start.Y) - (this.X - start.X) * (finish.Y - start.Y));
-            var lab = Math.sqrt(Math.pow(finish.X-start.X,2) + Math.pow(finish.Y - start.Y,2));
+            var lab = Math.sqrt(Math.pow(finish.X - start.X, 2) + Math.pow(finish.Y - start.Y, 2));
             var h = area2 / lab;
-            return h < this.Radius;
+            return h < this.Radius
+                && this.X >= Math.min(start.X, finish.X) - this.Radius - width && this.X <= Math.max(start.X, finish.X) + this.Radius + width
+                && this.Y >= Math.min(start.Y, finish.Y) - this.Radius - width && this.Y <= Math.max(start.Y, finish.Y) + this.Radius + width;
         };
         this.move = function () {
             if (this.Path == null || this.Path.length == 0) {
@@ -97,7 +100,7 @@
         this.calculateScore = function () {
             this.Score = this.Health * this.MoveSpeed;
         };
-        this.loadTemplate = function(template){
+        this.loadTemplate = function (template) {
             General.CopyTo(template, this);
         };
         this.initialize = function () {

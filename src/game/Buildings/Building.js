@@ -47,8 +47,8 @@
         }
 
         var i = this.Updates.length;
-        while (i--) this.Updates[i]();
-        var i = this.Weapons.length;
+        while (i--) this.Updates[i].call(this);
+        i = this.Weapons.length;
         while (i--) this.Weapons[i].update();
     };
     Building.prototype.addStorageToPlayer = function () {
@@ -65,5 +65,6 @@
             }
         }
     };
+
     return Building;
 });

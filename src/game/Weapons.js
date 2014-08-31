@@ -146,7 +146,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
             this.FireRate = this.FireRateCount = Settings.Second * 2;
             this.ProjectileCustomization = function(projectile){
                 projectile.Radius = 2;
-                projectile.Damage = .4;
+                projectile.Damage = 11.4;
             }
         }
     };
