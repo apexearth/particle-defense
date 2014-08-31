@@ -65,7 +65,7 @@
     });
     it('should have a helper function to deliver an array of units', function () {
         var units = Unit.Array(function () {
-            return new Unit(Levels.LevelTest(), 10, 10);
+            return new Unit(Levels.LevelTest(), {X: 10, Y: 10});
         }, 10);
         expect(units.length).toBe(10);
         expect(units[0].constructor).toBe(Unit);

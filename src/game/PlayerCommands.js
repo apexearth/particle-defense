@@ -4,7 +4,7 @@
             if (player.Level.Map.Grid.getBlock(blockX, blockY).IsBlocked) return null;
             if (player.Resources.Metal >= buildingConstructor.Cost.Metal
                 && player.Resources.Energy >= buildingConstructor.Cost.Energy) {
-                var building = new buildingConstructor(player.Level, player, blockX, blockY);
+                var building = new buildingConstructor(player.Level, player, {BlockX: blockX, BlockY: blockY});
                 player.Resources.Metal -= buildingConstructor.Cost.Metal;
                 player.Resources.Energy -= buildingConstructor.Cost.Energy;
                 player.Buildings.push(building);

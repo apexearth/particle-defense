@@ -38,7 +38,7 @@
 
     it('should die on impact, by default', function () {
         var level = Levels.LevelTest();
-        var unit = new Unit(level, level.Player.HomeBase.X - 50, level.Player.HomeBase.Y);
+        var unit = new Unit(level, {X:level.Player.HomeBase.X - 50, Y:level.Player.HomeBase.Y});
         level.Units.push(unit);
 
         var projectile = new Projectiles.Bullet(level,

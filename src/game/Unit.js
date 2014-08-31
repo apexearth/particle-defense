@@ -1,7 +1,7 @@
 ﻿define("game/Unit", ["util/General", "game/Settings"], function (General, Settings) {
-    function Unit(level, x, y) {
-        this.X = (x == null ? 0 : x);
-        this.Y = (y == null ? 0 : y);
+    function Unit(level, templates) {
+        this.X = 0;
+        this.Y = 0;
         this.VelocityX = 0;
         this.VelocityY = 0;
         this.Radius = 3;
@@ -103,10 +103,22 @@
         this.loadTemplate = function (template) {
             General.CopyTo(template, this);
         };
+        this.loadTemplates = function () {
+            if (templates === undefined)return;
+            if (templates instanceof Array)
+                for (var template in templates) {
+                    if (templates.hasOwnProperty(template))
+                        this.loadTemplate(templates[template]);
+                }
+            else
+                this.loadTemplate(templates);
+        }
         this.initialize = function () {
             this.UpdateBlockLocation();
             this.calculateScore();
         };
+
+        this.loadTemplates();
         this.initialize();
     }
 

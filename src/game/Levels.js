@@ -8,23 +8,25 @@
 
         for (var _b in json.Buildings) {
             var b = json.Buildings[_b];
-            var building = new Buildings[b.constructor](level, player, 0, 0);
-            building.initialize(b.Template);
+            var building = new Buildings[b.constructor](level, player, b.Template);
             level.AddBuilding(building);
         }
         delete json.Buildings;
+
         for (var _w in json.Waves) {
             var w = json.Waves[_w];
             var wave = Units.Array(function () {
                 var unit = new Unit(level);
-                unit.loadTemplate(Units[w.TemplateName]);
-                unit.loadTemplate(w.Customization);
+                if(w.TemplateName!==undefined) unit.loadTemplate(Units[w.TemplateName]);
+                if(w.Template!==undefined) unit.loadTemplate(w.Template);
+                if(w.Customization!==undefined) unit.loadTemplate(w.Customization);
                 unit.initialize();
                 return unit;
             }, w.Count);
             level.createWave(wave, w.SpawnInterval);
         }
         delete json.Waves;
+
         level.initialize(json);
 
         return level;
