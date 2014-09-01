@@ -113,8 +113,8 @@ define("game/Buildings", [
         constructor: {
             canvas: CreateCanvas('#fff', '#2a2', 5),
             Cost: {
-                Energy: 50,
-                Metal: 25
+                Energy: 200,
+                Metal: 50
             }
         },
         template: {

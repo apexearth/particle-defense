@@ -4,7 +4,7 @@
         this.X = x;
         this.Y = y;
         this.Damage = 1;
-        this.Radius = 1;
+        this.Width = 1;
         this.Lifespan = Settings.Second * 60;
         this.LifespanCount = 0;
         this.die = function () {
@@ -70,7 +70,8 @@
                 context.save();
                 context.globalAlpha = Math.max(1, this.FadeTime - this.FadeTimeCount) / this.FadeTime;
                 context.strokeStyle = '#77f';
-                context.lineWidth = this.Radius * 2;
+                context.lineWidth = this.Width;
+                context.lineCap = "square";
                 context.beginPath();
                 context.moveTo(this.X, this.Y);
                 context.lineTo(this.EndX, this.EndY);
@@ -100,13 +101,16 @@
                 return unit.hitTest(this);
             };
             this.draw = function (context) {
+                context.save();
                 context.strokeStyle = '#aaa';
-                context.lineWidth = this.Radius * 2;
+                context.lineWidth = this.Width;
+                context.lineCap = "square";
                 context.beginPath();
                 context.moveTo(this.X, this.Y);
                 context.lineTo(this.EndX, this.EndY);
                 context.stroke();
                 context.closePath();
+                context.restore();
             };
         }
     };

@@ -17,9 +17,9 @@
             var w = json.Waves[_w];
             var wave = Units.Array(function () {
                 var unit = new Unit(level);
-                if(w.TemplateName!==undefined) unit.loadTemplate(Units[w.TemplateName]);
-                if(w.Template!==undefined) unit.loadTemplate(w.Template);
-                if(w.Customization!==undefined) unit.loadTemplate(w.Customization);
+                if (w.TemplateName !== undefined) unit.loadTemplate(Units[w.TemplateName]);
+                if (w.Template !== undefined) unit.loadTemplate(w.Template);
+                if (w.Customization !== undefined) unit.loadTemplate(w.Customization);
                 unit.initialize();
                 return unit;
             }, w.Count);
@@ -75,8 +75,12 @@
             ],
             Waves: [
                 { TemplateName: "UnitCircle", Count: 10, SpawnInterval: Settings.Second, Customization: { X: 10 * Settings.BlockSize, Y: 0, Health: 10, Radius: 3, MoveSpeed: 1 } },
-                { TemplateName: "UnitCircle", Count: 20, SpawnInterval: Settings.Second * 2, Customization: { X: 10 * Settings.BlockSize, Y: 0, Health: 50, Radius: 7, MoveSpeed: .5, FillColor: '#afa' } },
-                { TemplateName: "UnitCircle", Count: 40, SpawnInterval: Settings.Second * .75, Customization: { X: 10 * Settings.BlockSize, Y: 0, Health: 20, Radius: 4, MoveSpeed: 1.5, FillColor: '#afa' } }
+                { TemplateName: "UnitCircle", Count: 20, SpawnInterval: Settings.Second * 2, Customization: { X: 10 * Settings.BlockSize, Y: 0, Health: 35, Radius: 6, MoveSpeed: .4, FillColor: '#afa' } },
+                { TemplateName: "UnitCircle", Count: 40, SpawnInterval: Settings.Second * .75, Customization: { X: 10 * Settings.BlockSize, Y: 0, Health: 20, Radius: 4, MoveSpeed: 1.15, FillColor: '#4f4' } },
+                { TemplateName: "UnitCircle", Count: 50, SpawnInterval: Settings.Second * .75, Customization: { X: 10 * Settings.BlockSize, Y: 0, Health: 35, Radius: 4, MoveSpeed: .8, FillColor: '#44f' } },
+                { TemplateName: "UnitCircle", Count: 60, SpawnInterval: Settings.Second * .75, Customization: { X: 10 * Settings.BlockSize, Y: 0, Health: 15, Radius: 4, MoveSpeed: 2, FillColor: '#f44' } },
+                { TemplateName: "UnitCircle", Count: 30, SpawnInterval: Settings.Second * .5, Customization: { X: 10 * Settings.BlockSize, Y: 0, Health: 100, Radius: 8, MoveSpeed: .65, FillColor: '#444' } },
+                { TemplateName: "UnitCircle", Count: 100, SpawnInterval: Settings.Second * .3, Customization: { X: 10 * Settings.BlockSize, Y: 0, Health: 10, Radius: 3, MoveSpeed: 1 } }
             ]
         });
 

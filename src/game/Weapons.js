@@ -23,7 +23,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                 this.Building.Level,
                 this.Building.X,
                 this.Building.Y,
-                angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2))
+                    angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2))
             );
             this.ProjectileCustomization(projectile);
             return projectile;
@@ -44,7 +44,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                 var i = this.Building.Level.Units.length;
                 while (i--) {
                     var unit = this.Building.Level.Units[i];
-                    if (General.Distance(unit.X - this.Building.X, unit.Y - this.Building.Y) < this.Range) {
+                    if (General.Distance(unit.X - this.Building.X, unit.Y - this.Building.Y) <= this.Range) {
                         this.Target = unit;
                     }
                 }
@@ -54,8 +54,12 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
             if (this.Target != null
                 && this.FireRateCount >= this.FireRate
                 && this.Building.Player.Resources.Ammo >= this.AmmoConsumption) {
-                this.fire();
-                this.FireRateCount = 0;
+                if (General.Distance(this.Target.X - this.Building.X, this.Target.Y - this.Building.Y) > this.Range) {
+                    this.ResetTarget();
+                } else {
+                    this.fire();
+                    this.FireRateCount = 0;
+                }
             }
         };
         this.leadTargetAngle = function () {
@@ -84,7 +88,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
             this.FireRate = this.FireRateCount = 10;
             this.ProjectileSpeed = 3;
             this.ShotSpeedVariance = .2;
-            this.ProjectileCustomization = function(projectile){
+            this.ProjectileCustomization = function (projectile) {
                 projectile.Speed = this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2));
                 projectile.Damage = 5;
                 projectile.Width = 2.5;
@@ -98,7 +102,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
             this.FireRate = this.FireRateCount = 5;
             this.ProjectileSpeed = 4;
             this.ShotSpeedVariance = .2;
-            this.ProjectileCustomization = function(projectile){
+            this.ProjectileCustomization = function (projectile) {
                 projectile.Speed = 4 * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2));
                 projectile.Damage = 3;
                 projectile.Width = 1.5;
@@ -112,7 +116,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
             this.FireRate = this.FireRateCount = 30;
             this.ProjectileSpeed = 2.3;
             this.ShotSpeedVariance = .2;
-            this.ProjectileCustomization = function(projectile){
+            this.ProjectileCustomization = function (projectile) {
                 projectile.Speed = 2.3 * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2));
                 projectile.Damage = 10;
                 projectile.Width = 5;
@@ -130,10 +134,10 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
             this.FireRate = this.FireRateCount = 60;
             this.ProjectileSpeed = 2.3;
             this.ShotSpeedVariance = .2;
-            this.ProjectileCustomization = function(projectile){
+            this.ProjectileCustomization = function (projectile) {
                 projectile.Speed = this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2));
                 projectile.Damage = this.Damage;
-                projectile.Radius = this.Radius;
+                projectile.Width = this.Radius;
             }
         },
         Laser: function (building) {
@@ -144,9 +148,9 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
             this.ShotsPerShot = 1;
             this.AmmoConsumption = 5;
             this.FireRate = this.FireRateCount = Settings.Second * 2;
-            this.ProjectileCustomization = function(projectile){
-                projectile.Radius = 2;
-                projectile.Damage = 11.4;
+            this.ProjectileCustomization = function (projectile) {
+                projectile.Width = 2;
+                projectile.Damage = .4;
             }
         }
     };

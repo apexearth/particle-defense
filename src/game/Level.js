@@ -63,6 +63,17 @@
         this.BeginBuildingPlacement = function (building) {
             this.PlacementBuilding = building;
         };
+        /** @returns bool **/
+        this.IsBlockBuildable = function (blockX, blockY) {
+            if(blockX instanceof Object) {
+                var block = blockX;
+                blockX = block.X;
+                blockY = block.Y;
+            }
+            if (blockX === 0 || blockY === 0) return false;
+            if (blockX === this.Width - 1 || blockY === this.Height - 1) return false;
+            return this.Map.Grid.getBlock(blockX, blockY).IsBlocked === false;
+        };
 
         this.Selection = null;
         this.SelectBuildingAt = function (blockX, blockY) {
@@ -76,7 +87,7 @@
             this.Selection = null;
         }
         this.initialize = function (template) {
-            General.CopyTo(template,this);
+            General.CopyTo(template, this);
         };
     };
 
@@ -183,9 +194,12 @@
         if (this.PlacementBuilding != null) {
             var block = this.GetBlockOrNull(Mouse.DisplayX, Mouse.DisplayY);
             if (block != null) {
+                this.context.save();
                 this.context.globalAlpha = .75;
                 this.context.drawImage(this.PlacementBuilding.canvas, block.X * Level.Settings.BlockSize, block.Y * Level.Settings.BlockSize);
-                this.context.globalAlpha = 1;
+                this.context.fillStyle = (this.IsBlockBuildable(block) ? 'rgba(0,255,0,.5)' : 'rgba(255,0,0,.5)');
+                this.context.fillRect(block.X * Level.Settings.BlockSize, block.Y * Level.Settings.BlockSize, Level.Settings.BlockSize, Level.Settings.BlockSize);
+                this.context.restore();
             }
         }
 
