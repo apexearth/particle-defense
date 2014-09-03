@@ -1,9 +1,9 @@
 ﻿define("game/PlayerCommands", function () {
-    var PlayerCommands = {
+    return {
         CreateBuilding: function (player, buildingConstructor, blockX, blockY) {
             if (player.Resources.Metal >= buildingConstructor.Cost.Metal
                 && player.Resources.Energy >= buildingConstructor.Cost.Energy
-                && player.Level.IsBlockBuildable(blockX, blockY) === true) {
+                && player.Level.IsBlockCoordBuildable(blockX, blockY) === true) {
                 var building = new buildingConstructor(player.Level, player, {BlockX: blockX, BlockY: blockY});
                 player.Resources.Metal -= buildingConstructor.Cost.Metal;
                 player.Resources.Energy -= buildingConstructor.Cost.Energy;
@@ -18,5 +18,4 @@
             building.Player.Level.Buildings.splice(building.Player.Level.Buildings.indexOf(building), 1);
         }
     };
-    return PlayerCommands;
 });

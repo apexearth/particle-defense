@@ -27,12 +27,10 @@
                 Y: this.BlockY * Settings.BlockSize
             };
             if (this.Block != null) {           // Reset Block if Reinitializing.
-                this.Block.IsBlocked = false;
-                this.Block.Building = null;
+                this.Block.RemoveBuilding();
             }
-            this.Block = this.Level.Map.Grid.getBlock(this.BlockX, this.BlockY);
-            this.Block.IsBlocked = true;
-            this.Block.Building = this;
+            this.Block = this.Level.getBlock(this.BlockX, this.BlockY);
+            this.Block.SetBuilding(this);
         }
         this.loadTemplate = function (template) {
             General.CopyTo(template, this);

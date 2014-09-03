@@ -5,7 +5,7 @@
         this.grid = new Grid(0, 0, 10 + Math.floor(Math.random() * 10), 10 + Math.floor(Math.random() * 10));
         var i = Math.floor(this.grid.MaxX * this.grid.MaxY * .25);
         while (i--)
-            this.grid.Block[Math.round(this.grid.MaxX * Math.random())][Math.round(this.grid.MaxY * Math.random())].IsBlocked = true;
+            this.grid.SetIsBlocked(Math.round(this.grid.MaxX * Math.random()), Math.round(this.grid.MaxY * Math.random()), true);
         this.start = Vector2.create(Math.floor(Math.random() * this.grid.MaxX), Math.floor(Math.random() * this.grid.MaxY));
         this.stop = Vector2.create(Math.floor(Math.random() * this.grid.MaxX), Math.floor(Math.random() * this.grid.MaxY));
         this.path = Pathfind.getPathByVector(this.grid, this.start, this.stop);
@@ -76,9 +76,9 @@
 
         Display.setFont(40, 'sans-serif');
         Display.setFill('rgb(255,255,255)');
-        if (PathfindExample.instance.grid.getBlock(PathfindExample.instance.start.X, PathfindExample.instance.start.Y).IsBlocked)
+        if (PathfindExample.instance.grid.IsBlocked(PathfindExample.instance.start.X, PathfindExample.instance.start.Y))
             Display.fillText("The start point is blocked.", 10, 50);
-        if (PathfindExample.instance.grid.getBlock(PathfindExample.instance.stop.X, PathfindExample.instance.stop.Y).IsBlocked)
+        if (PathfindExample.instance.grid.IsBlocked(PathfindExample.instance.stop.X, PathfindExample.instance.stop.Y))
             Display.fillText("The target is blocked.", 10, 100);
         Display.Settings.DisableTranslation = false;
     };

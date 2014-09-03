@@ -2,6 +2,9 @@
 
     function CreateLevel(json) {
         var level = new Level(json.Width, json.Height);
+        delete json.Width;
+        delete json.Height;
+
         var player = new Player(level);
         level.AddPlayer(player);
         level.Player = player;

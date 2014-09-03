@@ -17,7 +17,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
         this.ResetTarget();
         this.CreateProjectile = function () {
             var angle = (this.Projectile === Projectiles.Bullet
-                ? this.leadTargetAngle()
+                ? this.getTargetLeadingAngle()
                 : General.AngleRad(this.Building.X, this.Building.Y, this.Target.X, this.Target.Y));
             var projectile = new this.Projectile(
                 this.Building.Level,
@@ -28,7 +28,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
             this.ProjectileCustomization(projectile);
             return projectile;
         };
-        this.fire = function () {
+        this.FireAtTarget = function () {
             this.Building.Player.Resources.Ammo -= this.AmmoConsumption;
             var shots = this.ShotsPerShot;
             while (shots--) {
@@ -36,33 +36,38 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                 this.Building.Level.Projectiles.push(projectile);
             }
         };
+        this.FindTarget = function () {
+            var i = this.Building.Level.Units.length;
+            while (i--) {
+                var unit = this.Building.Level.Units[i];
+                if (General.Distance(unit.X - this.Building.X, unit.Y - this.Building.Y) <= this.Range) {
+                    this.Target = unit;
+                }
+            }
+        }
+
+        this.TryFireAtTarget = function () {
+            if (General.Distance(this.Target.X - this.Building.X, this.Target.Y - this.Building.Y) > this.Range) {
+                this.ResetTarget();
+            } else if (this.Building.Player.Resources.Ammo >= this.AmmoConsumption) {
+                this.FireAtTarget();
+                this.FireRateCount = 0;
+            }
+        };
         this.update = function () {
             if (this.Target != null && this.Target.Health <= 0) {
                 this.ResetTarget();
             }
             if (this.Target == null) {
-                var i = this.Building.Level.Units.length;
-                while (i--) {
-                    var unit = this.Building.Level.Units[i];
-                    if (General.Distance(unit.X - this.Building.X, unit.Y - this.Building.Y) <= this.Range) {
-                        this.Target = unit;
-                    }
-                }
+                this.FindTarget();
             }
 
             if (this.FireRateCount < this.FireRate) this.FireRateCount++;
-            if (this.Target != null
-                && this.FireRateCount >= this.FireRate
-                && this.Building.Player.Resources.Ammo >= this.AmmoConsumption) {
-                if (General.Distance(this.Target.X - this.Building.X, this.Target.Y - this.Building.Y) > this.Range) {
-                    this.ResetTarget();
-                } else {
-                    this.fire();
-                    this.FireRateCount = 0;
-                }
+            if (this.Target != null && this.FireRateCount >= this.FireRate) {
+                this.TryFireAtTarget();
             }
         };
-        this.leadTargetAngle = function () {
+        this.getTargetLeadingAngle = function () {
             var velocityX = this.Target.VelocityX;
             var velocityY = this.Target.VelocityY;
             var a = Math.pow(velocityX, 2) + Math.pow(velocityY, 2) - Math.pow(this.ProjectileSpeed, 2);

@@ -95,7 +95,7 @@
             this.findPath();
         };
         this.findPath = function () {
-            this.Path = this.Level.getPath(this);
+            this.Path = this.Level.getPathForUnit(this);
         };
         this.calculateScore = function () {
             this.Score = this.Health * this.MoveSpeed;

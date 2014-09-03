@@ -54,8 +54,8 @@
         ParticleDefense.Level = level();
 
         Display.initialize(canvas);
-        Display.drawOffsetX = Display.drawOffsetXT = -ParticleDefense.Level.Map.PixelWidth / 2;
-        Display.drawOffsetY = Display.drawOffsetYT = -ParticleDefense.Level.Map.PixelHeight / 2;
+        Display.drawOffsetX = Display.drawOffsetXT = -ParticleDefense.Level.Width / 2;
+        Display.drawOffsetY = Display.drawOffsetYT = -ParticleDefense.Level.Height / 2;
 
         ParticleDefense.View = ParticleDefense.Views.GameUi;
         ParticleDefense.update();

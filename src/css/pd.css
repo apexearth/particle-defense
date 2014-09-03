@@ -2,9 +2,9 @@
     padding: 0;
     margin: 0;
     overflow: hidden;
-    background-color: #000;
+    background-color: rgb(10, 10, 12);
     color: #eee;
-    font-family: Audiowide;
+    font-family: Audiowide, serif;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -27,7 +27,7 @@
     top: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, .85);
+    background-color: rgba(12, 16, 4, .5);
     z-index: -1;
 }
 
@@ -63,7 +63,6 @@
     margin: 0;
     padding-left: 0;
     list-style: none;
-    list-style-type: none;
 }
 
     .list li {

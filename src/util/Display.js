@@ -37,7 +37,32 @@
     };
     Display.Settings.Quality = 1;
 
-
+    Display.AddEvents = function(element){
+        element.onmousedown = function (event) {
+            if (event.button != 0) {
+                Display.panning = true;
+                Display.px = event.clientX;
+                Display.py = event.clientY;
+            }
+            return false;
+        };
+        element.onmouseup = function (event) {
+            if (event.button != 0)
+                Display.panning = false;
+        };
+        element.onmousemove = function (event) {
+            if (Display.panning == true) {
+                Display.drawOffsetXT -= (Display.px - event.clientX) / Display.drawScale;
+                Display.drawOffsetYT -= (Display.py - event.clientY) / Display.drawScale;
+                Display.px = event.clientX;
+                Display.py = event.clientY;
+            }
+        };
+        element.oncontextmenu = element.ondblclick = function () {
+            window.focus();
+            return false;
+        };
+    };
     Display.initialize = function (canvas) {
         if (canvas == null) return;
         Display.canvas = canvas;
@@ -63,31 +88,8 @@
         else
             window.addEventListener("DOMMouseScroll", scroll, false);
 
+        this.AddEvents(canvas);
 
-        canvas.onmousedown = function (event) {
-            if (event.button != 0) {
-                Display.panning = true;
-                Display.px = event.clientX;
-                Display.py = event.clientY;
-            }
-            return false;
-        };
-        canvas.onmouseup = function (event) {
-            if (event.button != 0)
-                Display.panning = false;
-        };
-        canvas.onmousemove = function (event) {
-            if (Display.panning == true) {
-                Display.drawOffsetXT -= (Display.px - event.clientX) / Display.drawScale;
-                Display.drawOffsetYT -= (Display.py - event.clientY) / Display.drawScale;
-                Display.px = event.clientX;
-                Display.py = event.clientY;
-            }
-        };
-        canvas.oncontextmenu = canvas.ondblclick = function () {
-            window.focus();
-            return false;
-        };
         document.onmousedown = function () {
             window.focus();
             //return false;

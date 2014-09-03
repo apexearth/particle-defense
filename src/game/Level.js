@@ -1,10 +1,11 @@
 ﻿define("game/Level", ["game/Map", "game/PlayerCommands", "util/General", "util/Mouse", "util/Keyboard", "game/CommandQueue", "game/Settings"], function (Map, PlayerCommands, General, Mouse, Keyboard, CommandQueue, Settings) {
     var Level = function (width, height) {
         var me = this;
-        this.Map = new Map(width, height);
+        var _map = new Map(width, height);
 
-        this.Width = this.Map.PixelWidth;
-        this.Height = this.Map.PixelHeight;
+        this.FrameCount = 0;
+        this.Width = _map.PixelWidth;
+        this.Height = _map.PixelHeight;
         this.Bounds = {
             Left: 0,
             Top: 0,
@@ -31,8 +32,8 @@
             return me.Player.HomeBase.Health <= 0;
         }];
         this.canvas = document.createElement("canvas");
-        this.canvas.width = this.Map.PixelWidth;
-        this.canvas.height = this.Map.PixelHeight;
+        this.canvas.width = _map.PixelWidth;
+        this.canvas.height = _map.PixelHeight;
         this.context = this.canvas.getContext("2d");
 
         this.CheckCount = 0;
@@ -63,29 +64,177 @@
         this.BeginBuildingPlacement = function (building) {
             this.PlacementBuilding = building;
         };
+        var _buildableBlocks = [];
+        var _notBuildableBlocks = [];
         /** @returns bool **/
-        this.IsBlockBuildable = function (blockX, blockY) {
-            if(blockX instanceof Object) {
-                var block = blockX;
-                blockX = block.X;
-                blockY = block.Y;
-            }
+        this.IsBlockCoordBuildable = function (blockX, blockY) {
             if (blockX === 0 || blockY === 0) return false;
             if (blockX === this.Width - 1 || blockY === this.Height - 1) return false;
-            return this.Map.Grid.getBlock(blockX, blockY).IsBlocked === false;
+            return this.IsBlockBuildable(_map.getBlock(blockX, blockY));
+        };
+        /** @returns bool **/
+        this.IsBlockBuildable = function (block) {
+            if (_buildableBlocks.indexOf(block) !== -1) return true;
+            if (_notBuildableBlocks.indexOf(block) !== -1) return true;
+            return block.IsBlocked() === false;
+        };
+        this.ResetBuildableBlocks = function () {
+            _buildableBlocks = [];
+            _notBuildableBlocks = [];
         };
 
         this.Selection = null;
         this.SelectBuildingAt = function (blockX, blockY) {
             this.Selection = null;
-            var block = this.Map.getBlockOrNullFromBlock(blockX, blockY);
+            var block = _map.getBlockOrNull(blockX, blockY);
             if (block != null)
                 this.Selection = block.Building;
             return this.Selection;
         };
         this.Deselect = function () {
             this.Selection = null;
-        }
+        };
+
+        this.getPathForUnit = function (unit) {
+            return this.getPath(
+                _map.getBlockFromCoords(unit.X, unit.Y),
+                _map.getBlockFromVector(unit.Destination)
+            );
+        };
+        this.getPath = function (blockStart, blockTarget) {
+            return _map.getPathByBlock(blockStart, blockTarget)
+        };
+
+        this.checkWinConditions = function () {
+            var i = this.WinConditions.length;
+            while (i--) if (!this.WinConditions[i]()) return false;
+            return true;
+        };
+        this.checkLossConditions = function () {
+            var i = this.LossConditions.length;
+            while (i--) if (!this.LossConditions[i]()) return false;
+            return true;
+        };
+
+        this.getBlock = function (x, y){
+            return _map.getBlock(x, y);
+        };
+        this.getBlockFromCoords = function (x, y){
+            return _map.getBlockFromCoords(x, y);
+        };
+        this.getBlockOrNull = function (x, y) {
+            return _map.getBlockOrNull(x, y);
+        };
+        this.getBlockOrNullFromCoords = function (x, y) {
+            return _map.getBlockOrNullFromCoords(x, y);
+        };
+
+        this.update = function () {
+            this.FrameCount++;
+            if (this.Units.length === 0
+                && (this.CurrentWave === null || this.CurrentWave.Units.length === 0)
+                && this.Waves.length !== 0
+                && this.WaveDelayCount++ >= this.WaveDelay) {
+                this.CurrentWave = this.Waves.pop();
+                this.WaveDelayCount = 0;
+            }
+            var unit;
+            if (this.CurrentWave !== null
+                && this.CurrentWave.Units.length > 0
+                && this.CurrentWave.UnitDelayCount++ >= this.CurrentWave.UnitDelay) {
+                unit = this.CurrentWave.Units.pop();
+                this.Units.push(unit);
+                if (this.Player.HomeBase.Health > 0)
+                    unit.setDestination(this.Player.HomeBase);
+                this.CurrentWave.UnitDelayCount = 0;
+            }
+
+            var i = this.Units.length;
+            while (i-- > 0) {
+                unit = this.Units[i];
+                unit.update();
+            }
+
+            i = this.Buildings.length;
+            while (i-- > 0) {
+                var building = this.Buildings[i];
+                building.update();
+            }
+
+            i = this.Projectiles.length;
+            while (i-- > 0) {
+                var projectile = this.Projectiles[i];
+                projectile.update();
+            }
+
+            i = this.Players.length;
+            while (i-- > 0) {
+                var player = this.Players[i];
+                player.update();
+            }
+
+            if (this.PlacementBuilding != null) {
+                if (Mouse.LeftButton) {
+                    var block = this.getBlockOrNullFromCoords(Mouse.DisplayX, Mouse.DisplayY);
+                    if (block != null) {
+                        var buildResult = PlayerCommands.CreateBuilding(this.Player, this.PlacementBuilding, block.X, block.Y);
+                        if (buildResult != null) {
+                            i = this.Units.length;
+                            while (i--) this.Units[i].findPath();
+                            if (!Keyboard.CheckKey(Keyboard.Keys.Shift)) {
+                                this.PlacementBuilding = null;
+                            }
+                        }
+                    }
+                } else if (Mouse.RightButton || Keyboard.CheckKey(Keyboard.Keys.Escape)) {
+                    this.PlacementBuilding = null;
+                }
+            }
+
+            if (this.CheckCount++ > Settings.Second) {
+                var win = this.checkWinConditions();
+                var loss = this.checkLossConditions();
+                if (win || loss) {
+                    this.Result = {
+                        Victory: win
+                    };
+                    CommandQueue.unshift(CommandQueue.StopGame);
+                }
+            }
+
+        };
+        this.draw = function () {
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            var b = this.Buildings.length;
+            while (b--)
+                this.Buildings[b].draw(this.context);
+
+            var u = this.Units.length;
+            while (u--)
+                this.Units[u].draw(this.context);
+
+            var p = this.Projectiles.length;
+            while (p-- > 0) {
+                var projectile = this.Projectiles[p];
+                projectile.draw(this.context);
+            }
+
+            if (this.PlacementBuilding != null) {
+                var block = this.getBlockOrNullFromCoords(Mouse.DisplayX, Mouse.DisplayY);
+                if (block != null) {
+                    this.context.save();
+                    this.context.globalAlpha = .75;
+                    this.context.drawImage(this.PlacementBuilding.canvas, block.X * Level.Settings.BlockSize, block.Y * Level.Settings.BlockSize);
+                    this.context.fillStyle = (this.IsBlockBuildable(block) ? 'rgba(0,255,0,.5)' : 'rgba(255,0,0,.5)');
+                    this.context.fillRect(block.X * Level.Settings.BlockSize, block.Y * Level.Settings.BlockSize, Level.Settings.BlockSize, Level.Settings.BlockSize);
+                    this.context.restore();
+                }
+            }
+
+            this.context.drawImage(_map.canvas, 0, 0);
+        };
+
         this.initialize = function (template) {
             General.CopyTo(template, this);
         };
@@ -96,134 +245,6 @@
     };
 
 
-    Level.prototype.GetBlockOrNull = function (x, y) {
-        return this.Map.getBlockOrNullFromVector({ X: x, Y: y });
-    };
 
-    Level.prototype.update = function () {
-        if (this.Units.length === 0
-            && (this.CurrentWave === null || this.CurrentWave.Units.length === 0)
-            && this.Waves.length !== 0
-            && this.WaveDelayCount++ >= this.WaveDelay) {
-            this.CurrentWave = this.Waves.pop();
-            this.WaveDelayCount = 0;
-        }
-        var unit;
-        if (this.CurrentWave !== null
-            && this.CurrentWave.Units.length > 0
-            && this.CurrentWave.UnitDelayCount++ >= this.CurrentWave.UnitDelay) {
-            unit = this.CurrentWave.Units.pop();
-            this.Units.push(unit);
-            if (this.Player.HomeBase.Health > 0)
-                unit.setDestination(this.Player.HomeBase);
-            this.CurrentWave.UnitDelayCount = 0;
-        }
-
-        var i = this.Units.length;
-        while (i-- > 0) {
-            unit = this.Units[i];
-            unit.update();
-        }
-
-        i = this.Buildings.length;
-        while (i-- > 0) {
-            var building = this.Buildings[i];
-            building.update();
-        }
-
-        i = this.Projectiles.length;
-        while (i-- > 0) {
-            var projectile = this.Projectiles[i];
-            projectile.update();
-        }
-
-        i = this.Players.length;
-        while (i-- > 0) {
-            var player = this.Players[i];
-            player.update();
-        }
-
-        if (this.PlacementBuilding != null) {
-            if (Mouse.LeftButton) {
-                var block = this.GetBlockOrNull(Mouse.DisplayX, Mouse.DisplayY);
-                if (block != null) {
-                    var buildResult = PlayerCommands.CreateBuilding(this.Player, this.PlacementBuilding, block.X, block.Y);
-                    if (buildResult != null) {
-                        i = this.Units.length;
-                        while (i--) this.Units[i].findPath();
-                        if (!Keyboard.CheckKey(Keyboard.Keys.Shift)) {
-                            this.PlacementBuilding = null;
-                        }
-                    }
-                }
-            } else if (Mouse.RightButton || Keyboard.CheckKey(Keyboard.Keys.Escape)) {
-                this.PlacementBuilding = null;
-            }
-        }
-
-        if (this.CheckCount++ > Settings.Second) {
-            var win = this.checkWinConditions();
-            var loss = this.checkLossConditions();
-            if (win || loss) {
-                this.Result = {
-                    Victory: win
-                };
-                CommandQueue.unshift(CommandQueue.StopGame);
-            }
-        }
-
-    };
-
-    Level.prototype.draw = function () {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        var b = this.Buildings.length;
-        while (b--)
-            this.Buildings[b].draw(this.context);
-
-        var u = this.Units.length;
-        while (u--)
-            this.Units[u].draw(this.context);
-
-        var p = this.Projectiles.length;
-        while (p-- > 0) {
-            var projectile = this.Projectiles[p];
-            projectile.draw(this.context);
-        }
-
-        if (this.PlacementBuilding != null) {
-            var block = this.GetBlockOrNull(Mouse.DisplayX, Mouse.DisplayY);
-            if (block != null) {
-                this.context.save();
-                this.context.globalAlpha = .75;
-                this.context.drawImage(this.PlacementBuilding.canvas, block.X * Level.Settings.BlockSize, block.Y * Level.Settings.BlockSize);
-                this.context.fillStyle = (this.IsBlockBuildable(block) ? 'rgba(0,255,0,.5)' : 'rgba(255,0,0,.5)');
-                this.context.fillRect(block.X * Level.Settings.BlockSize, block.Y * Level.Settings.BlockSize, Level.Settings.BlockSize, Level.Settings.BlockSize);
-                this.context.restore();
-            }
-        }
-
-        this.context.drawImage(this.Map.canvas, 0, 0);
-    };
-
-
-    Level.prototype.getPath = function (unit) {
-        return this.Map.getPathByBlock(
-            this.Map.getBlock(unit.X, unit.Y),
-            this.Map.getBlockFromVector(unit.Destination)
-        );
-    };
-
-    Level.prototype.checkWinConditions = function () {
-        var i = this.WinConditions.length;
-        while (i--) if (!this.WinConditions[i]()) return false;
-        return true;
-    };
-
-    Level.prototype.checkLossConditions = function () {
-        var i = this.LossConditions.length;
-        while (i--) if (!this.LossConditions[i]()) return false;
-        return true;
-    };
     return Level;
 });

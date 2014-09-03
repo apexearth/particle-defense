@@ -1,4 +1,29 @@
 ﻿define("util/Grid", function () {
+    var Block = function (x, y) {
+        var _isBlocked = false;
+        var _building = null;
+        this.X = x;
+        this.Y = y;
+        this.SetIsBlocked = function (bool) {
+            _isBlocked = bool;
+        };
+        /** @return bool **/
+        this.IsBlocked = function () {
+            if (_isBlocked !== null) return _isBlocked;
+            return false;
+        };
+        this.RemoveBuilding = function () {
+            _isBlocked = false;
+            _building = null;
+        };
+        this.SetBuilding = function (building) {
+            _isBlocked = true;
+            _building = building;
+        };
+        this.GetBuilding = function () {
+            return _building;
+        };
+    };
     var Grid = function (minX, minY, maxX, maxY) {
         this.Block = [];
         this.MinX = minX;
@@ -14,11 +39,7 @@
             this.Block[x] = [];
             var y = maxY - minY + 1;
             while (y--) {
-                var block = {
-                    IsBlocked: false,
-                    X: x,
-                    Y: y
-                };
+                var block = new Block(x, y);
                 this.Block[x][y] = block;
                 if (x + 1 < this.Block.length && this.Block[x + 1].indexOf(y)) {
                     block.RightBlock = this.Block[x + 1][y];
@@ -30,12 +51,18 @@
                 }
             }
         }
+    };
+
+    Grid.prototype.SetIsBlocked = function (x, y, bool) {
+        this.getBlock(x, y).SetIsBlocked(bool);
     }
+    Grid.prototype.IsBlocked = function (x, y) {
+        return this.getBlock(x, y).IsBlocked();
+    };
 
     Grid.prototype.getBlockFromVector = function (vector) {
         return this.getBlock(vector.X, vector.Y);
     };
-
     Grid.prototype.getBlock = function (x, y) {
         x -= this.MinX;
         y -= this.MinY;

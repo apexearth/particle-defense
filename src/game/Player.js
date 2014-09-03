@@ -12,19 +12,22 @@
             Energy: 0,
             Metal: 0,
             Ammo: 0
-        }
+        };
         this.Score = 0;
         this.AddScore = function (score) {
             this.Score += score;
-        }
+        };
 
-        this.update = function () {
+        this.CheckResourceStorageLimit = function () {
             for (var key in this.ResourceStorage) {
                 if (this.ResourceStorage.hasOwnProperty(key)
                     && this.Resources[key] > this.ResourceStorage[key]) {
                     this.Resources[key] = this.ResourceStorage[key];
                 }
             }
+        };
+        this.update = function () {
+            this.CheckResourceStorageLimit();
         }
     }
     return Player;
