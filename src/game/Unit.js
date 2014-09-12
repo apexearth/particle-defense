@@ -11,10 +11,19 @@
         this.Destination = null;
         this.Path = null;
         this.Score = 0;
+        this.IsDead = false;
 
         this.UpdateBlockLocation = function () {
+            var _blockX = this.BlockX;
+            var _blockY = this.BlockY;
             this.BlockX = Math.floor(this.X / Settings.BlockSize);
             this.BlockY = Math.floor(this.Y / Settings.BlockSize);
+            if (_blockX !== this.BlockX || _blockY !== this.BlockY) {
+                if (_blockX !== undefined && _blockY !== undefined) {
+                    level.getBlock(_blockX, _blockY).Remove(this);
+                }
+                level.getBlock(this.BlockX, this.BlockY).Add(this);
+            }
         };
         this.UpdateBlockLocation();
 
@@ -73,13 +82,14 @@
                 && this.BlockX == this.Destination.BlockX
                 && this.BlockY == this.Destination.BlockY) {
                 this.Destination.Health--;
-                this.Health = 0;
-                this.Level.Units.splice(this.Level.Units.indexOf(this), 1);
+                this.die();
             }
         };
         this.die = function () {
+            this.IsDead = true;
             var i = this.Level.Units.indexOf(this);
             if (i !== -1) this.Level.Units.splice(i, 1);
+            level.getBlock(this.BlockX, this.BlockY).Remove(this);
             this.Level.Player.Score += this.Score;
         };
         this.draw = function (context) {

@@ -60,22 +60,23 @@
             return vector.X >= this.Bounds.Left && vector.X <= this.Bounds.Right && vector.Y >= this.Bounds.Top && vector.Y <= this.Bounds.Bottom;
         };
 
-        this.PlacementBuilding = null;
+        var PlacementBuilding = null;
         this.BeginBuildingPlacement = function (building) {
-            this.PlacementBuilding = building;
+            this.PlacementBuilding = new building(this, null, NaN, NaN);
         };
         var _buildableBlocks = [];
         var _notBuildableBlocks = [];
         /** @returns bool **/
         this.IsBlockCoordBuildable = function (blockX, blockY) {
-            if (blockX === 0 || blockY === 0) return false;
-            if (blockX === this.Width - 1 || blockY === this.Height - 1) return false;
             return this.IsBlockBuildable(_map.getBlock(blockX, blockY));
         };
         /** @returns bool **/
         this.IsBlockBuildable = function (block) {
+            if (block.X === 0 || block.Y === 0) return false;
+            if (block.X === this.Width - 1 || block.Y === this.Height - 1) return false;
             if (_buildableBlocks.indexOf(block) !== -1) return true;
             if (_notBuildableBlocks.indexOf(block) !== -1) return true;
+            if (block.Objects.length > 0) return false;
             return block.IsBlocked() === false;
         };
         this.ResetBuildableBlocks = function () {
@@ -116,10 +117,10 @@
             return true;
         };
 
-        this.getBlock = function (x, y){
+        this.getBlock = function (x, y) {
             return _map.getBlock(x, y);
         };
-        this.getBlockFromCoords = function (x, y){
+        this.getBlockFromCoords = function (x, y) {
             return _map.getBlockFromCoords(x, y);
         };
         this.getBlockOrNull = function (x, y) {
@@ -177,7 +178,7 @@
                 if (Mouse.LeftButton) {
                     var block = this.getBlockOrNullFromCoords(Mouse.DisplayX, Mouse.DisplayY);
                     if (block != null) {
-                        var buildResult = PlayerCommands.CreateBuilding(this.Player, this.PlacementBuilding, block.X, block.Y);
+                        var buildResult = PlayerCommands.CreateBuilding(this.Player, this.PlacementBuilding.constructor, block.X, block.Y);
                         if (buildResult != null) {
                             i = this.Units.length;
                             while (i--) this.Units[i].findPath();
@@ -225,7 +226,10 @@
                 if (block != null) {
                     this.context.save();
                     this.context.globalAlpha = .75;
-                    this.context.drawImage(this.PlacementBuilding.canvas, block.X * Level.Settings.BlockSize, block.Y * Level.Settings.BlockSize);
+                    this.PlacementBuilding.BlockX = block.X;
+                    this.PlacementBuilding.BlockY = block.Y;
+                    this.PlacementBuilding.UpdateXY();
+                    this.PlacementBuilding.draw(this.context);
                     this.context.fillStyle = (this.IsBlockBuildable(block) ? 'rgba(0,255,0,.5)' : 'rgba(255,0,0,.5)');
                     this.context.fillRect(block.X * Level.Settings.BlockSize, block.Y * Level.Settings.BlockSize, Level.Settings.BlockSize, Level.Settings.BlockSize);
                     this.context.restore();
@@ -243,7 +247,6 @@
     Level.Settings = {
         BlockSize: 35
     };
-
 
 
     return Level;

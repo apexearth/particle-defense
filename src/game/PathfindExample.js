@@ -13,7 +13,6 @@
         Display.drawOffsetXT = Display.drawOffsetX = -this.grid.MaxX / 2 * 100 - 50;
         Display.drawOffsetYT = Display.drawOffsetY = -this.grid.MaxY / 2 * 100 - 50;
 
-
     }
 
     PathfindExample.initialize = function (canvas) {

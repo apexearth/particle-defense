@@ -4,7 +4,10 @@
         var _building = null;
         this.X = x;
         this.Y = y;
-        this.SetIsBlocked = function (bool) {
+        this.Objects = [];
+
+
+        this.SetIsBlocked = function(bool){
             _isBlocked = bool;
         };
         /** @return bool **/
@@ -22,6 +25,12 @@
         };
         this.GetBuilding = function () {
             return _building;
+        };
+        this.Add = function (object) {
+            this.Objects.push(object);
+        };
+        this.Remove = function (object) {
+            this.Objects.splice(this.Objects.indexOf(object), 1);
         };
     };
     var Grid = function (minX, minY, maxX, maxY) {
@@ -55,7 +64,7 @@
 
     Grid.prototype.SetIsBlocked = function (x, y, bool) {
         this.getBlock(x, y).SetIsBlocked(bool);
-    }
+    };
     Grid.prototype.IsBlocked = function (x, y) {
         return this.getBlock(x, y).IsBlocked();
     };

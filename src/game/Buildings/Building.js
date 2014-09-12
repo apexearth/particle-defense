@@ -1,4 +1,5 @@
 ﻿define("game/Buildings/Building", ["game/Settings", "util/General"], function (Settings, General) {
+    var arcCircle = 2 * Math.PI;
     var Building = function (level, player, templates) {
         this.BlockX = 0;
         this.BlockY = 0;
@@ -17,21 +18,32 @@
         this.Canvas = null;
         this.draw = function (context) {
             context.drawImage(this.constructor.canvas, this.TopLeft.X, this.TopLeft.Y);
+            var i = this.Weapons.length;
+            while (i--) {
+                context.fillStyle = 'rgba(0,0,255,.05)';
+                context.beginPath();
+                context.arc(this.X, this.Y, this.Weapons[i].Range, 0, arcCircle, false);
+                context.closePath();
+                context.fill();
+            }
         };
         this.update = Building.prototype.update;
-        this.initialize = function () {
+        this.UpdateXY = function() {
             this.X = this.BlockX * Settings.BlockSize + Settings.BlockSize / 2;
             this.Y = this.BlockY * Settings.BlockSize + Settings.BlockSize / 2;
             this.TopLeft = {
                 X: this.BlockX * Settings.BlockSize,
                 Y: this.BlockY * Settings.BlockSize
             };
+        };
+        this.initialize = function () {
+            this.UpdateXY();
             if (this.Block != null) {           // Reset Block if Reinitializing.
                 this.Block.RemoveBuilding();
             }
             this.Block = this.Level.getBlock(this.BlockX, this.BlockY);
             this.Block.SetBuilding(this);
-        }
+        };
         this.loadTemplate = function (template) {
             General.CopyTo(template, this);
         };
@@ -50,7 +62,6 @@
         Building.prototype.addStorageToPlayer.call(this);
         this.initialize();
     }
-
     Building.prototype.update = function () {
         if (this.Health <= 0) {
             Building.prototype.removeStorageFromPlayer.call(this);
@@ -66,6 +77,7 @@
         while (i--) this.Weapons[i].update();
     };
     Building.prototype.addStorageToPlayer = function () {
+        if (this.Player === null) return;
         for (var key in this.ResourceStorage) {
             if (this.ResourceStorage.hasOwnProperty(key)) {
                 this.Player.ResourceStorage[key] += this.ResourceStorage[key];
@@ -73,6 +85,7 @@
         }
     };
     Building.prototype.removeStorageFromPlayer = function () {
+        if (this.Player === null) return;
         for (var key in this.ResourceStorage) {
             if (this.ResourceStorage.hasOwnProperty(key)) {
                 this.Player.ResourceStorage[key] -= this.ResourceStorage[key];
