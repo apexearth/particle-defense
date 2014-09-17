@@ -31,7 +31,7 @@
         if (ParticleDefense.View != ParticleDefense.Views.GameUi) return;
         setTimeout(function () {
             ParticleDefense.updateUi()
-        }, 1000);
+        }, 100);
         ParticleDefense.UiScope.$apply();
     };
     ParticleDefense.processCommands = function () {

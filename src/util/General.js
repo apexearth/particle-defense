@@ -53,16 +53,17 @@
         var t1 = (-b + Math.sqrt(disc)) / (2 * a);
         var t2 = (-b - Math.sqrt(disc)) / (2 * a);
         var t = (t1 < t2 && t1 > 0 ? t1 : t2);
-        if(isNaN(t)) return General.AngleRad(x1, y1, x2, y2);
+        if (isNaN(t)) return General.AngleRad(x1, y1, x2, y2);
         var aimTargetX = t * x2v + x2;
         var aimTargetY = t * y2v + y2;
         return General.AngleRad(x1, y1, aimTargetX, aimTargetY);
-    }
+    };
+
     General.Distance = function (x, y) {
-        return Math.sqrt((x * x) + (y * y));
+        return Math.sqrt(Math.abs((x * x) + (y * y)));
     };
     General.DistanceSq = function (x, y) {
-        return (x * x) + (y * y);
+        return Math.abs((x * x) + (y * y));
     };
     General.isNumber = function (n) {
         return !isNaN(parseFloat(n)) && isFinite(n);

@@ -59,27 +59,29 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
     }
 
     return {
-        Missile: function (building) {
-            Weapon.call(this, building);
-            this.Range = 250;
-            this.AmmoConsumption = 7;
-            this.FireRate = this.FireRateCount = 45;
-            this.ProjectileSpeed = 2;
-            this.ShotSpeedVariance = .1; //General.AngleRad(this.Building.X, this.Building.Y, this.Target.X, this.Target.Y)
-            this.Acceleration = .25;
-            this.CreateProjectile = function () {
-                var angle = this.getTargetLeadingAngle();
-                var projectile = new Projectiles.Missile(
-                    this,
-                        angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2)),
-                        this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2)),
-                    this.Acceleration
-                );
-                projectile.Target = this.Target;
-                projectile.Damage = 10;
-                projectile.Width = 2.5;
-                return projectile;
-            };
+        Missile: function (range, fireRate, projectileSpeed, acceleration, damage, accuracy) {
+            return function (building) {
+                Weapon.call(this, building);
+                this.Range = range;
+                this.AmmoConsumption = damage / 1.5;
+                this.FireRate = this.FireRateCount = fireRate;
+                this.ProjectileSpeed = projectileSpeed;
+                this.ShotSpeedVariance = accuracy; //General.AngleRad(this.Building.X, this.Building.Y, this.Target.X, this.Target.Y)
+                this.Acceleration = acceleration;
+                this.CreateProjectile = function () {
+                    var angle = this.getTargetLeadingAngle();
+                    var projectile = new Projectiles.Missile(
+                        this,
+                            angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2)),
+                            this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2)),
+                        this.Acceleration
+                    );
+                    projectile.Target = this.Target;
+                    projectile.Damage = damage;
+                    projectile.Width = damage / 2;
+                    return projectile;
+                };
+            }
         },
         Gun: function (range, fireRate, projectileSpeed, damage, accuracy) {
             return function (building) {

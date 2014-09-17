@@ -1,13 +1,9 @@
 define("game/Buildings", [
     "util/General",
-    "game/Buildings/Building",
+    "game/Building",
     "game/Weapons",
-    "game/Settings",
-    "game/Buildings/Wall",
-    "game/Buildings/AmmoFab",
-    "game/Buildings/EnergyCollector",
-    "game/Buildings/MetalFab"
-], function (General, Building, Weapons, Settings, Wall, AmmoFab, EnergyCollector, MetalFab) {
+    "game/Settings"
+], function (General, Building, Weapons, Settings) {
 
     function ConstructorFromTemplate(obj) {
         var constructor = function (level, player, blockX, blockY) {
@@ -25,9 +21,62 @@ define("game/Buildings", [
     }
 
     var list = {};
-    list.Wall = Wall;
-    list.AmmoFab = AmmoFab;
-    list.EnergyCollector = EnergyCollector;
+    list.Wall = ConstructorFromTemplate({
+        constructor: { canvas: CreateCanvas('#0c9', '#3c9', 8),
+            Cost: {
+                Energy: 10,
+                Metal: 5
+            }},
+        template: {
+            Health: 20
+        }
+    });
+    list.AmmoFab = ConstructorFromTemplate({
+        constructor: {
+            canvas: CreateCanvas('#5a4', '#811', 7),
+            Cost: {
+                Energy: 150,
+                Metal: 75
+            },
+            ExtendedConstructor: function () {
+                Building.prototype.addStorageToPlayer.call(this);
+            }
+        },
+        template: {
+            Health: 20,
+            ResourceStorage: {
+                Ammo: 50
+            },
+            Updates: [
+                function () {
+                    this.Player.Resources.Ammo += .1;
+                }
+            ]
+        }
+    });
+    list.EnergyFab = ConstructorFromTemplate({
+        constructor: {
+            canvas: CreateCanvas('#5a4', '#118', 7),
+            Cost: {
+                Energy: 125,
+                Metal: 50
+            },
+            ExtendedConstructor: function () {
+                Building.prototype.addStorageToPlayer.call(this);
+            }
+        },
+        template: {
+            Health: 20,
+            ResourceStorage: {
+                Energy: 100
+            },
+            Updates: [
+                function () {
+                    this.Player.Resources.Energy += .05;
+                }
+            ]
+        }
+    });
     list.HomeBase = ConstructorFromTemplate({
         constructor: {
             canvas: CreateCanvas('#0a7', '#222', 7),
@@ -56,7 +105,29 @@ define("game/Buildings", [
             ]
         }
     });
-    list.MetalFab = MetalFab;
+    list.MetalFab = ConstructorFromTemplate({
+        constructor: {
+            canvas: CreateCanvas('#5a4', '#111', 7),
+            Cost: {
+                Energy: 100,
+                Metal: 75
+            },
+            ExtendedConstructor: function () {
+                Building.prototype.addStorageToPlayer.call(this);
+            }
+        },
+        template: {
+            Health: 20,
+            ResourceStorage: {
+                Metal: 50
+            },
+            Updates: [
+                function () {
+                    this.Player.Resources.Metal += .025;
+                }
+            ]
+        }
+    });
     list.Gun = ConstructorFromTemplate({
         constructor: {
             canvas: CreateCanvas('#fff', '#666', 5),
@@ -96,6 +167,19 @@ define("game/Buildings", [
             Weapons: [ Weapons.Gun(100, 30, 2, 1, .9) ]
         }
     });
+    list.SmallGun = ConstructorFromTemplate({
+        constructor: {
+            canvas: CreateCanvas('#fff', '#aaa', 5),
+            Cost: {
+                Energy: 15,
+                Metal: 5
+            }
+        },
+        template: {
+            Health: 5,
+            Weapons: [ Weapons.Gun(110, 30, 2, 2, .9) ]
+        }
+    });
     list.Shotgun = ConstructorFromTemplate({
         constructor: {
             canvas: CreateCanvas('#fff', '#f66', 5),
@@ -126,7 +210,7 @@ define("game/Buildings", [
         constructor: {
             canvas: CreateCanvas('#fff', '#2a2', 5),
             Cost: {
-                Energy: 200,
+                Energy: 100,
                 Metal: 50
             }
         },
@@ -135,9 +219,9 @@ define("game/Buildings", [
             Weapons: [ Weapons.Laser ]
         }
     });
-    list.MissileLauncher = ConstructorFromTemplate({
+    list.Missile = ConstructorFromTemplate({
         constructor: {
-            canvas: CreateCanvas('#44a', '#44a', 5),
+            canvas: CreateCanvas('#88a', '#44a', 5),
             Cost: {
                 Energy: 75,
                 Metal: 40
@@ -145,7 +229,20 @@ define("game/Buildings", [
         },
         template: {
             Health: 5,
-            Weapons: [ Weapons.Missile ]
+            Weapons: [ Weapons.Missile(175, 45, 2, .15, 6, 1) ]
+        }
+    });
+    list.Torpedo = ConstructorFromTemplate({
+        constructor: {
+            canvas: CreateCanvas('#bba', '#44a', 5),
+            Cost: {
+                Energy: 75,
+                Metal: 40
+            }
+        },
+        template: {
+            Health: 5,
+            Weapons: [ Weapons.Missile(150, 60, 1, .1, 10, 1) ]
         }
     });
 

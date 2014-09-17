@@ -151,7 +151,7 @@
                         this.Target = this.Weapon.Target;
                     }
                     if (this.Target !== null) {
-                        this.Direction = General.AngleRad(this.X, this.Y, this.Target.X + this.Target.VelocityX, this.Target.Y + this.Target.VelocityY);
+                        this.Direction = General.LeadingAngleRad(this.X, this.Y, initialVelocity, this.Target.X, this.Target.Y, this.Target.VelocityX, this.Target.VelocityY);
                     }
                 }
                 this.acceleratingProjectileUpdate();

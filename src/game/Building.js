@@ -1,4 +1,4 @@
-﻿define("game/Buildings/Building", ["game/Settings", "util/General"], function (Settings, General) {
+﻿define("game/Building", ["game/Settings", "util/General"], function (Settings, General) {
     var arcCircle = 2 * Math.PI;
     var Building = function (level, player, templates) {
         this.BlockX = 0;

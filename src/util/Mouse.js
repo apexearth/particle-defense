@@ -5,7 +5,7 @@
         LeftButton: false,
         MiddleButton: false,
         RightButton: false,
-        AddEvents: function(element){
+        AddEvents: function (element) {
             element.addEventListener('mousemove', function (e) {
                 Mouse.X = e.clientX || e.pageX;
                 Mouse.Y = e.clientY || e.pageY;
