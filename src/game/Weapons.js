@@ -8,6 +8,111 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
         this.ShotsPerShot = 1;
         this.ShotSpread = .05;
 
+        var weapon = this;
+        var player = this.Building.Player;
+
+        this.Upgrades = {};
+        this.Upgrades.Range = function () {
+            if (!weapon.Upgrades.Range.IsEnabled()) return;
+            weapon.Building.Player.TryApplyCost(this.Cost);
+            weapon.Range += 1;
+        };
+        /** @returns bool **/
+        this.Upgrades.Range.IsEnabled = function () {
+            return weapon.Range <= 250
+                && player.TestApplyCost(weapon.Upgrades.Range.Cost);
+        };
+        this.Upgrades.Range.Cost = {
+            /** @returns Number **/
+            Energy: function () {
+                return weapon.Range / 25;
+            },
+            /** @returns Number **/
+            Metal: function () {
+                return weapon.Range / 50;
+            }
+        };
+        this.Upgrades.FireRate = function () {
+            if (!weapon.Upgrades.FireRate.IsEnabled()) return;
+            weapon.Building.Player.TryApplyCost(this.Cost);
+            weapon.FireRate -= 1;
+        };
+        /** @returns bool **/
+        this.Upgrades.FireRate.IsEnabled = function () {
+            return weapon.FireRate > 1
+                && player.TestApplyCost(weapon.Upgrades.FireRate.Cost);
+        };
+        this.Upgrades.FireRate.Cost = {
+            /** @returns Number **/
+            Energy: function () {
+                return (70 - weapon.FireRate) / 10;
+            },
+            /** @returns Number **/
+            Metal: function () {
+                return (65 - weapon.FireRate) / 5;
+            }
+        };
+        this.Upgrades.ProjectileSpeed = function () {
+            if (!weapon.Upgrades.ProjectileSpeed.IsEnabled()) return;
+            weapon.Building.Player.TryApplyCost(this.Cost);
+            weapon.ProjectileSpeed += .1;
+        };
+        /** @returns bool **/
+        this.Upgrades.ProjectileSpeed.IsEnabled = function () {
+            return weapon.ProjectileSpeed < 10
+                && player.TestApplyCost(weapon.Upgrades.ProjectileSpeed.Cost);
+        };
+        this.Upgrades.ProjectileSpeed.Cost = {
+            /** @returns Number **/
+            Energy: function () {
+                return (weapon.ProjectileSpeed * 5);
+            },
+            /** @returns Number **/
+            Metal: function () {
+                return (weapon.ProjectileSpeed * 3);
+            }
+        };
+        this.Upgrades.Damage = function () {
+            if (!weapon.Upgrades.Damage.IsEnabled()) return;
+            weapon.Building.Player.TryApplyCost(this.Cost);
+            weapon.Damage += 1;
+        };
+        /** @returns bool **/
+        this.Upgrades.Damage.IsEnabled = function () {
+            return weapon.Damage < 30
+                && player.TestApplyCost(weapon.Upgrades.Damage.Cost);
+        };
+        this.Upgrades.Damage.Cost = {
+            /** @returns Number **/
+            Energy: function () {
+                return (weapon.Damage * 5);
+            },
+            /** @returns Number **/
+            Metal: function () {
+                return (weapon.Damage * 3);
+            }
+        };
+        this.Upgrades.ShotSpread = function () {
+            if (!weapon.Upgrades.ShotSpread.IsEnabled()) return;
+            weapon.Building.Player.TryApplyCost(this.Cost);
+            weapon.ShotSpread = Math.min(1, weapon.ShotSpread * 1.005);
+        };
+        /** @returns bool **/
+        this.Upgrades.ShotSpread.IsEnabled = function () {
+            return weapon.ShotSpread < 1
+                && player.TestApplyCost(weapon.Upgrades.ShotSpread.Cost);
+        };
+        this.Upgrades.ShotSpread.Cost = {
+            /** @returns Number **/
+            Energy: function () {
+                return 6;
+            },
+            /** @returns Number **/
+            Metal: function () {
+                return 3;
+            }
+        };
+
         this.ResetTarget = function () {
             this.Target = null;
         };
@@ -30,7 +135,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                     this.Target = unit;
                 }
             }
-        }
+        };
 
         this.TryFireAtTarget = function () {
             if (General.Distance(this.Target.X - this.Building.X, this.Target.Y - this.Building.Y) > this.Range) {
@@ -66,6 +171,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                 this.AmmoConsumption = damage / 1.5;
                 this.FireRate = this.FireRateCount = fireRate;
                 this.ProjectileSpeed = projectileSpeed;
+                this.Damage = damage;
                 this.ShotSpeedVariance = accuracy; //General.AngleRad(this.Building.X, this.Building.Y, this.Target.X, this.Target.Y)
                 this.Acceleration = acceleration;
                 this.CreateProjectile = function () {
@@ -77,8 +183,8 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                         this.Acceleration
                     );
                     projectile.Target = this.Target;
-                    projectile.Damage = damage;
-                    projectile.Width = damage / 2;
+                    projectile.Damage = this.Damage;
+                    projectile.Width = Math.sqrt(this.Damage);
                     return projectile;
                 };
             }
@@ -90,6 +196,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                 this.AmmoConsumption = damage / 2;
                 this.FireRate = this.FireRateCount = fireRate;
                 this.ProjectileSpeed = 3;
+                this.Damage = damage;
                 this.ShotSpeedVariance = 1 - accuracy;
                 this.CreateProjectile = function () {
                     var angle = this.getTargetLeadingAngle();
@@ -98,48 +205,10 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                             angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2)),
                             this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2))
                     );
-                    projectile.Damage = damage;
-                    projectile.Width = Math.max(1, damage / 2);
+                    projectile.Damage = this.Damage;
+                    projectile.Width = Math.sqrt(this.Damage);
                     return projectile;
                 };
-            };
-        },
-        Autogun: function (building) {
-            Weapon.call(this, building);
-            this.Range = 100;
-            this.AmmoConsumption = 1.5;
-            this.FireRate = this.FireRateCount = 5;
-            this.ProjectileSpeed = 4;
-            this.ShotSpeedVariance = .2;
-            this.CreateProjectile = function () {
-                var angle = this.getTargetLeadingAngle();
-                var projectile = new Projectiles.Bullet(
-                    this,
-                        angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2)),
-                        this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2))
-                );
-                projectile.Damage = 3;
-                projectile.Width = 1.5;
-                return projectile;
-            };
-        },
-        Cannon: function (building) {
-            Weapon.call(this, building);
-            this.Range = 140;
-            this.AmmoConsumption = 2;
-            this.FireRate = this.FireRateCount = 30;
-            this.ProjectileSpeed = 2.3;
-            this.ShotSpeedVariance = .2;
-            this.CreateProjectile = function () {
-                var angle = this.getTargetLeadingAngle();
-                var projectile = new Projectiles.Bullet(
-                    this,
-                        angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2)),
-                        this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2))
-                );
-                projectile.Damage = 10;
-                projectile.Width = 5;
-                return projectile;
             };
         },
         Shotgun: function (building) {
@@ -150,6 +219,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
             this.AmmoConsumption = 12.5;
             this.FireRate = this.FireRateCount = 60;
             this.ProjectileSpeed = 2.3;
+            this.Damage = 5;
             this.ShotSpeedVariance = .2;
             this.CreateProjectile = function () {
                 var angle = this.getTargetLeadingAngle();
@@ -158,8 +228,8 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                         angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2)),
                         this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2))
                 );
-                projectile.Damage = 5;
-                projectile.Width = 2.5;
+                projectile.Damage = this.Damage;
+                projectile.Width = Math.sqrt(this.Damage);
                 return projectile;
             };
         },
@@ -169,6 +239,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
             this.Range = 185;
             this.ShotsPerShot = 1;
             this.AmmoConsumption = 5;
+            this.Damage = .4;
             this.FireRate = this.FireRateCount = Settings.Second * 2;
             this.CreateProjectile = function () {
                 var angle = this.getTargetLeadingAngle();
@@ -176,8 +247,8 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                     this,
                         angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2))
                 );
-                projectile.Damage = .4;
-                projectile.Width = 2;
+                projectile.Damage = this.Damage;
+                projectile.Width = this.Damage * 4;
                 return projectile;
             };
         }

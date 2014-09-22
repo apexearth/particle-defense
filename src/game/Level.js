@@ -60,9 +60,21 @@
             return vector.X >= this.Bounds.Left && vector.X <= this.Bounds.Right && vector.Y >= this.Bounds.Top && vector.Y <= this.Bounds.Bottom;
         };
 
-        var PlacementBuilding = null;
         this.BeginBuildingPlacement = function (building) {
-            this.PlacementBuilding = new building(this, null, NaN, NaN);
+            this.PlacementBuilding = new building(this, null);
+        };
+        this.FinalizeBuildingPlacement = function (block) {
+            if (block != null) {
+                var buildResult = PlayerCommands.CreateBuilding(this.Player, this.PlacementBuilding.constructor, block.X, block.Y);
+                if (buildResult != null) {
+                    this.ResetBuildableBlocks();
+                    var i = this.Units.length;
+                    while (i--) this.Units[i].findPath();
+                    if (!Keyboard.CheckKey(Keyboard.Keys.Shift)) {
+                        this.PlacementBuilding = null;
+                    }
+                }
+            }
         };
         var _buildableBlocks = [];
         var _notBuildableBlocks = [];
@@ -70,30 +82,50 @@
         this.IsBlockCoordBuildable = function (blockX, blockY) {
             return this.IsBlockBuildable(_map.getBlock(blockX, blockY));
         };
+
+        /** @summary The idea behind this is to check if a block is buildable when placing a building. **/
         /** @returns bool **/
         this.IsBlockBuildable = function (block) {
             if (block.X === 0 || block.Y === 0) return false;
             if (block.X === this.Width - 1 || block.Y === this.Height - 1) return false;
-            if (_buildableBlocks.indexOf(block) !== -1) return true;
-            if (_notBuildableBlocks.indexOf(block) !== -1) return true;
-            if (block.Objects.length > 0) return false;
-            return block.IsBlocked() === false;
+            if (block.IsBlocked()) return false                             // It's blocked
+            if (block.Objects.length > 0) return false;                     // The block has an object in it.
+            if (_buildableBlocks.indexOf(block) >= 0) return true;          // Is within list of buildable blocks.
+            if (_notBuildableBlocks.indexOf(block) >= 0) return false;      // Is within list of not buildable blocks.
+            return this.CheckIfBuildingWillBlockPath(block);                // Since last two didn't show, we find out.
         };
+
+        /** @returns bool **/
+        this.CheckIfBuildingWillBlockPath = function (block) {
+            block.SetIsBlocked(true);
+            var path = this.getPath(this.getBlock(0, 0), this.Player.HomeBase.Block);
+            block.SetIsBlocked(false);
+            if (path.length > 0) {
+                _buildableBlocks.push(block);
+                return true;
+            } else {
+                _notBuildableBlocks.push(block);
+                return false;
+            }
+        };
+        /** @summary Should be called whenever block IsBlocked statuses change. **/
         this.ResetBuildableBlocks = function () {
             _buildableBlocks = [];
             _notBuildableBlocks = [];
         };
 
         this.Selection = null;
-        this.SelectBuildingAt = function (blockX, blockY) {
-            this.Selection = null;
-            var block = _map.getBlockOrNull(blockX, blockY);
-            if (block != null)
-                this.Selection = block.Building;
+        this.SelectBuildingAt = function (block) {
+            this.Deselect();
+            this.Selection = block.GetBuilding();
+            this.Selection.Select();
             return this.Selection;
         };
         this.Deselect = function () {
-            this.Selection = null;
+            if (this.Selection !== null) {
+                this.Selection.Deselect();
+                this.Selection = null;
+            }
         };
 
         this.getPathForUnit = function (unit) {
@@ -129,7 +161,38 @@
         this.getBlockOrNullFromCoords = function (x, y) {
             return _map.getBlockOrNullFromCoords(x, y);
         };
+        this.ProcessKeyboardInput = function () {
+            if (Keyboard.CheckKey(Keyboard.Keys.Escape)) {
+                if (this.PlacementBuilding != null) {
+                    this.PlacementBuilding = null;
+                    return;
+                }
+            }
+        };
+        this.ProcessMouseInput = function () {
+            if (Mouse.LeftButton) {
+                Mouse.LeftButton = false;
+                var clickedBlock = this.getBlockOrNullFromCoords(Mouse.DisplayX, Mouse.DisplayY);
+                if (this.PlacementBuilding != null) {
+                    this.FinalizeBuildingPlacement(clickedBlock);
+                    return;
+                }
 
+                if (clickedBlock != null && clickedBlock.GetBuilding() != null) {
+                    this.SelectBuildingAt(clickedBlock);
+                }else{
+                    this.Deselect();
+                }
+            }
+
+            if (Mouse.RightButton) {
+                Mouse.RightButton = false;
+                if (this.PlacementBuilding != null) {
+                    this.PlacementBuilding = null;
+                    return;
+                }
+            }
+        };
         this.update = function () {
             this.FrameCount++;
             if (this.Units.length === 0
@@ -174,23 +237,8 @@
                 player.update();
             }
 
-            if (this.PlacementBuilding != null) {
-                if (Mouse.LeftButton) {
-                    var block = this.getBlockOrNullFromCoords(Mouse.DisplayX, Mouse.DisplayY);
-                    if (block != null) {
-                        var buildResult = PlayerCommands.CreateBuilding(this.Player, this.PlacementBuilding.constructor, block.X, block.Y);
-                        if (buildResult != null) {
-                            i = this.Units.length;
-                            while (i--) this.Units[i].findPath();
-                            if (!Keyboard.CheckKey(Keyboard.Keys.Shift)) {
-                                this.PlacementBuilding = null;
-                            }
-                        }
-                    }
-                } else if (Mouse.RightButton || Keyboard.CheckKey(Keyboard.Keys.Escape)) {
-                    this.PlacementBuilding = null;
-                }
-            }
+            this.ProcessMouseInput();
+            this.ProcessKeyboardInput();
 
             if (this.CheckCount++ > Settings.Second) {
                 var win = this.checkWinConditions();
@@ -250,4 +298,5 @@
 
 
     return Level;
-});
+})
+;

@@ -1,22 +1,21 @@
 ﻿describe('Unit Tests', function () {
-    var Levels, Unit, General;
+    var Levels, Unit, Units, General;
     beforeEach(function () {
         runs(function () {
-            require(["game/Levels", "game/Unit", "util/General"], function (levels, unit, general) {
+            require(["game/Levels", "game/Unit", "game/Units", "util/General"], function (levels, unit, units, general) {
                 Levels = levels;
                 Unit = unit;
+                Units = units;
                 General = general;
             });
         });
         waitsFor(function () {
-            return Levels;
+            return Levels != null
+                && Units != null
+                && Unit != null
+                && General != null;
         }, 300);
-        waitsFor(function () {
-            return Unit;
-        }, 300);
-        waitsFor(function () {
-            return General;
-        }, 300);
+
     });
     it('should move towards the target move location', function () {
         var level = Levels.LevelTest();
@@ -64,7 +63,7 @@
         expect(level.Player.Score).toBeGreaterThan(0);
     });
     it('should have a helper function to deliver an array of units', function () {
-        var units = Unit.Array(function () {
+        var units = Units.Array(function () {
             return new Unit(Levels.LevelTest(), {X: 10, Y: 10});
         }, 10);
         expect(units.length).toBe(10);

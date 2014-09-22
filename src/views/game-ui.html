@@ -76,9 +76,14 @@
     </ul>
     <ul class="list right-border10" style="width:150px; margin: 0;  position: relative; left: 0; top: 0">
         <li class="title grad-down">Buildings</li>
-        <li class="button right smaller grad-left {{value == PlacementBuilding() && 'button-active' || ''}}" ng-repeat="(key, value) in Buildings" ng-click="CreateBuilding(value)"
+        <li class="button right smaller grad-left {{value == PlacementBuilding() && 'button-active' || ''}}"
+            ng-repeat="(key, value) in Buildings" ng-click="CreateBuilding(value)"
             ng-mouseover="ShowCost(value.Cost)" ng-mouseleave="HideCost()">
             {{key}}
         </li>
     </ul>
+    <div ng-show="Selection() != null"
+         style="display: block; position: absolute; left: {{Selection().TopLeft.X+'px'}}; top: {{Selection().TopLeft.Y+'px'}};">
+        Selection Menu
+    </div>
 </div>

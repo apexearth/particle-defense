@@ -3,6 +3,9 @@
         $scope.Level = ParticleDefense.Level;
         $scope.Player = ParticleDefense.Level.Player;
         $scope.Buildings = Buildings;
+        $scope.Selection = function() {
+            return ParticleDefense.Level.Selection;
+        };
         $scope.PlacementBuilding = function () {
             return $scope.Level.PlacementBuilding != null
                 ? $scope.Level.PlacementBuilding.constructor
@@ -22,7 +25,8 @@
                 ? $scope.PlacementBuilding().Cost
                 : null;
         };
-        var eventCatcher = document.getElementById('event-catcher')
+
+        var eventCatcher = document.getElementById('event-catcher');
         Mouse.AddEvents(eventCatcher);
         Display.AddEvents(eventCatcher);
 

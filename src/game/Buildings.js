@@ -6,8 +6,8 @@ define("game/Buildings", [
 ], function (General, Building, Weapons, Settings) {
 
     function ConstructorFromTemplate(obj) {
-        var constructor = function (level, player, blockX, blockY) {
-            Building.call(this, level, player, blockX, blockY);
+        var constructor = function (level, player, templates) {
+            Building.call(this, level, player, templates);
             if (obj.template.Weapons !== undefined) {
                 for (var w in obj.template.Weapons) {
                     this.Weapons.push(new obj.template.Weapons[w](this));
@@ -85,7 +85,7 @@ define("game/Buildings", [
                 Metal: 200
             },
             ExtendedConstructor: function () {
-                this.Player.HomeBase = this;
+                if (this.Player) this.Player.HomeBase = this;
                 Building.prototype.addStorageToPlayer.call(this);
             }
         },
@@ -151,7 +151,7 @@ define("game/Buildings", [
         },
         template: {
             Health: 5,
-            Weapons: [ Weapons.Autogun ]
+            Weapons: [ Weapons.Gun(100, 10, 1.8, 1, .8) ]
         }
     });
     list.TinyGun = ConstructorFromTemplate({
@@ -203,7 +203,7 @@ define("game/Buildings", [
         },
         template: {
             Health: 5,
-            Weapons: [ Weapons.Cannon ]
+            Weapons: [ Weapons.Gun(150, 40, 2.25, 6,.9) ]
         }
     });
     list.Laser = ConstructorFromTemplate({

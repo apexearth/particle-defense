@@ -122,7 +122,7 @@
                 }
             else
                 this.loadTemplate(templates);
-        }
+        };
         this.initialize = function () {
             this.UpdateBlockLocation();
             this.calculateScore();

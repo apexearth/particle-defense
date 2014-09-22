@@ -31,15 +31,23 @@
         open.push(current);
         while (
             (open.length > 0 || closed.indexOf(target) === -1)
-            && current !== target
+            && current !== target && current !== null
             ) {
-            if (open.length == 0) current = target;
             Pathfind.processBestScorer(grid, current, start, target, open, closed);
             current = Pathfind.getBestScorer(current, open);
         }
+
+
         var path = [];
-        current = target;
-        if (current.Pathfind != null) {
+        if (current!= null && current.Pathfind != null) {
+            current = target;
+            //TODO: I don't think I should have to check if the parent is blocked here, but I do when the destination is surrounded by blocking tiles.
+            while (current.Pathfind.Parent != null) {
+                if (current.Pathfind.Parent.IsBlocked()) target.Pathfind.Parent = null;
+                current = current.Pathfind.Parent;
+            }
+
+            current = target;
             while (current.Pathfind.Parent != null) {
                 path.splice(0, 0, current);
                 current = current.Pathfind.Parent;
@@ -77,10 +85,13 @@
         var i = adjacentBlocks.length;
         while (i--) {
             var adjacentBlock = adjacentBlocks[i];
-            if (adjacentBlock != null
+            var blockIsGood =
+                adjacentBlock != null
                 && (!adjacentBlock.IsBlocked() || adjacentBlock == target)
                 && closed.indexOf(adjacentBlock) == -1
-                && Pathfind.diagonalScreen(current, adjacentBlock)) {
+                && Pathfind.diagonalScreen(current, adjacentBlock);
+
+            if (blockIsGood) {
                 if (open.indexOf(adjacentBlock) == -1) {
                     open.push(adjacentBlock);
                     Pathfind.calculate(adjacentBlock, current, start, target);
@@ -122,7 +133,7 @@
     Pathfind.calculate = function (block, parent, start, target) {
         block.Pathfind = function () {
         };
-        if (parent == null || parent.PathFind == null)
+        if (parent == null || parent.Pathfind == null)
             block.Pathfind.ScoreStart = 0;
         else
             block.Pathfind.ScoreStart = Pathfind.calculateScore(block.X, block.Y, parent.X, parent.Y) + parent.Pathfind.ScoreStart;

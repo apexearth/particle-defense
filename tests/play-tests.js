@@ -15,8 +15,8 @@
         expect(level.checkLossConditions()).toBeFalsy();
         expect(level.checkWinConditions()).toBeFalsy();
 
-        var i = 800;
-        while (i--) level.update();
+        var i = 3000;
+        while (i-- || level.Waves.length !== 0 && level.Units.length !== 0) level.update();
 
         expect(level.checkLossConditions()).toBeFalsy();
         expect(level.checkWinConditions()).toBeTruthy();

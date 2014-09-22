@@ -29,8 +29,6 @@
     });
     it('should release waves of units', function () {
         var level = Levels.LevelTest();
-        var homeBase = new Buildings.HomeBase(level, level.Players[0], 5, 5);
-        level.Buildings.push(homeBase);
         level.Waves = [];
         level.createWave([new Unit(level)], 1);
         level.WaveDelay = 2;
@@ -71,4 +69,5 @@
         while (i--) level.update();
         expect(homeBase.Health).toBe(0);
     });
+
 });

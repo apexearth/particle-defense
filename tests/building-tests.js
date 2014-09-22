@@ -1,44 +1,40 @@
 ﻿describe('Building Tests', function () {
-    var Levels, Buildings, Unit, PlayerCommands;
+    var Levels, Buildings, Building, Unit, PlayerCommands;
     var Gun;
     beforeEach(function () {
         runs(function () {
-            require(["game/Levels", "game/Buildings", "game/Unit", "game/PlayerCommands"], function (levels, buildings, unit, playerCommands) {
+            require(["game/Levels", "game/Buildings", "game/Building", "game/Unit", "game/PlayerCommands"], function (levels, buildings, building, unit, playerCommands) {
                 Levels = levels;
                 Buildings = buildings;
+                Building = building;
                 Unit = unit;
                 PlayerCommands = playerCommands;
                 Gun = Buildings.Gun;
             });
         });
         waitsFor(function () {
-            return Levels;
-        }, 300);
-        waitsFor(function () {
-            return Buildings;
-        }, 300);
-        waitsFor(function () {
-            return Unit;
-        }, 300);
-        waitsFor(function () {
-            return PlayerCommands;
+            return Levels != null
+                && Buildings != null
+                && Building != null
+                && Unit != null
+                && PlayerCommands != null;
         }, 300);
     });
 
     it('should attack units in range of any of it\'s weapons', function () {
-        var level = Levels.LevelEmpty();
+        var level = Levels.LevelTest();
         level.Player.Resources.Ammo = 10;
         var unit = new Unit(level, {X: level.Width / 2, Y: level.Height / 2});
         level.Units.push(unit);
-        var turret = new Gun(level, level.Player, unit.BlockX, unit.BlockY + 2);
-        turret.Weapon.Range = 1000;
+        var turret = new Gun(level, level.Player, {BlockX: unit.BlockX, BlockY: unit.BlockY + 2});
+        turret.Weapons[0].Range = 1000;
 
         level.Buildings.push(turret);
         level.Player.Buildings.push(turret);
         var health = unit.Health;
 
         level.update();
-        expect(turret.Weapon.Target).not.toBe(null);
+        expect(turret.Weapons[0].Target).not.toBe(null);
         expect(level.Projectiles.length).toBeGreaterThan(0);
 
         var i = 50;
@@ -48,12 +44,12 @@
     });
 
     it('should not attack units out of range', function () {
-        var level = Levels.LevelEmpty();
-        var unit = new Unit(level, {X:level.Player.HomeBase.X - 50, Y:level.Player.HomeBase.Y - 50});
+        var level = Levels.LevelTest();
+        var unit = new Unit(level, {X: level.Player.HomeBase.X - 50, Y: level.Player.HomeBase.Y - 50});
         unit.setDestination(level.Player.HomeBase);
         level.Units.push(unit);
         var turret = new Gun(level, level.Player, 5, 9);
-        turret.Weapon.Range = 10;
+        turret.Weapons[0].Range = 10;
         level.Buildings.push(turret);
 
         var health = unit.Health;
@@ -62,16 +58,19 @@
     });
 
     it('can provide energy and metal', function () {
-        var level = Levels.LevelEmpty();
-        var energy = level.Player.Resources.Energy;
-        var metal = level.Player.Resources.Metal;
+        var level = Levels.LevelTest();
+        var energy = level.Player.Resources.Energy = 0;
+        var metal = level.Player.Resources.Metal = 0;
+        level.update();
+        level.update();
+        level.update();
         level.update();
         expect(energy).toBeLessThan(level.Player.Resources.Energy);
         expect(metal).toBeLessThan(level.Player.Resources.Metal);
     });
 
     it('can be sold', function () {
-        var level = Levels.LevelEmpty();
+        var level = Levels.LevelTest();
         level.Player.Resources.Energy = Gun.Cost.Energy;
         level.Player.Resources.Metal = Gun.Cost.Metal;
         var building = PlayerCommands.CreateBuilding(level.Player, Gun, 1, 1);
@@ -79,11 +78,26 @@
         expect(level.Player.Resources.Metal).toBeGreaterThan(0);
     });
 
-    it('can be selected', function () {
-        var level = Levels.LevelEmpty();
-        var building = level.Player.HomeBase;
-        var selection = level.SelectBuildingAt(building.BlockX, building.BlockY);
-        expect(selection).toBe(building);
+    it('buildings can be selected and deselected', function () {
+        var level = Levels.LevelTest();
+        var block = level.getBlock(5, 5);
+        var building = block.GetBuilding();
+        expect(building).not.toBeNull();
+        level.SelectBuildingAt(block);
         expect(level.Selection).toBe(building);
+        expect(building.IsSelected()).toBe(true);
+
+        level.Deselect();
+        expect(level.Selection).toBeNull();
+        expect(building.IsSelected()).toBe(false);
+    });
+
+    it('when selected, it\'s menu is available', function () {
+        var building = new Buildings.Gun(null, null, {});
+        expect(building.Menu).toBeDefined();
+        expect(building.Menu).toBeNull();
+        building.Select();
+        expect(building.Menu).not.toBeNull();
+        expect(building.Menu.constructor).toBe(Building.BuildingMenu);
     });
 });

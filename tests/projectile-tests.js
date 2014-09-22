@@ -10,26 +10,19 @@
             });
         });
         waitsFor(function () {
-            return Levels;
-        }, 300);
-        waitsFor(function () {
-            return Projectiles;
-        }, 300);
-        waitsFor(function () {
-            return General;
-        }, 300);
-        waitsFor(function () {
-            return Unit;
+            return Levels != null
+                && Projectiles != null
+                && Unit != null
+                && General != null;
         }, 300);
     });
     it('should move', function () {
         var level = Levels.LevelTest();
-        var projectile = new Projectiles.Bullet(level,
-            0,
-            0,
+        var building = level.Buildings[1];
+        var projectile = new Projectiles.Bullet(
+            building.Weapons[0],
             General.AngleRad(0, 0, 50, 50),
-            5,
-            0);
+            2);
         level.Projectiles.push(projectile);
         level.update();
         expect(projectile.X).toBeGreaterThan(0);
@@ -38,15 +31,14 @@
 
     it('should die on impact, by default', function () {
         var level = Levels.LevelTest();
-        var unit = new Unit(level, {X:level.Player.HomeBase.X - 50, Y:level.Player.HomeBase.Y});
+        var building = level.Buildings[1];
+        var unit = new Unit(level, {X: building.X - 50, Y: building.Y});
         level.Units.push(unit);
 
-        var projectile = new Projectiles.Bullet(level,
-                unit.X + 20,
-            unit.Y,
-            General.AngleRad(unit.X + 20, unit.Y, unit.X, unit.Y),
-            1,
-            0);
+        var projectile = new Projectiles.Bullet(
+            building.Weapons[0],
+            General.AngleRad(building.X, building.Y, unit.X, unit.Y),
+            3);
         level.Projectiles.push(projectile);
 
         var i = 30;
@@ -55,21 +47,20 @@
     });
 
     it('should die when outside of level', function () {
-        var level = Levels.LevelEmpty();
-        var projectile = new Projectiles.Bullet(level,
-            25,
-            25,
-            180,
-            5,
-            0);
+        var level = Levels.LevelTest();
+        level.Waves = [];
+        var building = level.Buildings[1];
+        var projectile = new Projectiles.Bullet(building.Weapons[0],
+            0,
+            5);
         level.Projectiles.push(projectile);
 
         expect(level.Projectiles.length).toBe(1);
         level.update();
         expect(level.Projectiles.length).toBe(1);
 
-        var i = 20;
-        while (i--) level.update();
+        var i = 200;
+        while (i-->0 && level.Projectiles.length > 0) level.update();
         expect(level.Projectiles.length).toBe(0);
     });
 });

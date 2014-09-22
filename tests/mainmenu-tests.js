@@ -1,30 +1,31 @@
 ﻿describe('Main Menu Tests', function () {
-    var mocks, ParticleDefense, Level;
+    var MainMenuController, ParticleDefense, Level;
     beforeEach(function () {
         runs(function () {
-            require(["angular-mocks", "game/ParticleDefense", "game/Level"], function (_mocks, particleDefense, level) {
-                mocks = _mocks;
+            require(["app/MainMenuController", "game/ParticleDefense", "game/Level"], function (mainMenuController, particleDefense, level) {
+                MainMenuController = mainMenuController;
                 ParticleDefense = particleDefense;
                 Level = level;
             });
         });
         waitsFor(function () {
-            return mocks;
+            return MainMenuController;
         }, 300);
         waitsFor(function () {
             return ParticleDefense;
         }, 300);
+        waitsFor(function () {
+            return Level;
+        }, 300);
     });
     it('should have the basics of a main menu', function () {
-        mocks.module('ParticleDefense');
-        mocks.inject(function ($controller) {
-            var scope = {};
-            var ctrl = $controller("MainMenuController", { $scope: scope });
-            expect(scope.Title).toBeDefined();
-            expect(scope.Levels).toBeDefined();
-            expect(scope.Levels[0]() instanceof Level).toBeTruthy();
-            scope.BeginLevel(scope.Levels[0], document.createElement('canvas'));
-            ParticleDefense.Level = null;
-        });
+        var scope = {};
+        var canvas = document.createElement('canvas');
+        var ctrl = new MainMenuController(scope, canvas);
+        expect(scope.Title).toBeDefined();
+        expect(scope.Levels).toBeDefined();
+        expect(scope.Levels[0]() instanceof Level).toBeTruthy();
+        scope.BeginLevel(scope.Levels[0]);
+        ParticleDefense.Level = null;
     });
 });
