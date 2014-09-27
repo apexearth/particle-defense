@@ -94,10 +94,10 @@
 
     it('when selected, it\'s menu is available', function () {
         var building = new Buildings.Gun(null, null, {});
-        expect(building.Menu).toBeDefined();
-        expect(building.Menu).toBeNull();
+        expect(building.Abilities).toBeDefined();
+        expect(building.Abilities).toBeNull();
         building.Select();
-        expect(building.Menu).not.toBeNull();
-        expect(building.Menu.constructor).toBe(Building.BuildingMenu);
+        expect(building.Abilities).not.toBeNull();
+        expect(building.Abilities.constructor).toBe(Building.Abilities);
     });
 });

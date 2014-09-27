@@ -3,9 +3,7 @@
         $scope.Level = ParticleDefense.Level;
         $scope.Player = ParticleDefense.Level.Player;
         $scope.Buildings = Buildings;
-        $scope.Selection = function() {
-            return ParticleDefense.Level.Selection;
-        };
+
         $scope.PlacementBuilding = function () {
             return $scope.Level.PlacementBuilding != null
                 ? $scope.Level.PlacementBuilding.constructor
@@ -24,6 +22,12 @@
             $scope.Cost = $scope.PlacementBuilding() != null
                 ? $scope.PlacementBuilding().Cost
                 : null;
+        };
+        /** @returns String, Number */
+        $scope.GetCost = function (cost, key) {
+            if (cost == null) return null;
+            if (typeof(cost[key]) == "function" && cost[key]() > 0) return -Math.round(cost[key]());
+            if (cost[key] > 0) return -Math.round(cost[key]);
         };
 
         var eventCatcher = document.getElementById('event-catcher');

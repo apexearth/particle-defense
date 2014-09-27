@@ -1,4 +1,4 @@
-﻿define("game/Building", ["game/Settings", "util/General"], function (Settings, General) {
+﻿define("game/Building", ["game/Settings", "util/General", "util/Display"], function (Settings, General, Display) {
     var arcCircle = 2 * Math.PI;
 
     var Building = function (level, player, templates) {
@@ -10,7 +10,7 @@
         this.Height = Settings.BlockSize;
         this.Level = level;
         this.Player = player;
-        this.Menu = null;
+        this.Abilities = null;
         this.ResourceStorage = {
             Energy: 0,
             Metal: 0,
@@ -26,11 +26,11 @@
             return _isSelected;
         };
         this.Select = function () {
-            this.Menu = new Building.BuildingMenu(this);
+            this.Abilities = new Building.Abilities(this);
             _isSelected = true;
         };
         this.Deselect = function () {
-            this.Menu = null;
+            this.Abilities = null;
             _isSelected = false;
         };
 
@@ -56,10 +56,14 @@
         this.UpdateXY = function () {
             this.X = this.BlockX * Settings.BlockSize + Settings.BlockSize / 2;
             this.Y = this.BlockY * Settings.BlockSize + Settings.BlockSize / 2;
+
             this.TopLeft = {
                 X: this.BlockX * Settings.BlockSize,
                 Y: this.BlockY * Settings.BlockSize
             };
+            var displayCoords = Display.translateCoordinate(this.TopLeft.X, this.TopLeft.Y);
+            this.TopLeft.DisplayX = displayCoords.x;
+            this.TopLeft.DisplayY = displayCoords.y;
         };
         this.initialize = function () {
             this.UpdateXY();
@@ -118,16 +122,13 @@
         }
     };
 
-    Building.BuildingMenu = function (building) {
+    Building.Abilities = function (building) {
         this.Building = building;
-        this.Abilities = {
-            Upgrade: {}
-        };
-
         // Add Weapon Upgrades
+        this.Upgrades = {};
         var i = building.Weapons.length;
         while (i--) {
-            this.Abilities.Upgrade['Weapon' + (i === 0 ? "" : i)] = building.Weapons[i].Upgrades;
+            this.Upgrades['Weapon' + (i === 0 ? "" : i)] = building.Weapons[i].Attributes;
         }
     };
 

@@ -1,4 +1,4 @@
-﻿describe('Main Menu Tests', function () {
+﻿describe('Main Abilities Tests', function () {
     var MainMenuController, ParticleDefense, Level;
     beforeEach(function () {
         runs(function () {

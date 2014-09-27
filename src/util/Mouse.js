@@ -23,6 +23,6 @@
         }
     };
 
-    Mouse.AddEvents(document);
+    //Mouse.AddEvents(document);
     return Mouse;
 });
