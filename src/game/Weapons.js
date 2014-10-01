@@ -282,19 +282,16 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
             this.Range = 185;
             this.ShotsPerShot = 1;
             /** @return {number} **/
-            this.AmmoConsumption = function () {
-                return this.Damage * 10;
-            };
-            this.Damage = .4;
-            this.FireRate = this.FireRateCount = Settings.Second * 2;
+            this.Damage = 4;
+            this.FireRate = this.FireRateCount = 60;
             this.CreateProjectile = function () {
                 var angle = this.getTargetLeadingAngle();
                 var projectile = new Projectiles.Laser(
                     this,
                         angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2))
                 );
-                projectile.Damage = this.Damage;
-                projectile.Width = this.Damage * 4;
+                projectile.Damage = this.Damage / this.Lifespan;
+                projectile.Width = this.Damage / 4;
                 return projectile;
             };
         }

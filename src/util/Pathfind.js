@@ -1,4 +1,4 @@
-﻿define("util/Pathfind", function () {
+﻿define("util/Pathfind", ["util/BlockStatus"], function (BlockStatus) {
     function Pathfind() {
     }
 
@@ -22,7 +22,7 @@
         var open = [];
 
         var start = blockStart;
-        if (start.IsBlocked()) return [];
+        if (start.Status() >= BlockStatus.NotPassable) return [];
         var current = start;
         var target = blockTarget;
         //if (target.IsBlocked) return [];
@@ -39,11 +39,11 @@
 
 
         var path = [];
-        if (current!= null && current.Pathfind != null) {
+        if (current != null && current.Pathfind != null) {
             current = target;
             //TODO: I don't think I should have to check if the parent is blocked here, but I do when the destination is surrounded by blocking tiles.
             while (current.Pathfind.Parent != null) {
-                if (current.Pathfind.Parent.IsBlocked()) target.Pathfind.Parent = null;
+                if (current.Pathfind.Parent.Status() >= BlockStatus.NotPassable) target.Pathfind.Parent = null;
                 current = current.Pathfind.Parent;
             }
 
@@ -87,7 +87,7 @@
             var adjacentBlock = adjacentBlocks[i];
             var blockIsGood =
                 adjacentBlock != null
-                && (!adjacentBlock.IsBlocked() || adjacentBlock == target)
+                && (adjacentBlock.Status() < BlockStatus.NotPassable || adjacentBlock == target)
                 && closed.indexOf(adjacentBlock) == -1
                 && Pathfind.diagonalScreen(current, adjacentBlock);
 
@@ -117,10 +117,10 @@
 
     Pathfind.diagonalScreen = function (current, adjacent) {
         return Pathfind.Settings.BlockedDiagonalMovement || adjacent.X == current.X || adjacent.Y == current.Y
-            || adjacent.X < current.X && (adjacent.Y < current.Y && (adjacent.BottomBlock == null || !adjacent.BottomBlock.IsBlocked()) && (adjacent.RightBlock == null || !adjacent.RightBlock.IsBlocked())
-            || current.Y < adjacent.Y && (adjacent.TopBlock == null || !adjacent.TopBlock.IsBlocked()) && (adjacent.RightBlock == null || !adjacent.RightBlock.IsBlocked()))
-            || adjacent.X > current.X && (adjacent.Y < current.Y && (adjacent.BottomBlock == null || !adjacent.BottomBlock.IsBlocked()) && (adjacent.LeftBlock == null || !adjacent.LeftBlock.IsBlocked())
-            || current.Y < adjacent.Y && (adjacent.TopBlock == null || !adjacent.TopBlock.IsBlocked()) && (adjacent.LeftBlock == null || !adjacent.LeftBlock.IsBlocked()));
+            || adjacent.X < current.X && (adjacent.Y < current.Y && (adjacent.BottomBlock == null || adjacent.BottomBlock.Status() < BlockStatus.NotPassable) && (adjacent.RightBlock == null || adjacent.RightBlock.Status() < BlockStatus.NotPassable)
+            || current.Y < adjacent.Y && (adjacent.TopBlock == null || adjacent.TopBlock.Status() < BlockStatus.NotPassable) && (adjacent.RightBlock == null || adjacent.RightBlock.Status() < BlockStatus.NotPassable))
+            || adjacent.X > current.X && (adjacent.Y < current.Y && (adjacent.BottomBlock == null || adjacent.BottomBlock.Status() < BlockStatus.NotPassable) && (adjacent.LeftBlock == null || adjacent.LeftBlock.Status() < BlockStatus.NotPassable)
+            || current.Y < adjacent.Y && (adjacent.TopBlock == null || adjacent.TopBlock.Status() < BlockStatus.NotPassable) && (adjacent.LeftBlock == null || adjacent.LeftBlock.Status() < BlockStatus.NotPassable));
     };
     Pathfind.calculateScore = function (currentX, currentY, targetX, targetY) {
         var x = Math.abs(targetX - currentX);
@@ -131,8 +131,7 @@
     };
 
     Pathfind.calculate = function (block, parent, start, target) {
-        block.Pathfind = function () {
-        };
+        block.Pathfind = {};
         if (parent == null || parent.Pathfind == null)
             block.Pathfind.ScoreStart = 0;
         else

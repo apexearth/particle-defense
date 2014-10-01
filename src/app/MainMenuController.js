@@ -3,7 +3,8 @@
         $scope.Title = "Particle Defense";
         $scope.Levels = [
             Levels.LevelTest,
-            Levels.LevelOne
+            Levels.LevelOne,
+            Levels.LevelTwo
         ];
         $scope.BeginLevel = function (level) {
             ParticleDefense.startLevel(level, canvas);

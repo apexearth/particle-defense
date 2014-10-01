@@ -1,26 +1,25 @@
-﻿define("util/Grid", function () {
+﻿define("util/Grid", ["util/BlockStatus"], function (BlockStatus) {
     var Block = function (x, y) {
-        var _isBlocked = false;
+        var _status = BlockStatus.IsNothing;
         var _building = null;
         this.X = x;
         this.Y = y;
         this.Objects = [];
 
-
-        this.SetIsBlocked = function(bool){
-            _isBlocked = bool;
+        this.SetStatus = function (status) {
+            _status = status;
         };
-        /** @return bool **/
-        this.IsBlocked = function () {
-            if (_isBlocked !== null) return _isBlocked;
-            return false;
+        /** @return String **/
+        this.Status = function () {
+            if (_status !== null) return _status;
+            return null;
         };
         this.RemoveBuilding = function () {
-            _isBlocked = false;
+            _status = BlockStatus.IsEmpty;
             _building = null;
         };
         this.SetBuilding = function (building) {
-            _isBlocked = true;
+            _status = BlockStatus.NotBuildable;
             _building = building;
         };
         this.GetBuilding = function () {
@@ -33,6 +32,7 @@
             this.Objects.splice(this.Objects.indexOf(object), 1);
         };
     };
+
     var Grid = function (minX, minY, maxX, maxY) {
         this.Block = [];
         this.MinX = minX;
@@ -43,10 +43,10 @@
         this.TopBlock = null;
         this.RightBlock = null;
         this.BottomBlock = null;
-        var x = maxX - minX + 1;
+        var x = maxX - minX;
         while (x--) {
             this.Block[x] = [];
-            var y = maxY - minY + 1;
+            var y = maxY - minY;
             while (y--) {
                 var block = new Block(x, y);
                 this.Block[x][y] = block;
@@ -62,11 +62,11 @@
         }
     };
 
-    Grid.prototype.SetIsBlocked = function (x, y, bool) {
-        this.getBlock(x, y).SetIsBlocked(bool);
+    Grid.prototype.SetBlockStatus = function (x, y, status) {
+        this.getBlock(x, y).SetStatus(status);
     };
-    Grid.prototype.IsBlocked = function (x, y) {
-        return this.getBlock(x, y).IsBlocked();
+    Grid.prototype.BlockStatus = function (x, y) {
+        return this.getBlock(x, y).Status();
     };
 
     Grid.prototype.getBlockFromVector = function (vector) {
@@ -98,8 +98,8 @@
                     && (diagonal || (x == blockX || y == blockY))
                     && x >= this.MinX && x <= this.MaxX
                     && y >= this.MinY && y <= this.MaxY) {
-                    var block = this.getBlock(x, y);
-                    adjacentBlocks.push(block);
+                    var block = this.getBlockOrNull(x, y);
+                    if (block !== null) adjacentBlocks.push(block);
                 }
             }
         }

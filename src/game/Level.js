@@ -1,8 +1,9 @@
-﻿define("game/Level", ["game/Map", "game/PlayerCommands", "util/General", "util/Mouse", "util/Keyboard", "game/CommandQueue", "game/Settings"], function (Map, PlayerCommands, General, Mouse, Keyboard, CommandQueue, Settings) {
-    var Level = function (width, height) {
+﻿define("game/Level", ["game/Map", "game/PlayerCommands", "util/General", "util/Mouse", "util/Keyboard", "game/CommandQueue", "game/Settings", "util/BlockStatus"], function (Map, PlayerCommands, General, Mouse, Keyboard, CommandQueue, Settings, BlockStatus) {
+    var Level = function (width, height, startBlock, mapTemplate) {
         var me = this;
-        var _map = new Map(width, height);
+        var _map = new Map(width, height, mapTemplate);
 
+        this.StartBlock = _map.getBlock(startBlock.X, startBlock.Y);
         this.FrameCount = 0;
         this.Width = _map.PixelWidth;
         this.Height = _map.PixelHeight;
@@ -86,20 +87,19 @@
         /** @summary The idea behind this is to check if a block is buildable when placing a building. **/
         /** @returns bool **/
         this.IsBlockBuildable = function (block) {
-            if (block.X === 0 || block.Y === 0) return false;
-            if (block.X === this.Width - 1 || block.Y === this.Height - 1) return false;
-            if (block.IsBlocked()) return false                             // It's blocked
-            if (block.Objects.length > 0) return false;                     // The block has an object in it.
-            if (_buildableBlocks.indexOf(block) >= 0) return true;          // Is within list of buildable blocks.
-            if (_notBuildableBlocks.indexOf(block) >= 0) return false;      // Is within list of not buildable blocks.
-            return this.CheckIfBuildingWillBlockPath(block);                // Since last two didn't show, we find out.
+            if (block.Status() >= BlockStatus.OnlyPassable) return false;       // It's blocked
+            if (block.Objects.length > 0) return false;                         // The block has an object in it.
+            if (_buildableBlocks.indexOf(block) >= 0) return true;              // Is within list of buildable blocks.
+            if (_notBuildableBlocks.indexOf(block) >= 0) return false;          // Is within list of not buildable blocks.
+            return this.CheckIfBuildingWillBlockPath(block);                    // Since last two didn't show, we find out.
         };
 
         /** @returns bool **/
         this.CheckIfBuildingWillBlockPath = function (block) {
-            block.SetIsBlocked(true);
-            var path = this.getPath(this.getBlock(0, 0), this.Player.HomeBase.Block);
-            block.SetIsBlocked(false);
+            var prevStatus = block.Status();
+            block.SetStatus(BlockStatus.NotPassable);
+            var path = this.getPath(this.StartBlock, this.Player.HomeBase.Block);
+            block.SetStatus(prevStatus);
             if (path.length > 0) {
                 _buildableBlocks.push(block);
                 return true;
@@ -108,7 +108,7 @@
                 return false;
             }
         };
-        /** @summary Should be called whenever block IsBlocked statuses change. **/
+        /** @summary Should be called whenever block BlockStatus changes. **/
         this.ResetBuildableBlocks = function () {
             _buildableBlocks = [];
             _notBuildableBlocks = [];
@@ -180,7 +180,7 @@
 
                 if (clickedBlock != null && clickedBlock.GetBuilding() != null) {
                     this.SelectBuildingAt(clickedBlock);
-                }else{
+                } else {
                     this.Deselect();
                 }
             }
@@ -207,6 +207,7 @@
                 && this.CurrentWave.Units.length > 0
                 && this.CurrentWave.UnitDelayCount++ >= this.CurrentWave.UnitDelay) {
                 unit = this.CurrentWave.Units.pop();
+
                 this.Units.push(unit);
                 if (this.Player.HomeBase.Health > 0)
                     unit.setDestination(this.Player.HomeBase);
@@ -254,6 +255,7 @@
         };
         this.draw = function () {
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.context.drawImage(_map.canvas, 0, 0);
 
             var b = this.Buildings.length;
             while (b--)
@@ -284,7 +286,6 @@
                 }
             }
 
-            this.context.drawImage(_map.canvas, 0, 0);
         };
 
         this.initialize = function (template) {

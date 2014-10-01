@@ -1,5 +1,5 @@
-﻿define("game/Map", ["util/Grid", "game/Settings", "util/Pathfind"], function (Grid, Settings, Pathfind) {
-    function Map(width, height) {
+﻿define("game/Map", ["util/Grid", "game/Settings", "util/Pathfind", "util/BlockStatus"], function (Grid, Settings, Pathfind, BlockStatus) {
+    function Map(width, height, template) {
         this.BlockSize = Settings.BlockSize;
         this.Width = width;
         this.Height = height;
@@ -12,8 +12,8 @@
         var _grid = new Grid(0, 0, this.Width, this.Height);
         this.RequiresDraw = true;
 
-        this.IsBlocked = function(x, y){
-            return _grid.IsBlocked(x, y);
+        this.BlockStatus = function (x, y) {
+            return _grid.BlockStatus(x, y);
         };
         this.getBlock = function (x, y) {
             return _grid.getBlock(x, y);
@@ -52,20 +52,39 @@
 
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.context.strokeStyle = 'rgba(50,50,50,.5)';
+            this.context.fillStyle = 'rgba(75,75,75.5)';
             this.context.lineWidth = 1;
             var x = this.Width;
             while (x--) {
                 var y = this.Height;
-                while (y--)
+                while (y--) {
                     this.context.strokeRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
+                    if (_grid.BlockStatus(x, y) == BlockStatus.OnlyPassable)
+                        this.context.fillRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize)
+                }
             }
             this.context.strokeStyle = 'rgba(50,50,50,1)';
             this.context.lineWidth = 2;
             this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height);
         };
 
+        (function () {
+            if (template) {
+                if (template.BuildableBlocks) {
+                    var yCount = template.BuildableBlocks.length;
+                    while (yCount--) {
+                        var row = template.BuildableBlocks[yCount];
+                        var xCount = row.length;
+                        while (xCount--) {
+                            _grid.SetBlockStatus(xCount, yCount, row[xCount]);
+                        }
+                    }
+                }
+            }
+        })();
+
         this.draw();
-    };
+    }
 
     return Map;
 });

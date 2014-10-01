@@ -1,11 +1,11 @@
-﻿define("game/PathfindExample", ["util/Grid", "util/General", "util/Display", "util/Pathfind"], function (Grid, General, Display, Pathfind) {
+﻿define("game/PathfindExample", ["util/Grid", "util/General", "util/Display", "util/Pathfind", "util/BlockStatus"], function (Grid, General, Display, Pathfind, BlockStatus) {
     var Vector2 = General.Vector2;
     PathfindExample.instance = new PathfindExample();
     function PathfindExample() {
         this.grid = new Grid(0, 0, 10 + Math.floor(Math.random() * 10), 10 + Math.floor(Math.random() * 10));
         var i = Math.floor(this.grid.MaxX * this.grid.MaxY * .25);
         while (i--)
-            this.grid.SetIsBlocked(Math.round(this.grid.MaxX * Math.random()), Math.round(this.grid.MaxY * Math.random()), true);
+            this.grid.SetBlockStatus(Math.round(this.grid.MaxX * Math.random()), Math.round(this.grid.MaxY * Math.random()), BlockStatus.NotPassable);
         this.start = Vector2.create(Math.floor(Math.random() * this.grid.MaxX), Math.floor(Math.random() * this.grid.MaxY));
         this.stop = Vector2.create(Math.floor(Math.random() * this.grid.MaxX), Math.floor(Math.random() * this.grid.MaxY));
         this.path = Pathfind.getPathByVector(this.grid, this.start, this.stop);
@@ -63,7 +63,7 @@
         while (x--) {
             var y = PathfindExample.instance.grid.Block[x].length;
             while (y--) {
-                if (PathfindExample.instance.grid.Block[x][y].IsBlocked) {
+                if (PathfindExample.instance.grid.Block[x][y].Status() >= BlockStatus.NotPassable) {
                     Display.setFill('rgba(255,75,75,.5)');
                 } else {
                     Display.setFill('rgba(75,75,75,.4)');
@@ -75,9 +75,9 @@
 
         Display.setFont(40, 'sans-serif');
         Display.setFill('rgb(255,255,255)');
-        if (PathfindExample.instance.grid.IsBlocked(PathfindExample.instance.start.X, PathfindExample.instance.start.Y))
+        if (PathfindExample.instance.grid.BlockStatus(PathfindExample.instance.start.X, PathfindExample.instance.start.Y) >= BlockStatus.NotPassable)
             Display.fillText("The start point is blocked.", 10, 50);
-        if (PathfindExample.instance.grid.IsBlocked(PathfindExample.instance.stop.X, PathfindExample.instance.stop.Y))
+        if (PathfindExample.instance.grid.BlockStatus(PathfindExample.instance.stop.X, PathfindExample.instance.stop.Y) >= BlockStatus.NotPassable)
             Display.fillText("The target is blocked.", 10, 100);
         Display.Settings.DisableTranslation = false;
     };
