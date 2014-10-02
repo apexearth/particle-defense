@@ -51,21 +51,24 @@
             this.RequiresDraw = false;
 
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.context.strokeStyle = 'rgba(50,50,50,.5)';
-            this.context.fillStyle = 'rgba(75,75,75.5)';
+            this.context.strokeStyle = 'rgba(30,30,30,1)';
             this.context.lineWidth = 1;
             var x = this.Width;
             while (x--) {
                 var y = this.Height;
                 while (y--) {
-                    this.context.strokeRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
-                    if (_grid.BlockStatus(x, y) == BlockStatus.OnlyPassable)
-                        this.context.fillRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize)
+                    if (_grid.BlockStatus(x, y) === BlockStatus.IsNothing) {
+                        // Do nothing!
+                    } else if (_grid.BlockStatus(x, y) == BlockStatus.OnlyPassable) {
+                        this.context.fillStyle = 'rgba(20,20,20,1)';
+                        this.context.fillRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
+                    } else {
+                        this.context.fillStyle = 'rgba(7,7,7,1)';
+                        this.context.fillRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
+                        this.context.strokeRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
+                    }
                 }
             }
-            this.context.strokeStyle = 'rgba(50,50,50,1)';
-            this.context.lineWidth = 2;
-            this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height);
         };
 
         (function () {

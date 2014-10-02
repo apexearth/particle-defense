@@ -4,7 +4,8 @@
         $scope.Levels = [
             Levels.LevelTest,
             Levels.LevelOne,
-            Levels.LevelTwo
+            Levels.LevelTwo,
+            Levels.LevelThree
         ];
         $scope.BeginLevel = function (level) {
             ParticleDefense.startLevel(level, canvas);

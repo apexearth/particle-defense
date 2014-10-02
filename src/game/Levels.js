@@ -173,10 +173,10 @@
                     [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1],
-                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1],
-                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1],
-                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1],
-                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1],
+                    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 5, 5],
+                    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 5, 5],
+                    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 5, 5],
+                    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 5, 5],
                     [1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1],
                     [1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -191,6 +191,56 @@
         return level;
     };
     Levels.LevelTwo.Name = "Level Two";
+
+    Levels.LevelThree = function () {
+        var level = CreateLevel({
+            Player: { Resources: {Ammo: 0, Energy: 200, Metal: 100 } },
+            WaveDelay: Settings.Second * 7,
+            Buildings: [
+                { constructor: "HomeBase", Template: { BlockX: 10, BlockY: 15 } }
+            ],
+            StartBlock: {
+                X: 1,
+                Y: 0
+            },
+            Waves: [
+                { TemplateName: "UnitCircle", Count: 20, SpawnInterval: Settings.Second, Customization: { Health: 15, Radius: 3, MoveSpeed: 2, FillColor: '#afa' } },
+                { TemplateName: "UnitCircle", Count: 20, SpawnInterval: Settings.Second, Customization: { Health: 20, Radius: 3.5, MoveSpeed: 2, FillColor: '#0fa' } },
+                { TemplateName: "UnitCircle", Count: 20, SpawnInterval: Settings.Second * 2, Customization: { Health: 40, Radius: 5, MoveSpeed: 2, FillColor: '#af0' } },
+                { TemplateName: "UnitCircle", Count: 20, SpawnInterval: Settings.Second * 2, Customization: { Health: 20, Radius: 2.5, MoveSpeed: 2.5, FillColor: '#a0a' } },
+                { TemplateName: "UnitCircle", Count: 40, SpawnInterval: Settings.Second, Customization: { Health: 35, Radius: 3, MoveSpeed: 2, FillColor: '#00a' } },
+                { TemplateName: "UnitCircle", Count: 80, SpawnInterval: Settings.Second * .5, Customization: { Health: 45, Radius: 4, MoveSpeed: 2, FillColor: '#00a' } },
+            ],
+            MapTemplate: {
+                BuildableBlocks: [
+                    [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+                    [1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 2, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1, 5, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 2, 2, 2, 2, 2, 2, 5, 1, 1, 1, 1, 5, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 5, 5, 5, 5, 5, 2, 5, 1, 1, 1, 1, 5, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 1, 1, 1, 1, 5, 2, 5, 1, 1, 1, 1, 5, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 1, 1, 1, 1, 5, 2, 5, 1, 1, 1, 1, 5, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 1, 1, 1, 1, 5, 2, 5, 1, 1, 1, 1, 5, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 1, 1, 1, 1, 5, 1, 5, 1, 1, 1, 1, 5, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 1, 2, 1],
+                    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
+                    [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
+                    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                ]
+            }
+        });
+
+        return level;
+    };
+    Levels.LevelThree.Name = "Level Three";
 
     return Levels;
 });
