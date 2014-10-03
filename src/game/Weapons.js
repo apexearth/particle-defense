@@ -7,7 +7,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
 
         /** @return {number} **/
         this.AmmoConsumption = function () {
-            return this.Damage / 2;
+            return this.Damage / 2 * this.ProjectileSpeed / 3;
         };
         this.FireRate = 10;
         this.FireRateCount = 10;
@@ -130,7 +130,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                 attribute.Upgrade = function () {
                     if (!weapon.Attributes.Accuracy.IsEnabled()) return;
                     player.TryApplyCost(weapon.Attributes.Accuracy.Cost);
-                    weapon.ShotSpread = Math.min(1, weapon.ShotSpread * 1.005);
+                    weapon.ShotSpread = Math.min(1, weapon.ShotSpread *.95);
                 };
                 /** @returns bool **/
                 attribute.IsEnabled = function () {
@@ -235,18 +235,18 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                 Weapon.call(this, building);
                 this.Range = range;
                 this.FireRate = this.FireRateCount = fireRate;
-                this.ProjectileSpeed = 3;
+                this.ProjectileSpeed = projectileSpeed;
                 this.Damage = damage;
-                this.ShotSpeedVariance = 1 - accuracy;
+                this.ShotSpread = 1 - accuracy;
                 this.CreateProjectile = function () {
                     var angle = this.getTargetLeadingAngle();
                     var projectile = new Projectiles.Bullet(
                         this,
-                            angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2)),
-                            this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2))
+                            angle + Math.PI * (Math.random() * this.ShotSpread - (this.ShotSpread / 2)),
+                        this.ProjectileSpeed
                     );
                     projectile.Damage = this.Damage;
-                    projectile.Width = Math.sqrt(this.Damage);
+                    projectile.Width = Math.sqrt(this.Damage) * 2 / this.ProjectileSpeed * 3;
                     return projectile;
                 };
             };

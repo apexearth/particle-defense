@@ -1,9 +1,10 @@
 ﻿define("game/Level", ["game/Map", "game/PlayerCommands", "util/General", "util/Mouse", "util/Keyboard", "game/CommandQueue", "game/Settings", "util/BlockStatus"], function (Map, PlayerCommands, General, Mouse, Keyboard, CommandQueue, Settings, BlockStatus) {
-    var Level = function (width, height, startBlock, mapTemplate) {
+    var Level = function (width, height, mapTemplate) {
         var me = this;
         var _map = new Map(width, height, mapTemplate);
 
-        this.StartBlock = _map.getBlock(startBlock.X, startBlock.Y);
+        this.SpawnPoints = [];
+
         this.FrameCount = 0;
         this.Width = _map.PixelWidth;
         this.Height = _map.PixelHeight;
@@ -20,14 +21,24 @@
         this.Units = [];
         this.Projectiles = [];
         this.Buildings = [];
-        this.Waves = [];
-        this.CurrentWave = null;
-        this.WaveDelay = 30;
-        this.WaveDelayCount = 0;
+
+        /** @returns Number **/
+        this.TotalWaves = function () {
+            var i = me.SpawnPoints.length;
+            var waveCount = 0;
+            while (i--) {
+                waveCount = Math.max(me.SpawnPoints[i].Waves.length, waveCount);
+                if (me.SpawnPoints[i].CurrentWave !== null) waveCount++;
+            }
+
+            return waveCount;
+        };
         this.WinConditions = [function () {
-            return (me.CurrentWave === null || me.CurrentWave.Units.length === 0)
-                && me.Waves.length === 0
-                && me.Units.length === 0;
+            var i = me.SpawnPoints.length;
+            while (i--) {
+                if (me.SpawnPoints[i].HasWaves() === false) return true;
+            }
+            return false;
         }];
         this.LossConditions = [function () {
             return me.Player.HomeBase.Health <= 0;
@@ -47,15 +58,6 @@
         this.AddPlayer = function (player) {
             this.Players.push(player);
             return player;
-        };
-        this.createWave = function (unitArray, unitDelay) {
-            var wave = {
-                Units: unitArray,
-                UnitDelay: unitDelay,
-                UnitDelayCount: 0
-            };
-            this.Waves.unshift(wave);
-            return wave;
         };
         this.hitTest = function (vector) {
             return vector.X >= this.Bounds.Left && vector.X <= this.Bounds.Right && vector.Y >= this.Bounds.Top && vector.Y <= this.Bounds.Bottom;
@@ -98,15 +100,21 @@
         this.CheckIfBuildingWillBlockPath = function (block) {
             var prevStatus = block.Status();
             block.SetStatus(BlockStatus.NotPassable);
-            var path = this.getPath(this.StartBlock, this.Player.HomeBase.Block);
-            block.SetStatus(prevStatus);
-            if (path.length > 0) {
-                _buildableBlocks.push(block);
-                return true;
-            } else {
-                _notBuildableBlocks.push(block);
-                return false;
+            var i = this.SpawnPoints.length;
+            while (i--) {
+                var spawnPoint = this.SpawnPoints[i];
+                var spawnPointBlock = this.getBlock(spawnPoint.X, spawnPoint.Y);
+                var path = this.getPath(spawnPointBlock, this.Player.HomeBase.Block);
+                if (path.length > 0) {
+                    _buildableBlocks.push(block);
+                } else {
+                    _notBuildableBlocks.push(block);
+                    block.SetStatus(prevStatus);
+                    return false;
+                }
             }
+            block.SetStatus(prevStatus);
+            return true;
         };
         /** @summary Should be called whenever block BlockStatus changes. **/
         this.ResetBuildableBlocks = function () {
@@ -195,28 +203,15 @@
         };
         this.update = function () {
             this.FrameCount++;
-            if (this.Units.length === 0
-                && (this.CurrentWave === null || this.CurrentWave.Units.length === 0)
-                && this.Waves.length !== 0
-                && this.WaveDelayCount++ >= this.WaveDelay) {
-                this.CurrentWave = this.Waves.pop();
-                this.WaveDelayCount = 0;
-            }
-            var unit;
-            if (this.CurrentWave !== null
-                && this.CurrentWave.Units.length > 0
-                && this.CurrentWave.UnitDelayCount++ >= this.CurrentWave.UnitDelay) {
-                unit = this.CurrentWave.Units.pop();
-
-                this.Units.push(unit);
-                if (this.Player.HomeBase.Health > 0)
-                    unit.setDestination(this.Player.HomeBase);
-                this.CurrentWave.UnitDelayCount = 0;
+            var i = this.SpawnPoints.length;
+            while (i--) {
+                var spawnPoint = this.SpawnPoints[i];
+                spawnPoint.update(this);
             }
 
-            var i = this.Units.length;
+            i = this.Units.length;
             while (i-- > 0) {
-                unit = this.Units[i];
+                var unit = this.Units[i];
                 unit.update();
             }
 
@@ -281,7 +276,7 @@
                     this.PlacementBuilding.UpdateXY();
                     this.PlacementBuilding.draw(this.context);
                     this.context.fillStyle = (this.IsBlockBuildable(block) ? 'rgba(0,255,0,.5)' : 'rgba(255,0,0,.5)');
-                    this.context.fillRect(block.X * Level.Settings.BlockSize, block.Y * Level.Settings.BlockSize, Level.Settings.BlockSize, Level.Settings.BlockSize);
+                    this.context.fillRect(block.X * Settings.BlockSize, block.Y * Settings.BlockSize, Settings.BlockSize, Settings.BlockSize);
                     this.context.restore();
                 }
             }
@@ -291,10 +286,6 @@
         this.initialize = function (template) {
             General.CopyTo(template, this);
         };
-    };
-
-    Level.Settings = {
-        BlockSize: 35
     };
 
 
