@@ -29,6 +29,9 @@
             if (typeof(cost[key]) == "function" && cost[key]() > 0) return -Math.round(cost[key]());
             if (cost[key] > 0) return -Math.round(cost[key]);
         };
+        $scope.ToTitle = function (s) {
+            return s.replace(/([a-z])([A-Z0-9])/g, '$1 $2');
+        };
 
         var eventCatcher = document.getElementById('event-catcher');
         Mouse.AddEvents(eventCatcher);

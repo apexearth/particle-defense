@@ -7,149 +7,75 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
 
         /** @return {number} **/
         this.AmmoConsumption = function () {
-            return this.Damage / 2 * this.ProjectileSpeed / 3;
+            return this.Damage;
         };
         this.FireRate = 10;
         this.FireRateCount = 10;
         this.ShotsPerShot = 1;
-        this.ShotSpread = .05;
+        this.Accuracy = .05;
 
         var player = this.Building.Player;
 
         var weapon = this;
+        var me = this;
 
-        this.Attributes = {
-            Range: (function () {
-                var attribute = function () {
-                    return weapon.Range;
-                };
-                attribute.Upgrade = function () {
-                    if (!weapon.Attributes.Range.IsEnabled()) return;
-                    player.TryApplyCost(weapon.Attributes.Range.Cost);
-                    weapon.Range += 5;
-                };
-                /** @return {boolean} **/
-                attribute.IsEnabled = function () {
-                    return weapon.Range <= 250
-                        && player.TestApplyCost(weapon.Attributes.Range.Cost);
-                };
-                attribute.Cost = {
-                    /** @returns Number **/
-                    Energy: function () {
-                        return weapon.Range / 25;
-                    },
-                    /** @returns Number **/
-                    Metal: function () {
-                        return weapon.Range / 50;
+        this.NumberOfUpgrades = 0;
+        this.Attributes = {  };
+        var createAttribute = function (valueF, actionF, upgradeF, cost) {
+            var attribute = valueF;
+            attribute.Upgrade = function () {
+                if (!attribute.CanUpgrade()) return;
+                player.TryApplyCost(attribute.Cost);
+                actionF();
+                me.NumberOfUpgrades++;
+            };
+            /** @return {boolean} **/
+            attribute.CanUpgrade = function () {
+                if (upgradeF !== null && !upgradeF()) return false;
+                return player.TestApplyCost(attribute.Cost);
+            };
+            attribute.Cost = {};
+            for (var c in cost) {
+                if (cost.hasOwnProperty(c)) {
+                    attribute.Cost[c] = function () {
+                        return Math.pow(cost[c](), 1 + me.NumberOfUpgrades / 100);
                     }
-                };
-                return attribute;
-            })(),
-            FireRate: (function () {
-                var attribute = function () {
-                    return weapon.FireRate;
-                };
-                attribute.Upgrade = function () {
-                    if (!weapon.Attributes.FireRate.IsEnabled()) return;
-                    player.TryApplyCost(weapon.Attributes.FireRate.Cost);
-                    weapon.FireRate -= 1;
-                };
-                /** @return {boolean} **/
-                attribute.IsEnabled = function () {
-                    return weapon.FireRate > 1
-                        && player.TestApplyCost(weapon.Attributes.FireRate.Cost);
-                };
-                attribute.Cost = {
-                    /** @returns Number **/
-                    Energy: function () {
-                        return (60 / weapon.FireRate) * 5;
-                    },
-                    /** @returns Number **/
-                    Metal: function () {
-                        return (60 / weapon.FireRate) * 2.5;
-                    }
-                };
-                return attribute;
-            })(),
-            ProjectileSpeed: (function () {
-                var attribute = function () {
-                    return weapon.ProjectileSpeed;
-                };
-                attribute.Upgrade = function () {
-                    if (!weapon.Attributes.ProjectileSpeed.IsEnabled()) return;
-                    player.TryApplyCost(weapon.Attributes.ProjectileSpeed.Cost);
-                    weapon.ProjectileSpeed += .1;
-                };
-                /** @return {boolean} **/
-                attribute.IsEnabled = function () {
-                    return weapon.ProjectileSpeed < 10
-                        && player.TestApplyCost(weapon.Attributes.ProjectileSpeed.Cost);
-                };
-                attribute.Cost = {
-                    /** @returns Number **/
-                    Energy: function () {
-                        return (weapon.ProjectileSpeed * 2);
-                    },
-                    /** @returns Number **/
-                    Metal: function () {
-                        return (weapon.ProjectileSpeed);
-                    }
-                };
-                return attribute;
-            })(),
-            Damage: (function () {
-                var attribute = function () {
-                    return weapon.Damage;
-                };
-                attribute.Upgrade = function () {
-                    if (!weapon.Attributes.Damage.IsEnabled()) return;
-                    player.TryApplyCost(weapon.Attributes.Damage.Cost);
-                    weapon.Damage += .25;
-                };
-                /** @returns bool **/
-                attribute.IsEnabled = function () {
-                    return weapon.Damage < 30
-                        && player.TestApplyCost(weapon.Attributes.Damage.Cost);
-                };
-                attribute.Cost = {
-                    /** @returns Number **/
-                    Energy: function () {
-                        return (weapon.Damage * 4);
-                    },
-                    /** @returns Number **/
-                    Metal: function () {
-                        return (weapon.Damage * 2);
-                    }
-                };
-                return attribute;
-            })(),
-            Accuracy: (function () {
-                var attribute = function () {
-                    return weapon.ShotSpread;
-                };
-                attribute.Upgrade = function () {
-                    if (!weapon.Attributes.Accuracy.IsEnabled()) return;
-                    player.TryApplyCost(weapon.Attributes.Accuracy.Cost);
-                    weapon.ShotSpread = Math.min(1, weapon.ShotSpread *.95);
-                };
-                /** @returns bool **/
-                attribute.IsEnabled = function () {
-                    return weapon.ShotSpread < 1
-                        && player.TestApplyCost(weapon.Attributes.Accuracy.Cost);
-                };
-                attribute.Cost = {
-                    /** @returns Number **/
-                    Energy: function () {
-                        return 6;
-                    },
-                    /** @returns Number **/
-                    Metal: function () {
-                        return 3;
-                    }
-                };
-                return attribute;
-            })()
+                }
+            }
+            return attribute;
         };
+        var createAttributeForStat = function (name, upperLimit, limit, upgradeFactor, energyCost, metalCost) {
+            if (weapon[name] != null) {
+                me.Attributes[name] = createAttribute(
+                    function () {
+                        return weapon[name];
+                    },
+                    function () {
+                        weapon[name] *= upgradeFactor;
+                    },
+                    function () {
+                        if (upperLimit) return weapon[name] <= limit;
+                        return weapon[name] >= limit;
+                    },
+                    {
+                        /** @returns Number **/
+                        Energy: function () {
+                            return energyCost();
+                        },
+                        /** @returns Number **/
+                        Metal: function () {
+                            return metalCost();
+                        }
+                    }
+                );
+            }
+        };
+
+        createAttributeForStat("Range", true, 250, 1.1, function () {return weapon.Range / 25}, function () {return weapon.Range / 50});
+        createAttributeForStat("FireRate", false, 1, .95, function () {return 300 * weapon.Damage / 5 / weapon.FireRate}, function () {return 600 * weapon.Damage / 5 / weapon.FireRate});
+        createAttributeForStat("ProjectileSpeed", true, 10, 1.1, function () {return weapon.ProjectileSpeed * 4}, function () {return weapon.ProjectileSpeed * 2});
+        createAttributeForStat("Damage", true, 30, 1.1, function () {return 300 * weapon.Damage / 5 / weapon.FireRate}, function () {return 600 * weapon.Damage / 5 / weapon.FireRate});
+        createAttributeForStat("Accuracy", true, 30, .95, function () {return 6}, function () {return 3});
 
         this.ResetTarget = function () {
             this.Target = null;
@@ -219,7 +145,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                     var angle = this.getTargetLeadingAngle();
                     var projectile = new Projectiles.Missile(
                         this,
-                            angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2)),
+                            angle * (Math.random() * this.Accuracy + (1 - this.Accuracy / 2)),
                             this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2)),
                         this.Acceleration
                     );
@@ -230,69 +156,56 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                 };
             }
         },
-        Gun: function (range, fireRate, projectileSpeed, damage, accuracy) {
+        Gun: function (range, fireRate, projectileSpeed, damage, accuracy, shotsPerShot) {
             return function (building) {
                 Weapon.call(this, building);
                 this.Range = range;
                 this.FireRate = this.FireRateCount = fireRate;
                 this.ProjectileSpeed = projectileSpeed;
                 this.Damage = damage;
-                this.ShotSpread = 1 - accuracy;
+                this.Accuracy = 1 - accuracy;
+                this.ShotsPerShot = shotsPerShot;
+                /** @return {number} **/
+                this.AmmoConsumption = function () {
+                    return this.Damage / 2 * this.ProjectileSpeed / 3;
+                };
                 this.CreateProjectile = function () {
                     var angle = this.getTargetLeadingAngle();
                     var projectile = new Projectiles.Bullet(
                         this,
-                            angle + Math.PI * (Math.random() * this.ShotSpread - (this.ShotSpread / 2)),
+                            angle + Math.PI * (Math.random() * this.Accuracy - (this.Accuracy / 2)),
                         this.ProjectileSpeed
                     );
-                    projectile.Damage = this.Damage;
+                    projectile.Damage = this.Damage / this.ShotsPerShot;
                     projectile.Width = Math.sqrt(this.Damage) * 2 / this.ProjectileSpeed * 3;
                     return projectile;
                 };
             };
         },
-        Shotgun: function (building) {
-            Weapon.call(this, building);
-            this.Range = 120;
-            this.ShotsPerShot = 5;
-            this.ShotSpeedVariance = .05;
-            /** @return {number} **/
-            this.AmmoConsumption = function () {
-                return this.ShotsPerShot * this.Damage;
-            };
-            this.FireRate = this.FireRateCount = 60;
-            this.ProjectileSpeed = 2.3;
-            this.Damage = 5;
-            this.ShotSpeedVariance = .2;
-            this.CreateProjectile = function () {
-                var angle = this.getTargetLeadingAngle();
-                var projectile = new Projectiles.Bullet(
-                    this,
-                        angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2)),
-                        this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2))
-                );
-                projectile.Damage = this.Damage;
-                projectile.Width = Math.sqrt(this.Damage);
-                return projectile;
-            };
-        },
-        Laser: function (building) {
-            Weapon.call(this, building);
-            this.Lifespan = Settings.Second;
-            this.Range = 185;
-            this.ShotsPerShot = 1;
-            /** @return {number} **/
-            this.Damage = 4;
-            this.FireRate = this.FireRateCount = 60;
-            this.CreateProjectile = function () {
-                var angle = this.getTargetLeadingAngle();
-                var projectile = new Projectiles.Laser(
-                    this,
-                        angle * (Math.random() * this.ShotSpread + (1 - this.ShotSpread / 2))
-                );
-                projectile.Damage = this.Damage / this.Lifespan;
-                projectile.Width = this.Damage / 4;
-                return projectile;
+        Laser: function (range, fireRate, lifeSpan, damage, accuracy) {
+            return function (building) {
+                Weapon.call(this, building);
+                this.Lifespan = lifeSpan;
+                this.Range = range;
+                /** @return {number} **/
+                this.Damage = damage;
+                this.FireRate = this.FireRateCount = fireRate;
+                this.Accuracy = 1 - accuracy;
+                /** @return {number} **/
+                this.AmmoConsumption = function () {
+                    return this.Damage * 10 / this.Lifespan;
+                };
+                this.CreateProjectile = function () {
+                    var angle = this.getTargetLeadingAngle();
+                    var projectile = new Projectiles.Laser(
+                        this,
+                            angle * (Math.random() * this.Accuracy + (1 - this.Accuracy / 2))
+                    );
+                    projectile.Lifespan = this.Lifespan;
+                    projectile.Damage = this.Damage / this.Lifespan;
+                    projectile.Width = this.Damage * 10 / this.Lifespan;
+                    return projectile;
+                };
             };
         }
     };

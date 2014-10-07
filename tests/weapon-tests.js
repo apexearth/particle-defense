@@ -27,14 +27,14 @@
         expect(weapon.Upgrades[upgrade].Cost).toBeDefined();
 
         // Verify Failure when we have no resource
-        expect(weapon.Upgrades[upgrade].IsEnabled()).toBe(false);
+        expect(weapon.Upgrades[upgrade].CanUpgrade()).toBe(false);
         weapon.Upgrades[upgrade]();
         expect(weapon[upgrade]).toBe(beforeValue);
 
         // Works with resource
         player.Resources.Energy = weapon.Upgrades[upgrade].Cost.Energy();
         player.Resources.Metal = weapon.Upgrades[upgrade].Cost.Metal();
-        expect(weapon.Upgrades[upgrade].IsEnabled()).toBe(true);
+        expect(weapon.Upgrades[upgrade].CanUpgrade()).toBe(true);
         weapon.Upgrades[upgrade]();
         expect(weapon[upgrade]).not.toBe(beforeValue);
     }
@@ -44,6 +44,6 @@
         TestUpgrade('FireRate');
         TestUpgrade('ProjectileSpeed');
         TestUpgrade('Damage');
-        TestUpgrade('ShotSpread');
+        TestUpgrade('Accuracy');
     });
 });

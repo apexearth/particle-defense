@@ -62,7 +62,7 @@
         border-right: solid 3px rgba(55, 22, 20, .5);
     }
 
-    #stat-bar {
+    .stat-bar {
         position: absolute;
         display: inline-block;
         padding: 0;
@@ -75,24 +75,23 @@
         z-index: 1000;
     }
 
-    #stat-bar li {
+    .stat-bar li {
         font-size: 14px;
         margin: 0 1px 0 0;
         padding: 0;
-        display: inline-block;
         overflow: hidden;
     }
 
-    #stat-bar li:hover {
+    .stat-bar li:hover {
         background-color: rgba(255, 255, 255, .1);
     }
 
-    #stat-bar li div {
-        margin: 0;
-        padding: 0 15px 0 15px;
-        text-align: center;
+    .stat-bar li div {
+        padding: 2px 15px 2px 15px;
+        text-align: right;
         vertical-align: middle;
         cursor: pointer;
+        display: inline-block;
     }
 
     .disabled {
@@ -104,7 +103,7 @@
     <ul id="top-bar" class="grad-down">
         <li>
             <div>Score</div>
-            <div>{{Player.Score}}</div>
+            <div>{{Player.Score | number : 0}}</div>
             <div>&nbsp;</div>
         </li>
         <li>
@@ -128,17 +127,25 @@
         <li class="button right smaller {{value == PlacementBuilding() && 'button-active' || ''}}"
             ng-repeat="(key, value) in Buildings" ng-click="CreateBuilding(value)"
             ng-mouseover="ShowCost(value.Cost)" ng-mouseleave="HideCost()">
-            {{key}}
+            {{ToTitle(key)}}
         </li>
     </ul>
-    <ul id="stat-bar">
+    <ul class="stat-bar" ng-show="Level.Selection != null">
         <li ng-show="Level.Selection != null" ng-repeat="(key, value) in Level.Selection.Abilities.Upgrades.Weapon"
             ng-click="value.Upgrade()"
             ng-mouseover="ShowCost(value.Cost)"
             ng-mouseleave="HideCost()"
-            class="{{!value.IsEnabled() && 'disabled' || 'enabled'}}">
-            <div style="padding-top: 3px;">{{key}}</div>
-            <div style="padding-bottom: 3px;">{{value() | number : 3}}</div>
+            class="{{value.CanUpgrade() == false && 'disabled' || 'enabled'}}">
+            <div>{{ToTitle(key)}}</div>
+            <div>{{value() | number : 2}}</div>
+        </li>
+        <li ng-repeat="(key, value) in Level.Selection.Abilities.Upgrades.Building"
+            ng-click="value.Upgrade()"
+            ng-mouseover="ShowCost(value.Cost)"
+            ng-mouseleave="HideCost()"
+            class="{{value.CanUpgrade() == false && 'disabled' || 'enabled'}}">
+            <div>{{ToTitle(key)}}</div>
+            <div>{{value() | number : 2}}</div>
         </li>
     </ul>
     <div id="event-catcher"></div>

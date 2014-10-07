@@ -38,6 +38,9 @@ define('game/SpawnPoint', ["game/Units", "game/Unit", "game/Settings"], function
                 if (level.Player.HomeBase.Health > 0)
                     unit.setDestination(level.Player.HomeBase);
                 this.CurrentWave.SpawnIntervalCount = 0;
+            } else if (this.CurrentWave !== null
+                && this.CurrentWave.Units.length === 0) {
+                this.CurrentWave = null;
             }
         };
 

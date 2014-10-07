@@ -89,7 +89,7 @@
         /** @summary The idea behind this is to check if a block is buildable when placing a building. **/
         /** @returns bool **/
         this.IsBlockBuildable = function (block) {
-            if (block.Status() >= BlockStatus.OnlyPassable) return false;       // It's blocked
+            if (block.Status() == BlockStatus.OnlyPassable) return false;       // It's blocked
             if (block.Objects.length > 0) return false;                         // The block has an object in it.
             if (_buildableBlocks.indexOf(block) >= 0) return true;              // Is within list of buildable blocks.
             if (_notBuildableBlocks.indexOf(block) >= 0) return false;          // Is within list of not buildable blocks.
