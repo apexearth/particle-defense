@@ -1,4 +1,4 @@
-﻿define("game/Building", ["game/Settings", "util/General", "util/Display"], function (Settings, General, Display) {
+﻿define("game/Building", ["game/Settings", "util/General", "util/Display", "game/Attribute"], function (Settings, General, Display, Attribute) {
     var arcCircle = 2 * Math.PI;
 
 
@@ -26,37 +26,17 @@
         this.NumberOfUpgrades = 0;
         this.Attributes = {  };
         this.UpdateAttributes = function () {
-            var createAttribute = function (valueF, actionF, cost) {
-                var attribute = valueF;
-                attribute.Upgrade = function () {
-                    if (!attribute.CanUpgrade()) return;
-                    player.TryApplyCost(attribute.Cost);
-                    actionF();
-                    me.NumberOfUpgrades++;
-                };
-                /** @return {boolean} **/
-                attribute.CanUpgrade = function () {
-                    return player.TestApplyCost(attribute.Cost);
-                };
-                attribute.Cost = {};
-                for (var c in cost) {
-                    if (cost.hasOwnProperty(c)) {
-                        attribute.Cost[c] = function () {
-                            return Math.pow(cost[c](), 1 + me.NumberOfUpgrades / 100);
-                        }
-                    }
-                }
-                return attribute;
-            };
+
             var createAttributeForStorage = function (resourceName, energyFactor, metalFactor) {
                 if (me.ResourceStorage[resourceName] > 0) {
-                    me.Attributes[resourceName + 'Storage'] = createAttribute(
+                    me.Attributes[resourceName + 'Storage'] = new Attribute(me,
                         function () {
                             return me.ResourceStorage[resourceName];
                         },
                         function () {
                             me.ResourceStorage[resourceName] += 25;
                         },
+                        null,
                         {
                             /** @returns Number **/
                             Energy: function () {
@@ -72,13 +52,14 @@
             };
             var createAttributeForGeneration = function (resourceName, energyFactor, metalFactor) {
                 if (me.ResourceGeneration[resourceName] > 0) {
-                    me.Attributes[resourceName + 'Generation'] = createAttribute(
+                    me.Attributes[resourceName + 'Generation'] = new Attribute(me,
                         function () {
                             return me.ResourceGeneration[resourceName];
                         },
                         function () {
                             me.ResourceGeneration[resourceName] *= 1.25;
                         },
+                        null,
                         {
                             /** @returns Number **/
                             Energy: function () {

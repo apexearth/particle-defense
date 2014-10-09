@@ -21,6 +21,7 @@
         this.Units = [];
         this.Projectiles = [];
         this.Buildings = [];
+        this.Objects = [];
 
         /** @returns Number **/
         this.TotalWaves = function () {
@@ -227,6 +228,12 @@
                 projectile.update();
             }
 
+            i = this.Objects.length;
+            while (i-- > 0) {
+                var object = this.Objects[i];
+                if(object.update) object.update();
+            }
+
             i = this.Players.length;
             while (i-- > 0) {
                 var player = this.Players[i];
@@ -252,18 +259,22 @@
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.context.drawImage(_map.canvas, 0, 0);
 
-            var b = this.Buildings.length;
-            while (b--)
-                this.Buildings[b].draw(this.context);
+            var i = this.Buildings.length;
+            while (i--)
+                this.Buildings[i].draw(this.context);
 
-            var u = this.Units.length;
-            while (u--)
-                this.Units[u].draw(this.context);
+            i = this.Units.length;
+            while (i--)
+                this.Units[i].draw(this.context);
 
-            var p = this.Projectiles.length;
-            while (p-- > 0) {
-                var projectile = this.Projectiles[p];
-                projectile.draw(this.context);
+            i = this.Projectiles.length;
+            while (i-- > 0)
+                this.Projectiles[i].draw(this.context);
+
+            i = this.Objects.length;
+            while (i-- > 0) {
+                var object = this.Objects[i];
+                object.draw(this.context);
             }
 
             if (this.PlacementBuilding != null) {

@@ -124,6 +124,19 @@ define("game/Buildings", [
             Updates: []
         }
     });
+    list.Cannon = ConstructorFromTemplate({
+        constructor: {
+            canvas: CreateCanvas('#fff', '#666', 5),
+            Cost: {
+                Energy: 60,
+                Metal: 30
+            }
+        },
+        template: {
+            Health: 5,
+            Weapons: [ Weapons.Cannon(75, 30, 3, 1, .95, 1) ]
+        }
+    });
     list.Gun1 = ConstructorFromTemplate({
         constructor: {
             canvas: CreateCanvas('#fff', '#666', 5),

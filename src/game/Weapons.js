@@ -1,4 +1,4 @@
-define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], function (Projectiles, General, Settings) {
+define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "game/Attribute"], function (Projectiles, General, Settings, Attribute) {
 
     function Weapon(building) {
         this.Building = building;
@@ -14,39 +14,18 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
         this.ShotsPerShot = 1;
         this.Accuracy = .05;
 
-        var player = this.Building.Player;
+        this.Player = this.Building.Player;
 
         var weapon = this;
         var me = this;
 
         this.NumberOfUpgrades = 0;
         this.Attributes = {  };
-        var createAttribute = function (valueF, actionF, upgradeF, cost) {
-            var attribute = valueF;
-            attribute.Upgrade = function () {
-                if (!attribute.CanUpgrade()) return;
-                player.TryApplyCost(attribute.Cost);
-                actionF();
-                me.NumberOfUpgrades++;
-            };
-            /** @return {boolean} **/
-            attribute.CanUpgrade = function () {
-                if (upgradeF !== null && !upgradeF()) return false;
-                return player.TestApplyCost(attribute.Cost);
-            };
-            attribute.Cost = {};
-            for (var c in cost) {
-                if (cost.hasOwnProperty(c)) {
-                    attribute.Cost[c] = function () {
-                        return Math.pow(cost[c](), 1 + me.NumberOfUpgrades / 100);
-                    }
-                }
-            }
-            return attribute;
-        };
-        var createAttributeForStat = function (name, upperLimit, limit, upgradeFactor, energyCost, metalCost) {
+
+
+        this.CreateAttributeForStat = function (name, upperLimit, limit, upgradeFactor, energyCost, metalCost) {
             if (weapon[name] != null) {
-                me.Attributes[name] = createAttribute(
+                me.Attributes[name] = new Attribute(me,
                     function () {
                         return weapon[name];
                     },
@@ -60,22 +39,22 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                     {
                         /** @returns Number **/
                         Energy: function () {
-                            return energyCost();
+                            if (typeof energyCost == "function") return energyCost();
+                            return energyCost;
                         },
                         /** @returns Number **/
                         Metal: function () {
-                            return metalCost();
+                            if (typeof metalCost == "function") return metalCost();
+                            return metalCost;
                         }
                     }
                 );
             }
         };
-
-        createAttributeForStat("Range", true, 250, 1.1, function () {return weapon.Range / 25}, function () {return weapon.Range / 50});
-        createAttributeForStat("FireRate", false, 1, .95, function () {return 300 * weapon.Damage / 5 / weapon.FireRate}, function () {return 600 * weapon.Damage / 5 / weapon.FireRate});
-        createAttributeForStat("ProjectileSpeed", true, 10, 1.1, function () {return weapon.ProjectileSpeed * 4}, function () {return weapon.ProjectileSpeed * 2});
-        createAttributeForStat("Damage", true, 30, 1.1, function () {return 300 * weapon.Damage / 5 / weapon.FireRate}, function () {return 600 * weapon.Damage / 5 / weapon.FireRate});
-        createAttributeForStat("Accuracy", true, 30, .95, function () {return 6}, function () {return 3});
+        this.CreateAttributeForStat("Range", true, 250, 1.1, function () {return weapon.Range / 25}, function () {return weapon.Range / 50});
+        this.CreateAttributeForStat("FireRate", false, 1, .95, function () {return 300 * weapon.Damage / 5 / weapon.FireRate}, function () {return 6000 * weapon.Damage / (25 * weapon.FireRate)});
+        this.CreateAttributeForStat("Damage", true, 30, 1.1, function () {return 300 * weapon.Damage / 5 / weapon.FireRate}, function () {return 6000 * weapon.Damage / (25 * weapon.FireRate)});
+        this.CreateAttributeForStat("Accuracy", true, 30, .95, function () {return 6}, function () {return 3});
 
         this.ResetTarget = function () {
             this.Target = null;
@@ -138,6 +117,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                 };
                 this.FireRate = this.FireRateCount = fireRate;
                 this.ProjectileSpeed = projectileSpeed;
+                this.CreateAttributeForStat("ProjectileSpeed", true, 10, 1.1, function () {return this.ProjectileSpeed * 4}, function () {return this.ProjectileSpeed * 2});
                 this.Damage = damage;
                 this.ShotSpeedVariance = accuracy; //General.AngleRad(this.Building.X, this.Building.Y, this.Target.X, this.Target.Y)
                 this.Acceleration = acceleration;
@@ -162,18 +142,20 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                 this.Range = range;
                 this.FireRate = this.FireRateCount = fireRate;
                 this.ProjectileSpeed = projectileSpeed;
+                this.CreateAttributeForStat("ProjectileSpeed", true, 10, 1.1, function () {return this.ProjectileSpeed * 4}, function () {return this.ProjectileSpeed * 2});
                 this.Damage = damage;
                 this.Accuracy = 1 - accuracy;
                 this.ShotsPerShot = shotsPerShot;
+                this.ProjectileClass = Projectiles.Bullet;
                 /** @return {number} **/
                 this.AmmoConsumption = function () {
                     return this.Damage / 2 * this.ProjectileSpeed / 3;
                 };
                 this.CreateProjectile = function () {
                     var angle = this.getTargetLeadingAngle();
-                    var projectile = new Projectiles.Bullet(
+                    var projectile = new this.ProjectileClass(
                         this,
-                            angle + Math.PI * (Math.random() * this.Accuracy - (this.Accuracy / 2)),
+                        angle + Math.PI * (Math.random() * this.Accuracy - (this.Accuracy / 2)),
                         this.ProjectileSpeed
                     );
                     projectile.Damage = this.Damage / this.ShotsPerShot;
@@ -181,6 +163,13 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings"], fu
                     return projectile;
                 };
             };
+        },
+        Cannon: function (range, fireRate, projectileSpeed, damage, accuracy, shotsPerShot) {
+            var constructor = this.Gun(range, fireRate, projectileSpeed, damage, accuracy, shotsPerShot);
+            return function(building) {
+                constructor.call(this, building);
+                this.ProjectileClass = Projectiles.ExplosiveBullet;
+            }
         },
         Laser: function (range, fireRate, lifeSpan, damage, accuracy) {
             return function (building) {

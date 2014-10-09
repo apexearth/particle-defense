@@ -1,4 +1,6 @@
 ﻿define("game/Projectiles", ["game/Settings", "util/General"], function (Settings, General) {
+    var arcCircle = 2 * Math.PI;
+
     function Projectile(weapon) {
         this.Level = weapon.Building.Level;
         this.Building = weapon.Building;
@@ -6,6 +8,10 @@
         this.X = this.Building.X;
         this.Y = this.Building.Y;
         this.Damage = 1;
+        /** @returns Number **/
+        this.EffectiveDamage = function (unit) {
+            return this.Damage;
+        };
         this.Width = 1;
         this.Lifespan = Settings.Second * 60;
         this.LifespanCount = 0;
@@ -41,7 +47,7 @@
             while (u--) {
                 var unit = this.Level.Units[u];
                 if (this.hitTest(unit)) {
-                    unit.damage(this.Damage);
+                    unit.damage(this.EffectiveDamage(unit));
                     this.onHit();
                 }
             }
@@ -62,11 +68,21 @@
             this.LastY = this.Y;
             this.X += this.VelocityX;
             this.Y += this.VelocityY;
-            this.EndX = this.X + Math.cos(this.Direction) * this.Length;
-            this.EndY = this.Y + Math.sin(this.Direction) * this.Length;
         };
         this.hitTest = function (unit) {
             return unit.hitTestLine({X: this.X, Y: this.Y}, {X: this.LastX, Y: this.LastY}, this.Width);
+        };
+    }
+
+    function ExplosiveProjectile(weapon, direction, initialVelocity) {
+        VelocityProjectile.call(this, weapon, direction, initialVelocity);
+
+        this.ExplosiveIntensity = this.Damage;
+
+        this.inheritedOnHit = this.onHit;
+        this.onHit = function () {
+            this.inheritedOnHit();
+            var explosion = new Explosion.Basic(this);
         };
     }
 
@@ -89,6 +105,10 @@
         this.Direction = direction;
         this.EndX = this.X + Math.cos(this.Direction) * this.Weapon.Range;
         this.EndY = this.Y + Math.sin(this.Direction) * this.Weapon.Range;
+        /** @returns Number */
+        this.EffectiveDamage = function (unit) {
+            return this.Damage * General.Distance(this.X - unit.X, this.Y - unit.Y) / this.Weapon.Range;
+        };
 
         this.projectileUpdate = this.update;
         this.update = function () {
@@ -104,6 +124,24 @@
 
     }
 
+    var Explosion = {
+        Basic: function (particle) {
+            this.Level = particle.Level;
+            this.X = particle.X;
+            this.Y = particle.Y;
+            this.ExplosiveIntensity = particle.ExplosiveIntensity;
+            particle.Level.Objects.push(this);
+
+            this.draw = function (context) {
+                context.fillStyle = '#f77';
+                context.beginPath();
+                context.arc(this.X, this.Y, this.ExplosiveIntensity * 2, 0, arcCircle, false);
+                context.fill();
+                context.closePath();
+            };
+        }
+    };
+
     return {
         Laser: function (weapon, direction) {
             BeamProjectile.call(this, weapon, direction);
@@ -111,7 +149,10 @@
             this.draw = function (context) {
                 context.save();
                 context.globalAlpha = Math.max(1, this.FadeTime - this.FadeTimeCount) / this.FadeTime;
-                context.strokeStyle = '#77f';
+                var grad = context.createLinearGradient(this.X, this.Y, this.EndX, this.EndY);
+                grad.addColorStop(0, '#77f');
+                grad.addColorStop(1, '#227');
+                context.strokeStyle = grad;
                 context.lineWidth = this.Width;
                 context.lineCap = "square";
                 context.beginPath();
@@ -124,7 +165,6 @@
         },
         Bullet: function (weapon, direction, initialVelocity) {
             VelocityProjectile.call(this, weapon, direction, initialVelocity);
-            this.Length = 2;
 
             this.draw = function (context) {
                 context.save();
@@ -133,7 +173,23 @@
                 context.lineCap = "square";
                 context.beginPath();
                 context.moveTo(this.X, this.Y);
-                context.lineTo(this.EndX, this.EndY);
+                context.lineTo(this.LastX, this.LastY);
+                context.stroke();
+                context.closePath();
+                context.restore();
+            };
+        },
+        ExplosiveBullet: function (weapon, direction, initialVelocity) {
+            ExplosiveProjectile.call(this, weapon, direction, initialVelocity);
+
+            this.draw = function (context) {
+                context.save();
+                context.strokeStyle = '#fff';
+                context.lineWidth = this.Width;
+                context.lineCap = "square";
+                context.beginPath();
+                context.moveTo(this.X, this.Y);
+                context.lineTo(this.LastX, this.LastY);
                 context.stroke();
                 context.closePath();
                 context.restore();
@@ -141,7 +197,6 @@
         },
         Missile: function (weapon, direction, initialVelocity, acceleration) {
             AcceleratingProjectile.call(this, weapon, direction, initialVelocity, acceleration);
-            this.Length = 2;
             this.Target = null;
 
             this.acceleratingProjectileUpdate = this.update;
@@ -155,8 +210,6 @@
                     }
                 }
                 this.acceleratingProjectileUpdate();
-                this.EndX = this.X + Math.cos(this.Direction) * this.Length;
-                this.EndY = this.Y + Math.sin(this.Direction) * this.Length;
             };
             this.onHit = function () {
                 this.die();
@@ -168,11 +221,12 @@
                 context.lineCap = "square";
                 context.beginPath();
                 context.moveTo(this.X, this.Y);
-                context.lineTo(this.EndX, this.EndY);
+                context.lineTo(this.LastX, this.LastY);
                 context.stroke();
                 context.closePath();
                 context.restore();
             };
         }
     }
-});
+})
+;
