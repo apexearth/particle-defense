@@ -77,7 +77,8 @@
     function ExplosiveProjectile(weapon, direction, initialVelocity) {
         VelocityProjectile.call(this, weapon, direction, initialVelocity);
 
-        this.ExplosiveIntensity = this.Damage;
+        this.ExplosiveSpeed = weapon.ExplosiveSpeed;
+        this.ExplosiveTime = weapon.ExplosiveTime;
 
         this.inheritedOnHit = this.onHit;
         this.onHit = function () {
@@ -126,16 +127,36 @@
 
     var Explosion = {
         Basic: function (particle) {
+            particle.Level.Objects.push(this);
             this.Level = particle.Level;
             this.X = particle.X;
             this.Y = particle.Y;
-            this.ExplosiveIntensity = particle.ExplosiveIntensity;
-            particle.Level.Objects.push(this);
+            this.ExplosiveSpeed = particle.ExplosiveSpeed;
+            this.ExplosiveTime = particle.ExplosiveTime * Settings.Second;
+            this.ExplosiveTimeCount = 0;
+            this.Damage = particle.Damage / Settings.Second;
+            this.Radius = this.Damage * 2;
+
+            this.update = function () {
+                this.ExplosiveTimeCount++;
+                this.Radius += this.ExplosiveSpeed;
+                var i = this.Level.Units.length;
+                while (i--) {
+                    var unit = this.Level.Units[i];
+                    if (unit.hitTest(this)) {
+                        unit.damage(this.Damage);
+                    }
+                }
+                if (this.ExplosiveTimeCount >= this.ExplosiveTime) {
+                    particle.Level.Objects.splice(particle.Level.Objects.indexOf(this), 1);
+                }
+            };
 
             this.draw = function (context) {
-                context.fillStyle = '#f77';
+                var alpha = ((this.ExplosiveTime - this.ExplosiveTimeCount) / this.ExplosiveTime / 1.2);
+                context.fillStyle = 'rgba(255,50,50,' + alpha + ')';
                 context.beginPath();
-                context.arc(this.X, this.Y, this.ExplosiveIntensity * 2, 0, arcCircle, false);
+                context.arc(this.X, this.Y, this.Radius, 0, arcCircle, false);
                 context.fill();
                 context.closePath();
             };

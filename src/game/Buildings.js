@@ -134,7 +134,7 @@ define("game/Buildings", [
         },
         template: {
             Health: 5,
-            Weapons: [ Weapons.Cannon(75, 30, 3, 1, .95, 1) ]
+            Weapons: [ Weapons.Cannon(75, 30, 3, 1, .95, 1, .5, 1) ]
         }
     });
     list.Gun1 = ConstructorFromTemplate({
