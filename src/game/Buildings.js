@@ -134,10 +134,23 @@ define("game/Buildings", [
         },
         template: {
             Health: 5,
-            Weapons: [ Weapons.Cannon(75, 30, 3, 1, .95, 1, .5, 1) ]
+            Weapons: [ Weapons.Cannon(100, 30, 3, 1, .95, 1, .35, 1, 5) ]
         }
     });
-    list.Gun1 = ConstructorFromTemplate({
+    list.LethargicCannon = ConstructorFromTemplate({
+        constructor: {
+            canvas: CreateCanvas('#fff', '#666', 5),
+            Cost: {
+                Energy: 60,
+                Metal: 30
+            }
+        },
+        template: {
+            Health: 5,
+            Weapons: [ Weapons.Cannon(85, 30, 1.5, 1, .95, 1, .15, 4, 7) ]
+        }
+    });
+    list.Gun = ConstructorFromTemplate({
         constructor: {
             canvas: CreateCanvas('#fff', '#666', 5),
             Cost: {
@@ -147,10 +160,10 @@ define("game/Buildings", [
         },
         template: {
             Health: 5,
-            Weapons: [ Weapons.Gun(75, 30, 3, 1, .95, 1) ]
+            Weapons: [ Weapons.Gun(100, 30, 3, 1, .95, 1) ]
         }
     });
-    list.Gun2 = ConstructorFromTemplate({
+    list.FastGun = ConstructorFromTemplate({
         constructor: {
             canvas: CreateCanvas('#fff', '#666', 5),
             Cost: {
@@ -160,10 +173,10 @@ define("game/Buildings", [
         },
         template: {
             Health: 5,
-            Weapons: [ Weapons.Gun(85, 25, 4, 2, .96, 1) ]
+            Weapons: [ Weapons.Gun(85, 25, 5, 2, .96, 1) ]
         }
     });
-    list.Gun3 = ConstructorFromTemplate({
+    list.SharpShooter = ConstructorFromTemplate({
         constructor: {
             canvas: CreateCanvas('#fff', '#666', 5),
             Cost: {
@@ -173,36 +186,36 @@ define("game/Buildings", [
         },
         template: {
             Health: 5,
-            Weapons: [ Weapons.Gun(100, 20, 5, 3, .97, 1) ]
+            Weapons: [ Weapons.Gun(150, 20, 7, 4, .97, 1) ]
         }
     });
-    list.Autogun1 = ConstructorFromTemplate({
+    list.CrossEyes = ConstructorFromTemplate({
         constructor: {
             canvas: CreateCanvas('#fff', '#aaa', 5),
             Cost: {
-                Energy: 25,
-                Metal: 10
+                Energy: 35,
+                Metal: 20
             }
         },
         template: {
             Health: 5,
-            Weapons: [ Weapons.Gun(100, 10, 2.5, 1, .95, 1) ]
+            Weapons: [ Weapons.Gun(100, 5, 2.5, 2, .85, 3) ]
         }
     });
-    list.Autogun2 = ConstructorFromTemplate({
+    list.MachineGun = ConstructorFromTemplate({
         constructor: {
             canvas: CreateCanvas('#fff', '#aaa', 5),
             Cost: {
-                Energy: 40,
-                Metal: 15
+                Energy: 45,
+                Metal: 20
             }
         },
         template: {
             Health: 5,
-            Weapons: [ Weapons.Gun(100, 10, 2.5, 1.5, .95, 2) ]
+            Weapons: [ Weapons.Gun(100, 5, 2.5, 1.5, .9, 2) ]
         }
     });
-    list.Autogun3 = ConstructorFromTemplate({
+    list.Behemoth = ConstructorFromTemplate({
         constructor: {
             canvas: CreateCanvas('#fff', '#aaa', 5),
             Cost: {
@@ -212,7 +225,7 @@ define("game/Buildings", [
         },
         template: {
             Health: 5,
-            Weapons: [ Weapons.Gun(125, 10, 3.25, 2, .95, 3) ]
+            Weapons: [ Weapons.Gun(300, 60, 8, 15, .98, 1) ]
         }
     });
     list.Laser1 = ConstructorFromTemplate({

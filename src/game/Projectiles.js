@@ -79,6 +79,7 @@
 
         this.ExplosiveSpeed = weapon.ExplosiveSpeed;
         this.ExplosiveTime = weapon.ExplosiveTime;
+        this.ExplosiveInitialSize = weapon.ExplosiveInitialSize;
 
         this.inheritedOnHit = this.onHit;
         this.onHit = function () {
@@ -135,7 +136,7 @@
             this.ExplosiveTime = particle.ExplosiveTime * Settings.Second;
             this.ExplosiveTimeCount = 0;
             this.Damage = particle.Damage / Settings.Second;
-            this.Radius = this.Damage * 2;
+            this.Radius = particle.ExplosiveInitialSize;
 
             this.update = function () {
                 this.ExplosiveTimeCount++;
