@@ -13,7 +13,8 @@
             return this.Damage;
         };
         this.Width = 1;
-        this.Lifespan = Settings.Second * 60;
+        this.Radius = this.Width;
+        this.Lifespan = Settings.Second * 5;
         this.LifespanCount = 0;
         this.IsDead = false;
 
@@ -74,7 +75,39 @@
         };
     }
 
-    function ExplosiveProjectile(weapon, direction, initialVelocity) {
+    function ThrownProjectile(weapon, target, initialVelocity, slowdownDegree) {
+        Projectile.call(this, weapon);
+        this.LastX = this.X;
+        this.LastY = this.Y;
+        this.Target = target;
+        this.InitialDistance = General.Distance(this.X - this.Target.X, this.Y - this.Target.Y);
+        this.Direction = General.AngleRad(this.X, this.Y, this.Target.X, this.Target.Y);
+        this.InitialVelocity = initialVelocity;
+        this.CurrentVelocity = initialVelocity;
+        this.projectileUpdate = this.update;
+        this.update = function () {
+            this.projectileUpdate();
+            this.LastX = this.X;
+            this.LastY = this.Y;
+            if (this.Distance == null || this.Distance > this.Width) {
+                this.Distance = General.Distance(this.X - this.Target.X, this.Y - this.Target.Y);
+                this.CurrentVelocity = this.InitialVelocity * (Math.pow(this.Distance + 25, slowdownDegree) * 2 / Math.pow(this.InitialDistance, slowdownDegree));
+                this.VelocityX = Math.cos(this.Direction) * this.CurrentVelocity;
+                this.VelocityY = Math.sin(this.Direction) * this.CurrentVelocity;
+                this.X += this.VelocityX;
+                this.Y += this.VelocityY;
+            }
+        };
+        this.hitTest = function (unit) {
+            if (this.X !== this.LastX && this.Y !== this.LastY) {
+                return unit.hitTestLine({X: this.X, Y: this.Y}, {X: this.LastX, Y: this.LastY}, this.Width);
+            } else {
+                return unit.hitTest(this);
+            }
+        };
+    }
+
+    function CannonProjectile(weapon, direction, initialVelocity) {
         VelocityProjectile.call(this, weapon, direction, initialVelocity);
 
         this.ExplosiveSpeed = weapon.ExplosiveSpeed;
@@ -85,6 +118,20 @@
         this.onHit = function () {
             this.inheritedOnHit();
             var explosion = new Explosion.Basic(this);
+        };
+    }
+
+    function GrenadeProjectile(weapon, target, initialVelocity, slowdownDegree) {
+        ThrownProjectile.call(this, weapon, target, initialVelocity, slowdownDegree);
+
+        this.ExplosiveSpeed = weapon.ExplosiveSpeed;
+        this.ExplosiveTime = weapon.ExplosiveTime;
+        this.ExplosiveInitialSize = weapon.ExplosiveInitialSize;
+
+        this.inheritedDie = this.die;
+        this.die = function () {
+            var explosion = new Explosion.Basic(this);
+            this.inheritedDie();
         };
     }
 
@@ -202,7 +249,7 @@
             };
         },
         ExplosiveBullet: function (weapon, direction, initialVelocity) {
-            ExplosiveProjectile.call(this, weapon, direction, initialVelocity);
+            CannonProjectile.call(this, weapon, direction, initialVelocity);
 
             this.draw = function (context) {
                 context.save();
@@ -215,6 +262,27 @@
                 context.stroke();
                 context.closePath();
                 context.restore();
+            };
+        },
+        Grenade: function (weapon, target, initialVelocity, slowdownDegree) {
+            GrenadeProjectile.call(this, weapon, target, initialVelocity, slowdownDegree);
+
+            this.draw = function (context) {
+                if (this.X !== this.LastX && this.Y !== this.LastY) {
+                    context.save();
+                    context.strokeStyle = '#fff';
+                    context.lineWidth = this.Width;
+                    context.lineCap = "round";
+                    context.beginPath();
+                    context.moveTo(this.X, this.Y);
+                    context.lineTo(this.LastX, this.LastY);
+                    context.stroke();
+                    context.closePath();
+                    context.restore();
+                } else {
+                    context.fillStyle = '#fff';
+                    context.fillRect(this.X - this.Width / 2, this.Y - this.Width / 2, this.Width, this.Width);
+                }
             };
         },
         Missile: function (weapon, direction, initialVelocity, acceleration) {

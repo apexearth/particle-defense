@@ -108,6 +108,9 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "ga
         this.getTargetLeadingAngle = function () {
             return General.LeadingAngleRad(this.Building.X, this.Building.Y, this.ProjectileSpeed, this.Target.X, this.Target.Y, this.Target.VelocityX, this.Target.VelocityY);
         }
+        this.getTargetLeadingVector = function () {
+            return General.LeadingVector(this.Building.X, this.Building.Y, this.ProjectileSpeed, this.Target.X, this.Target.Y, this.Target.VelocityX, this.Target.VelocityY);
+        }
     }
 
     return {
@@ -193,6 +196,39 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "ga
                 this.CreateAttributeForStat("ExplosiveInitialSize", true, 30, 1.1, this.AttributeCost);
             }
         },
+        GrenadeLauncher: function (range, fireRate, projectileSpeed, projectileSlowFactor, damage, accuracy, shotsPerShot, explosiveSpeed, explosiveTime, explosiveInitialSize) {
+            var constructor = this.Gun(range, fireRate, projectileSpeed, damage, accuracy, shotsPerShot);
+            return function (building) {
+                constructor.call(this, building);
+                var me = this;
+                this.ProjectileClass = Projectiles.Grenade;
+                this.ProjectileSlowFactor = projectileSlowFactor;
+                this.ExplosiveSpeed = explosiveSpeed;
+                this.ExplosiveTime = explosiveTime;
+                this.ExplosiveInitialSize = explosiveInitialSize;
+                this.GunAttributeCost = this.AttributeCost;
+                /** @return {number} **/
+                this.AttributeCost = function () {
+                    return me.GunAttributeCost() * (1 + me.ExplosiveTime / 5) * (1 + me.ExplosiveInitialSize / 10);
+                };
+                this.CreateAttributeForStat("ExplosiveSpeed", true, 4, 1.1, this.AttributeCost);
+                this.CreateAttributeForStat("ExplosiveTime", true, 10, 1.1, this.AttributeCost);
+                this.CreateAttributeForStat("ExplosiveInitialSize", true, 30, 1.1, this.AttributeCost);
+
+                this.CreateProjectile = function () {
+                    var target = this.getTargetLeadingVector();
+                    var projectile = new this.ProjectileClass(
+                        this,
+                        target,
+                        this.ProjectileSpeed,
+                        this.ProjectileSlowFactor
+                    );
+                    projectile.Damage = this.Damage / this.ShotsPerShot;
+                    projectile.Width = Math.sqrt(this.Damage) * 2 / this.ProjectileSpeed * 3;
+                    return projectile;
+                };
+            }
+        },
         Laser: function (range, fireRate, lifeSpan, damage, accuracy) {
             return function (building) {
                 Weapon.call(this, building);
@@ -208,9 +244,10 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "ga
                 };
                 this.CreateProjectile = function () {
                     var angle = this.getTargetLeadingAngle();
+
                     var projectile = new Projectiles.Laser(
                         this,
-                        angle * (Math.random() * this.Accuracy + (1 - this.Accuracy / 2))
+                            angle * (Math.random() * this.Accuracy + (1 - this.Accuracy / 2))
                     );
                     projectile.Lifespan = this.Lifespan;
                     projectile.Damage = this.Damage / this.Lifespan;
