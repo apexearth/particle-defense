@@ -31,15 +31,15 @@
                 waveCount = Math.max(me.SpawnPoints[i].Waves.length, waveCount);
                 if (me.SpawnPoints[i].CurrentWave !== null) waveCount++;
             }
-
             return waveCount;
         };
         this.WinConditions = [function () {
+            if (me.Units.length > 0) return false;
             var i = me.SpawnPoints.length;
             while (i--) {
-                if (me.SpawnPoints[i].HasWaves() === false) return true;
+                if (me.SpawnPoints[i].HasWaves() === true) return false;
             }
-            return false;
+            return true;
         }];
         this.LossConditions = [function () {
             return me.Player.HomeBase.Health <= 0;
@@ -231,7 +231,7 @@
             i = this.Objects.length;
             while (i-- > 0) {
                 var object = this.Objects[i];
-                if(object.update) object.update();
+                if (object.update) object.update();
             }
 
             i = this.Players.length;

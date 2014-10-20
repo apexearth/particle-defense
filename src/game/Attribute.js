@@ -15,9 +15,11 @@ define('game/Attribute', [], function () {
         attribute.Cost = {};
         for (var c in cost) {
             if (cost.hasOwnProperty(c)) {
-                attribute.Cost[c] = function () {
-                    return Math.pow(cost[c](), 1 + owner.NumberOfUpgrades / 20);
-                }
+                attribute.Cost[c] = (function (cost) {
+                    return function () {
+                        return Math.pow(cost(), 1 + owner.NumberOfUpgrades / 20);
+                    }
+                })(cost[c]);
             }
         }
         return attribute;

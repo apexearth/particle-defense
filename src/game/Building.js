@@ -118,7 +118,26 @@
                 }
             }
         };
-        this.update = Building.prototype.update;
+        this.update = function () {
+            if (this.Health <= 0) {
+                Building.prototype.removeStorageFromPlayer.call(this);
+                this.Level.Buildings.splice(this.Level.Buildings.indexOf(this), 1);
+                this.Player.Buildings.splice(this.Player.Buildings.indexOf(this), 1);
+                delete this.Block.Building;
+                return;
+            }
+
+            for (var r in this.ResourceGeneration) {
+                if (this.ResourceGeneration.hasOwnProperty(r)) {
+                    this.Player.Resources[r] += this.ResourceGeneration[r] / Settings.Second;
+                }
+            }
+
+            var i = this.Updates.length;
+            while (i--) this.Updates[i].call(this);
+            i = this.Weapons.length;
+            while (i--) this.Weapons[i].update();
+        };
         this.UpdateXY = function () {
             this.X = this.BlockX * Settings.BlockSize + Settings.BlockSize / 2;
             this.Y = this.BlockY * Settings.BlockSize + Settings.BlockSize / 2;
@@ -154,29 +173,12 @@
                 this.loadTemplate(templates);
         };
 
+        if(player){
+            player.AddBuildingCount(this.Name);
+        }
         this.loadTemplates();
         Building.prototype.addStorageToPlayer.call(this);
         this.initialize();
-    };
-    Building.prototype.update = function () {
-        if (this.Health <= 0) {
-            Building.prototype.removeStorageFromPlayer.call(this);
-            this.Level.Buildings.splice(this.Level.Buildings.indexOf(this), 1);
-            this.Player.Buildings.splice(this.Player.Buildings.indexOf(this), 1);
-            delete this.Block.Building;
-            return;
-        }
-
-        for (var r in this.ResourceGeneration) {
-            if (this.ResourceGeneration.hasOwnProperty(r)) {
-                this.Player.Resources[r] += this.ResourceGeneration[r] / Settings.Second;
-            }
-        }
-
-        var i = this.Updates.length;
-        while (i--) this.Updates[i].call(this);
-        i = this.Weapons.length;
-        while (i--) this.Weapons[i].update();
     };
     Building.prototype.addStorageToPlayer = function () {
         if (this.Player === null) return;

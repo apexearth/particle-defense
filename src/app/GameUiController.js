@@ -26,7 +26,7 @@
         /** @returns String, Number */
         $scope.GetCost = function (cost, key) {
             if (cost == null) return null;
-            if (typeof(cost[key]) == "function" && cost[key]() > 0) return -Math.round(cost[key]());
+            if (typeof(cost[key]) == "function" && cost[key]($scope.Player) > 0) return -Math.round(cost[key]($scope.Player));
             if (cost[key] > 0) return -Math.round(cost[key]);
         };
         $scope.ToTitle = function (s) {
