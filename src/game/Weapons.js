@@ -114,20 +114,26 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "ga
     }
 
     return {
-        Missile: function (range, fireRate, projectileSpeed, acceleration, damage, accuracy) {
+        Missile: function (range, fireRate, projectileSpeed, acceleration, damage, accuracy, explosiveSpeed, explosiveTime, explosiveInitialSize) {
             return function (building) {
                 Weapon.call(this, building);
+                this.ProjectileSpeed = projectileSpeed;
+                this.ExplosiveSpeed = explosiveSpeed;
+                this.ExplosiveTime = explosiveTime;
+                this.ExplosiveInitialSize = explosiveInitialSize;
                 this.Range = range;
+                this.Damage = damage;
+                this.FireRate = this.FireRateCount = fireRate;
+                this.Acceleration = acceleration;
+                this.ShotSpeedVariance = accuracy;
                 /** @return {number} **/
                 this.AmmoConsumption = function () {
                     return this.Damage / 1.5;
                 };
-                this.FireRate = this.FireRateCount = fireRate;
-                this.ProjectileSpeed = projectileSpeed;
                 this.CreateAttributeForStat("ProjectileSpeed", true, 10, 1.25, this.AttributeCost);
-                this.Damage = damage;
-                this.ShotSpeedVariance = accuracy; //General.AngleRad(this.Building.X, this.Building.Y, this.Target.X, this.Target.Y)
-                this.Acceleration = acceleration;
+                this.CreateAttributeForStat("ExplosiveSpeed", true, 4, 1.1, this.AttributeCost);
+                this.CreateAttributeForStat("ExplosiveTime", true, 10, 1.1, this.AttributeCost);
+                this.CreateAttributeForStat("ExplosiveInitialSize", true, 30, 1.1, this.AttributeCost);
                 this.CreateProjectile = function () {
                     var angle = this.getTargetLeadingAngle();
                     var projectile = new Projectiles.Missile(
@@ -285,5 +291,4 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "ga
             };
         }
     };
-})
-;
+});

@@ -158,7 +158,21 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Cannon(100, 30, 3, 1, .95, 1, .35, 1, 5) ]
+                Weapons: [ Weapons.Cannon(100, 30, 3, 1.5, .95, 1, .35, 1, 5) ]
+            }
+        });
+        Create({
+            name: 'MissileLauncher',
+            constructor: {
+                canvas: CreateCanvas('#aaf', '#227', 5),
+                Cost: {
+                    Energy: 60,
+                    Metal: 30
+                }
+            },
+            template: {
+                Health: 5,
+                Weapons: [ Weapons.Missile(150, 45, 2, .1, 1, .95, .5, 1, 8) ]
             }
         });
         Create({
@@ -186,7 +200,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Cannon(85, 30, 1.5, 1, .95, 1, .15, 4, 7) ]
+                Weapons: [ Weapons.Cannon(85, 30, 1.75, 1.75, .95, 1, .15, 4, 7) ]
             }
         });
         Create({
@@ -214,7 +228,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Gun(85, 25, 5, 2, .96, 1) ]
+                Weapons: [ Weapons.Gun(75, 25, 5, 1, .96, 1) ]
             }
         });
         Create({
@@ -228,7 +242,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Gun(150, 20, 7, 4, .97, 1) ]
+                Weapons: [ Weapons.Gun(150, 20, 7, 3, .97, 1) ]
             }
         });
         Create({
@@ -242,7 +256,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Gun(100, 5, 2.5, 2, .85, 3) ]
+                Weapons: [ Weapons.Gun(100, 5, 2.5, 1.25, .85, 3) ]
             }
         });
         Create({
@@ -256,7 +270,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Gun(100, 5, 2.5, 1.5, .9, 2) ]
+                Weapons: [ Weapons.Gun(100, 5, 2.5, 1.25, .9, 2) ]
             }
         });
         Create({
@@ -270,7 +284,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Gun(300, 60, 8, 15, .98, 1) ]
+                Weapons: [ Weapons.Gun(300, 60, 8, 6, .98, 1) ]
             }
         });
         Create({
@@ -284,7 +298,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Laser(100, 60, 45, 6, .95) ]
+                Weapons: [ Weapons.Laser(100, 60, 45, 4, .95) ]
             }
         });
         Create({

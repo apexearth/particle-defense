@@ -1,6 +1,17 @@
 ﻿define("game/Projectiles", ["game/Settings", "util/General"], function (Settings, General) {
         var arcCircle = 2 * Math.PI;
 
+        function ExplosiveProperties(weapon) {
+            this.ExplosiveSpeed = weapon.ExplosiveSpeed;
+            this.ExplosiveTime = weapon.ExplosiveTime;
+            this.ExplosiveInitialSize = weapon.ExplosiveInitialSize;
+            this.inheritedOnHitExplosiveProperties = this.onHit;
+            this.onHit = function () {
+                this.inheritedOnHitExplosiveProperties();
+                var explosion = new Explosion.Basic(this);
+            };
+        }
+
         function Projectile(weapon) {
             this.Level = weapon.Building.Level;
             this.Building = weapon.Building;
@@ -73,6 +84,51 @@
             this.hitTest = function (unit) {
                 return unit.hitTestLine({X: this.X, Y: this.Y}, {X: this.LastX, Y: this.LastY}, this.Width);
             };
+            this.draw = function (context) {
+                context.save();
+                context.strokeStyle = '#fff';
+                context.lineWidth = this.Width;
+                context.lineCap = "square";
+                context.beginPath();
+                context.moveTo(this.X, this.Y);
+                context.lineTo(this.LastX, this.LastY);
+                context.stroke();
+                context.closePath();
+                context.restore();
+            };
+        }
+
+        function MissileProjectile(weapon, direction, initialVelocity, acceleration) {
+            AcceleratingProjectile.call(this, weapon, direction, initialVelocity, acceleration);
+            ExplosiveProperties.call(this, weapon);
+            this.Target = null;
+            this.ExplodeRange = this.Width * 3;
+            this.hitTest = function (unit) {
+                return unit.hitTestLine({X: this.X, Y: this.Y}, {X: this.LastX, Y: this.LastY}, this.ExplodeRange);
+            };
+            this.inheritedUpdateMissileProjectile = this.update;
+            this.update = function () {
+                if (this.Target !== null) {
+                    if (this.Target.IsDead) this.Target = null;
+                    if (this.Target !== null) {
+                        var expectedAverageVelocity = this.Acceleration * General.Distance(this.X - this.Target.X, this.Y - this.Target.Y) / 2 + this.CurrentVelocity;
+                        this.Direction = General.LeadingAngleRad(this.X, this.Y, expectedAverageVelocity, this.Target.X, this.Target.Y, this.Target.VelocityX, this.Target.VelocityY);
+                    }
+                }
+                this.inheritedUpdateMissileProjectile();
+            };
+            this.draw = function (context) {
+                context.save();
+                context.strokeStyle = '#f88';
+                context.lineWidth = this.Width;
+                context.lineCap = "square";
+                context.beginPath();
+                context.moveTo(this.X, this.Y);
+                context.lineTo(this.LastX, this.LastY);
+                context.stroke();
+                context.closePath();
+                context.restore();
+            };
         }
 
         function ThrownProjectile(weapon, target, initialVelocity, slowdownDegree) {
@@ -109,29 +165,42 @@
 
         function CannonProjectile(weapon, direction, initialVelocity) {
             VelocityProjectile.call(this, weapon, direction, initialVelocity);
+            ExplosiveProperties.call(this, weapon);
 
-            this.ExplosiveSpeed = weapon.ExplosiveSpeed;
-            this.ExplosiveTime = weapon.ExplosiveTime;
-            this.ExplosiveInitialSize = weapon.ExplosiveInitialSize;
-
-            this.inheritedOnHit = this.onHit;
-            this.onHit = function () {
-                this.inheritedOnHit();
-                var explosion = new Explosion.Basic(this);
+            this.draw = function (context) {
+                context.save();
+                context.strokeStyle = '#fff';
+                context.lineWidth = this.Width;
+                context.lineCap = "square";
+                context.beginPath();
+                context.moveTo(this.X, this.Y);
+                context.lineTo(this.LastX, this.LastY);
+                context.stroke();
+                context.closePath();
+                context.restore();
             };
         }
 
         function GrenadeProjectile(weapon, target, initialVelocity, slowdownDegree) {
             ThrownProjectile.call(this, weapon, target, initialVelocity, slowdownDegree);
+            ExplosiveProperties.call(this, weapon);
 
-            this.ExplosiveSpeed = weapon.ExplosiveSpeed;
-            this.ExplosiveTime = weapon.ExplosiveTime;
-            this.ExplosiveInitialSize = weapon.ExplosiveInitialSize;
-
-            this.inheritedDie = this.die;
-            this.die = function () {
-                var explosion = new Explosion.Basic(this);
-                this.inheritedDie();
+            this.draw = function (context) {
+                if (this.X !== this.LastX && this.Y !== this.LastY) {
+                    context.save();
+                    context.strokeStyle = '#fff';
+                    context.lineWidth = this.Width;
+                    context.lineCap = "round";
+                    context.beginPath();
+                    context.moveTo(this.X, this.Y);
+                    context.lineTo(this.LastX, this.LastY);
+                    context.stroke();
+                    context.closePath();
+                    context.restore();
+                } else {
+                    context.fillStyle = '#fff';
+                    context.fillRect(this.X - this.Width / 2, this.Y - this.Width / 2, this.Width, this.Width);
+                }
             };
         }
 
@@ -168,7 +237,24 @@
                 // Nothing
             };
             this.hitTest = function (unit) {
-                return unit.hitTestLine({X: this.X, Y: this.Y}, {X: this.EndX, Y: this.EndY});
+                return unit.hitTestLine({X: this.X, Y: this.Y}, {X: this.EndX, Y: this.EndY}, this.Width);
+            };
+
+            this.draw = function (context) {
+                context.save();
+                context.globalAlpha = Math.max(1, this.FadeTime - this.FadeTimeCount) / (this.FadeTime / 2);
+                var grad = context.createLinearGradient(this.X, this.Y, this.EndX, this.EndY);
+                grad.addColorStop(0, '#77f');
+                grad.addColorStop(1, '#227');
+                context.strokeStyle = grad;
+                context.lineWidth = this.Width;
+                context.lineCap = "square";
+                context.beginPath();
+                context.moveTo(this.X, this.Y);
+                context.lineTo(this.EndX, this.EndY);
+                context.stroke();
+                context.closePath();
+                context.restore();
             };
         }
 
@@ -209,6 +295,7 @@
                 } else {
                     connection.X = connection.unit.X;
                     connection.Y = connection.unit.Y;
+                    if (connection.unit.IsDead) this.LifespanCount = this.Lifespan + 1;
                 }
 
                 var i = this.Level.Units.length;
@@ -247,7 +334,7 @@
             };
             this.drawConnection = function (context, connection, parentConnection) {
                 var i = connection.array.length;
-                var wild = this.Damage;
+                var wild = Math.sqrt(this.Damage) * 5;
                 while (i--) this.drawConnection(context, connection.array[i], connection);
                 if (parentConnection !== null && !isNaN(connection.X) && !isNaN(connection.Y) && !isNaN(parentConnection.X) && !isNaN(parentConnection.Y)) {
                     context.beginPath();
@@ -315,113 +402,12 @@
         };
 
         return {
-            Laser: function (weapon, direction) {
-                BeamProjectile.call(this, weapon, direction);
-
-                this.draw = function (context) {
-                    context.save();
-                    context.globalAlpha = Math.max(1, this.FadeTime - this.FadeTimeCount) / this.FadeTime;
-                    var grad = context.createLinearGradient(this.X, this.Y, this.EndX, this.EndY);
-                    grad.addColorStop(0, '#77f');
-                    grad.addColorStop(1, '#227');
-                    context.strokeStyle = grad;
-                    context.lineWidth = this.Width;
-                    context.lineCap = "square";
-                    context.beginPath();
-                    context.moveTo(this.X, this.Y);
-                    context.lineTo(this.EndX, this.EndY);
-                    context.stroke();
-                    context.closePath();
-                    context.restore();
-                };
-            },
-            Bullet: function (weapon, direction, initialVelocity) {
-                VelocityProjectile.call(this, weapon, direction, initialVelocity);
-
-                this.draw = function (context) {
-                    context.save();
-                    context.strokeStyle = '#fff';
-                    context.lineWidth = this.Width;
-                    context.lineCap = "square";
-                    context.beginPath();
-                    context.moveTo(this.X, this.Y);
-                    context.lineTo(this.LastX, this.LastY);
-                    context.stroke();
-                    context.closePath();
-                    context.restore();
-                };
-            },
-            ExplosiveBullet: function (weapon, direction, initialVelocity) {
-                CannonProjectile.call(this, weapon, direction, initialVelocity);
-
-                this.draw = function (context) {
-                    context.save();
-                    context.strokeStyle = '#fff';
-                    context.lineWidth = this.Width;
-                    context.lineCap = "square";
-                    context.beginPath();
-                    context.moveTo(this.X, this.Y);
-                    context.lineTo(this.LastX, this.LastY);
-                    context.stroke();
-                    context.closePath();
-                    context.restore();
-                };
-            },
-            Grenade: function (weapon, target, initialVelocity, slowdownDegree) {
-                GrenadeProjectile.call(this, weapon, target, initialVelocity, slowdownDegree);
-
-                this.draw = function (context) {
-                    if (this.X !== this.LastX && this.Y !== this.LastY) {
-                        context.save();
-                        context.strokeStyle = '#fff';
-                        context.lineWidth = this.Width;
-                        context.lineCap = "round";
-                        context.beginPath();
-                        context.moveTo(this.X, this.Y);
-                        context.lineTo(this.LastX, this.LastY);
-                        context.stroke();
-                        context.closePath();
-                        context.restore();
-                    } else {
-                        context.fillStyle = '#fff';
-                        context.fillRect(this.X - this.Width / 2, this.Y - this.Width / 2, this.Width, this.Width);
-                    }
-                };
-            },
-            Missile: function (weapon, direction, initialVelocity, acceleration) {
-                AcceleratingProjectile.call(this, weapon, direction, initialVelocity, acceleration);
-                this.Target = null;
-
-                this.acceleratingProjectileUpdate = this.update;
-                this.update = function () {
-                    if (this.Target !== null) {
-                        if (this.Target.IsDead) {
-                            this.Target = this.Weapon.Target;
-                        }
-                        if (this.Target !== null) {
-                            this.Direction = General.LeadingAngleRad(this.X, this.Y, initialVelocity, this.Target.X, this.Target.Y, this.Target.VelocityX, this.Target.VelocityY);
-                        }
-                    }
-                    this.acceleratingProjectileUpdate();
-                };
-                this.onHit = function () {
-                    this.die();
-                };
-                this.draw = function (context) {
-                    context.save();
-                    context.strokeStyle = '#f88';
-                    context.lineWidth = this.Width;
-                    context.lineCap = "square";
-                    context.beginPath();
-                    context.moveTo(this.X, this.Y);
-                    context.lineTo(this.LastX, this.LastY);
-                    context.stroke();
-                    context.closePath();
-                    context.restore();
-                };
-            },
+            Laser: BeamProjectile,
+            Bullet: VelocityProjectile,
+            ExplosiveBullet: CannonProjectile,
+            Grenade: GrenadeProjectile,
+            Missile: MissileProjectile,
             Shock: ShockProjectile
         }
     }
-)
-;
+);
