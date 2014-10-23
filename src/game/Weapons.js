@@ -105,12 +105,21 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "ga
                 this.TryFireAtTarget();
             }
         };
+        this.getTargetAngle = function () {
+            return General.AngleRad(this.Building.X, this.Building.Y, this.Target.X, this.Target.Y)
+                + this.getAccuracyModification();
+        };
         this.getTargetLeadingAngle = function () {
-            return General.LeadingAngleRad(this.Building.X, this.Building.Y, this.ProjectileSpeed, this.Target.X, this.Target.Y, this.Target.VelocityX, this.Target.VelocityY);
+            return General.LeadingAngleRad(this.Building.X, this.Building.Y, this.ProjectileSpeed, this.Target.X, this.Target.Y, this.Target.VelocityX, this.Target.VelocityY)
+                + this.getAccuracyModification();
         };
         this.getTargetLeadingVector = function () {
             return General.LeadingVector(this.Building.X, this.Building.Y, this.ProjectileSpeed, this.Target.X, this.Target.Y, this.Target.VelocityX, this.Target.VelocityY);
         };
+        this.getAccuracyModification = function () {
+            if(this.Accuracy == null) return 0;
+            return Math.PI * (Math.random() * this.Accuracy - (this.Accuracy / 2));
+        }
     }
 
     return {
@@ -135,17 +144,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "ga
                 this.CreateAttributeForStat("ExplosiveTime", true, 10, 1.1, this.AttributeCost);
                 this.CreateAttributeForStat("ExplosiveInitialSize", true, 30, 1.1, this.AttributeCost);
                 this.CreateProjectile = function () {
-                    var angle = this.getTargetLeadingAngle();
-                    var projectile = new Projectiles.Missile(
-                        this,
-                            angle * (Math.random() * this.Accuracy + (1 - this.Accuracy / 2)),
-                            this.ProjectileSpeed * (Math.random() * this.ShotSpeedVariance + (1 - this.ShotSpeedVariance / 2)),
-                        this.Acceleration
-                    );
-                    projectile.Target = this.Target;
-                    projectile.Damage = this.Damage;
-                    projectile.Width = Math.sqrt(this.Damage);
-                    return projectile;
+                    return new Projectiles.Missile(this);
                 };
             }
         },
@@ -156,30 +155,22 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "ga
                 this.Range = range;
                 this.FireRate = this.FireRateCount = fireRate;
                 this.ProjectileSpeed = projectileSpeed;
-                this.WeaponAttributeCost = this.AttributeCost;
-                /** @return {number} **/
-                this.AttributeCost = function () {
-                    return me.WeaponAttributeCost() * (1 + me.ProjectileSpeed / 5);
-                };
-                this.CreateAttributeForStat("ProjectileSpeed", true, 10, 1.25, this.AttributeCost);
                 this.Damage = damage;
                 this.Accuracy = 1 - accuracy;
                 this.ShotsPerShot = shotsPerShot;
                 this.ProjectileClass = Projectiles.Bullet;
+                this.WeaponAttributeCost = this.AttributeCost;
+                this.CreateAttributeForStat("ProjectileSpeed", true, 10, 1.25, this.AttributeCost);
+                /** @return {number} **/
+                this.AttributeCost = function () {
+                    return me.WeaponAttributeCost() * (1 + me.ProjectileSpeed / 5);
+                };
                 /** @return {number} **/
                 this.AmmoConsumption = function () {
                     return this.Damage / 2 * this.ProjectileSpeed / 3;
                 };
                 this.CreateProjectile = function () {
-                    var angle = this.getTargetLeadingAngle();
-                    var projectile = new this.ProjectileClass(
-                        this,
-                            angle + Math.PI * (Math.random() * this.Accuracy - (this.Accuracy / 2)),
-                        this.ProjectileSpeed
-                    );
-                    projectile.Damage = this.Damage / this.ShotsPerShot;
-                    projectile.Width = Math.sqrt(this.Damage) * 2 / this.ProjectileSpeed * 3;
-                    return projectile;
+                    return new this.ProjectileClass(this);
                 };
             };
         },
@@ -230,16 +221,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "ga
                 this.CreateAttributeForStat("ExplosiveInitialSize", true, 30, 1.1, this.AttributeCost);
 
                 this.CreateProjectile = function () {
-                    var target = this.getTargetLeadingVector();
-                    var projectile = new this.ProjectileClass(
-                        this,
-                        target,
-                        this.ProjectileSpeed,
-                        this.ProjectileSlowFactor
-                    );
-                    projectile.Damage = this.Damage / this.ShotsPerShot;
-                    projectile.Width = Math.sqrt(this.Damage) * 2 / this.ProjectileSpeed * 3;
-                    return projectile;
+                    return new this.ProjectileClass(this);
                 };
             }
         },
@@ -257,16 +239,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "ga
                     return this.Damage * 3 / this.Lifespan;
                 };
                 this.CreateProjectile = function () {
-                    var angle = this.getTargetLeadingAngle();
-
-                    var projectile = new Projectiles.Laser(
-                        this,
-                            angle * (Math.random() * this.Accuracy + (1 - this.Accuracy / 2))
-                    );
-                    projectile.Lifespan = this.Lifespan;
-                    projectile.Damage = this.Damage / this.Lifespan;
-                    projectile.Width = this.Damage * 10 / this.Lifespan;
-                    return projectile;
+                    return new Projectiles.Laser(this);
                 };
             };
         },
@@ -283,10 +256,7 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "ga
                     return this.Damage * 3 / this.Lifespan;
                 };
                 this.CreateProjectile = function () {
-                    var projectile = new Projectiles.Shock(this);
-                    projectile.Lifespan = this.Lifespan;
-                    projectile.Width = this.Damage * 10 / this.Lifespan;
-                    return projectile;
+                    return new Projectiles.Shock(this);
                 };
             };
         }

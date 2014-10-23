@@ -256,7 +256,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Gun(100, 5, 2.5, 1.25, .85, 3) ]
+                Weapons: [ Weapons.Gun(100, 15, 2.5, .5, .85, 3) ]
             }
         });
         Create({

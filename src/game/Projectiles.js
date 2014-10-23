@@ -16,9 +16,9 @@
             this.Level = weapon.Building.Level;
             this.Building = weapon.Building;
             this.Weapon = weapon;
-            this.X = this.Building.X;
-            this.Y = this.Building.Y;
-            this.Damage = 1;
+            this.X = weapon.Building.X;
+            this.Y = weapon.Building.Y;
+            this.Damage = weapon.Damage;
             /** @returns Number **/
             this.EffectiveDamage = function (unit) {
                 return this.Damage;
@@ -66,13 +66,15 @@
             };
         }
 
-        function VelocityProjectile(weapon, direction, initialVelocity) {
+        function VelocityProjectile(weapon) {
             Projectile.call(this, weapon);
             this.LastX = this.X;
             this.LastY = this.Y;
-            this.Direction = direction;
-            this.VelocityX = Math.cos(this.Direction) * initialVelocity;
-            this.VelocityY = Math.sin(this.Direction) * initialVelocity;
+            this.Direction = weapon.getTargetLeadingAngle();
+            this.InitialVelocity = weapon.ProjectileSpeed;
+            this.VelocityX = Math.cos(this.Direction) * this.InitialVelocity;
+            this.VelocityY = Math.sin(this.Direction) * this.InitialVelocity;
+            this.Width = Math.sqrt(this.Damage) * 2 / this.InitialVelocity * 3;
             this.projectileUpdate = this.update;
             this.update = function () {
                 this.projectileUpdate();
@@ -98,10 +100,12 @@
             };
         }
 
-        function MissileProjectile(weapon, direction, initialVelocity, acceleration) {
-            AcceleratingProjectile.call(this, weapon, direction, initialVelocity, acceleration);
+        function MissileProjectile(weapon) {
+            AcceleratingProjectile.call(this, weapon);
             ExplosiveProperties.call(this, weapon);
-            this.Target = null;
+            this.Target = weapon.Target;
+            this.Damage = weapon.Damage;
+            this.Width = Math.sqrt(this.Damage);
             this.ExplodeRange = this.Width * 3;
             this.hitTest = function (unit) {
                 return unit.hitTestLine({X: this.X, Y: this.Y}, {X: this.LastX, Y: this.LastY}, this.ExplodeRange);
@@ -131,15 +135,16 @@
             };
         }
 
-        function ThrownProjectile(weapon, target, initialVelocity, slowdownDegree) {
+        function ThrownProjectile(weapon) {
             Projectile.call(this, weapon);
             this.LastX = this.X;
             this.LastY = this.Y;
-            this.Target = target;
+            this.Target = weapon.getTargetLeadingVector();
             this.InitialDistance = General.Distance(this.X - this.Target.X, this.Y - this.Target.Y);
             this.Direction = General.AngleRad(this.X, this.Y, this.Target.X, this.Target.Y);
-            this.InitialVelocity = initialVelocity;
-            this.CurrentVelocity = initialVelocity;
+            this.InitialVelocity = weapon.ProjectileSpeed;
+            this.CurrentVelocity = weapon.ProjectileSpeed;
+            this.ProjectileSlowFactor = weapon.ProjectileSlowFactor;
             this.projectileUpdate = this.update;
             this.update = function () {
                 this.projectileUpdate();
@@ -147,7 +152,7 @@
                 this.LastY = this.Y;
                 if (this.Distance == null || this.Distance > this.Width) {
                     this.Distance = General.Distance(this.X - this.Target.X, this.Y - this.Target.Y);
-                    this.CurrentVelocity = this.InitialVelocity * (Math.pow(this.Distance + 25, slowdownDegree) * 2 / Math.pow(this.InitialDistance, slowdownDegree));
+                    this.CurrentVelocity = this.InitialVelocity * (Math.pow(this.Distance + 25, this.ProjectileSlowFactor) * 2 / Math.pow(this.InitialDistance, this.ProjectileSlowFactor));
                     this.VelocityX = Math.cos(this.Direction) * this.CurrentVelocity;
                     this.VelocityY = Math.sin(this.Direction) * this.CurrentVelocity;
                     this.X += this.VelocityX;
@@ -163,8 +168,8 @@
             };
         }
 
-        function CannonProjectile(weapon, direction, initialVelocity) {
-            VelocityProjectile.call(this, weapon, direction, initialVelocity);
+        function CannonProjectile(weapon) {
+            VelocityProjectile.call(this, weapon);
             ExplosiveProperties.call(this, weapon);
 
             this.draw = function (context) {
@@ -181,8 +186,8 @@
             };
         }
 
-        function GrenadeProjectile(weapon, target, initialVelocity, slowdownDegree) {
-            ThrownProjectile.call(this, weapon, target, initialVelocity, slowdownDegree);
+        function GrenadeProjectile(weapon) {
+            ThrownProjectile.call(this, weapon);
             ExplosiveProperties.call(this, weapon);
 
             this.draw = function (context) {
@@ -204,9 +209,9 @@
             };
         }
 
-        function AcceleratingProjectile(weapon, direction, initialVelocity, acceleration) {
-            VelocityProjectile.call(this, weapon, direction, initialVelocity);
-            this.Acceleration = acceleration;
+        function AcceleratingProjectile(weapon) {
+            VelocityProjectile.call(this, weapon);
+            this.Acceleration = weapon.Acceleration;
             this.velocityProjectileUpdate = this.update;
             this.update = function () {
                 this.velocityProjectileUpdate();
@@ -215,12 +220,14 @@
             };
         }
 
-        function BeamProjectile(weapon, direction) {
+        function BeamProjectile(weapon) {
             Projectile.call(this, weapon);
-            this.Lifespan = Settings.Second;
-            this.FadeTime = this.Lifespan / 2;
+            this.Lifespan = weapon.Lifespan;
+            this.FadeTime = weapon.Lifespan / 2;
             this.FadeTimeCount = 0;
-            this.Direction = direction;
+            this.Damage = weapon.Damage / weapon.Lifespan;
+            this.Width = weapon.Damage * 10 / weapon.Lifespan;
+            this.Direction = weapon.getTargetAngle();
             this.EndX = this.X + Math.cos(this.Direction) * this.Weapon.Range;
             this.EndY = this.Y + Math.sin(this.Direction) * this.Weapon.Range;
             /** @returns Number */
@@ -262,6 +269,7 @@
             Projectile.call(this, weapon);
 
             this.Lifespan = Settings.Second / 3;
+            this.Width = this.Damage * 10 / this.Lifespan;
             this.Range = weapon.Range;
 
             /** @returns Number */
@@ -295,7 +303,10 @@
                 } else {
                     connection.X = connection.unit.X;
                     connection.Y = connection.unit.Y;
-                    if (connection.unit.IsDead) this.LifespanCount = this.Lifespan + 1;
+                    if (connection.unit.IsDead) {
+                        connection.unit = null;
+                        connection.array = [];
+                    }
                 }
 
                 var i = this.Level.Units.length;
