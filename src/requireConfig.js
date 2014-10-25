@@ -5,7 +5,8 @@ require.config({
         'jasmine-html': 'lib/jasmine-1.3.1/jasmine-html',
         'angular': 'lib/angular.min',
         'angular-mocks': 'lib/angular-mocks',
-        'domReady': 'lib/domReady'
+        'domReady': 'lib/domReady',
+        'color': 'lib/color'
     },
     shim: {
         jasmine: {
@@ -21,6 +22,9 @@ require.config({
         'angular-mocks': {
             deps: ['jasmine', 'angular'],
             exports: 'angular.mock'
+        },
+        'color': {
+            exports: 'Color'
         }
     },
     waitSeconds: 15

@@ -99,7 +99,7 @@
         };
 
         this.draw = function (context) {
-            context.drawImage(this.constructor.canvas, this.TopLeft.X, this.TopLeft.Y);
+            context.drawImage(this.Canvas, this.TopLeft.X, this.TopLeft.Y);
             if (this.IsSelected()) {
                 context.strokeStyle = 'rgba(100,255,100,.5)';
                 context.lineWidth = 4;

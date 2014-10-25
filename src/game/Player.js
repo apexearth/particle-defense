@@ -1,8 +1,9 @@
-﻿define("game/Player", function () {
+﻿define("game/Player", ["color"], function (Color) {
     function Player(level) {
         this.Level = level;
         this.HomeBase = null;
         this.Buildings = [];
+        this.Color = Color([100, 255, 100]);
         this.BuildingCounts = {};
         this.Resources = {
             Energy: 0,
@@ -14,10 +15,10 @@
             Metal: 0,
             Ammo: 0
         };
-        this.AddBuildingCount = function(constructor){
+        this.AddBuildingCount = function (constructor) {
             this.BuildingCounts[constructor] = (this.BuildingCounts[constructor] || 0) + 1;
         };
-        this.GetBuildingCount = function(constructor){
+        this.GetBuildingCount = function (constructor) {
             return this.BuildingCounts[constructor] || 0;
         };
         /** @returns bool **/
@@ -33,9 +34,9 @@
                     if (this.Resources[cost] < costList[cost]) return false;
                 }
             }
-            for(cost in costs){
-                if(costs.hasOwnProperty(cost)){
-                    this.Resources[cost]-=costList[cost];
+            for (cost in costs) {
+                if (costs.hasOwnProperty(cost)) {
+                    this.Resources[cost] -= costList[cost];
                 }
             }
             return true;

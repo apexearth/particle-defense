@@ -2,8 +2,10 @@ define("game/Buildings", [
         "util/General",
         "game/Building",
         "game/Weapons",
-        "game/Settings"
-    ], function (General, Building, Weapons, Settings) {
+        "game/Settings",
+        "color",
+        "game/Images"
+    ], function (General, Building, Weapons, Settings, Color, Images) {
 
         var list = {};
 
@@ -18,7 +20,12 @@ define("game/Buildings", [
                     }
                 }
 
-                this.loadTemplate(obj.template, [obj.template.Weapons, obj.template.Cost]);
+
+                var color = player !== null ? player.Color : Color([155, 155, 155]);
+                this.Canvas = BasicCanvas(color);
+                if (obj.template.Canvas != null) obj.template.Canvas(this.Canvas);
+
+                this.loadTemplate(obj.template, [obj.template.Weapons, obj.template.Canvas]);
                 if (obj.constructor.ExtendedConstructor !== undefined) obj.constructor.ExtendedConstructor.call(this);
             };
             if (obj.constructor.Cost) {
@@ -40,7 +47,7 @@ define("game/Buildings", [
 
         Create({
             name: 'Wall',
-            constructor: { canvas: CreateCanvas('#0c9', '#3c9', 8),
+            constructor: {
                 Cost: {
                     Energy: 4,
                     Metal: 2
@@ -53,7 +60,6 @@ define("game/Buildings", [
         Create({
             name: 'AmmoFab',
             constructor: {
-                canvas: CreateCanvas('#5a4', '#811', 7),
                 Cost: {
                     Energy: 100,
                     Metal: 50
@@ -76,7 +82,6 @@ define("game/Buildings", [
         Create({
             name: 'EnergyFab',
             constructor: {
-                canvas: CreateCanvas('#5a4', '#118', 7),
                 Cost: {
                     Energy: 125,
                     Metal: 50
@@ -99,7 +104,6 @@ define("game/Buildings", [
         Create({
             name: 'HomeBase',
             constructor: {
-                canvas: CreateCanvas('#0a7', '#222', 7),
                 Cost: {
                     Energy: 500,
                     Metal: 200
@@ -110,6 +114,15 @@ define("game/Buildings", [
                 }
             },
             template: {
+                Canvas: function (canvas) {
+                    var context = canvas.getContext("2d");
+                    context.fillStyle = 'rgba(200,2555,200,1)';
+                    context.fillRect(1, 1, canvas.width - 2, canvas.height - 2);
+                    context.fillStyle = 'rgba(100,125,100,.6)';
+                    context.fillRect(5, 5, canvas.width - 10, canvas.height - 10);
+                    context.fillStyle = 'rgba(50,125,50,.3)';
+                    context.fillRect(10, 10, canvas.width - 20, canvas.height - 20);
+                },
                 Health: 50,
                 ResourceStorage: {
                     Ammo: 200,
@@ -127,7 +140,6 @@ define("game/Buildings", [
         Create({
             name: 'MetalFab',
             constructor: {
-                canvas: CreateCanvas('#5a4', '#111', 7),
                 Cost: {
                     Energy: 50,
                     Metal: 75
@@ -150,7 +162,6 @@ define("game/Buildings", [
         Create({
             name: 'Cannon',
             constructor: {
-                canvas: CreateCanvas('#fff', '#666', 5),
                 Cost: {
                     Energy: 60,
                     Metal: 30
@@ -164,7 +175,6 @@ define("game/Buildings", [
         Create({
             name: 'MissileLauncher',
             constructor: {
-                canvas: CreateCanvas('#aaf', '#227', 5),
                 Cost: {
                     Energy: 60,
                     Metal: 30
@@ -178,7 +188,6 @@ define("game/Buildings", [
         Create({
             name: 'GrenadeLauncher',
             constructor: {
-                canvas: CreateCanvas('#fff', '#666', 5),
                 Cost: {
                     Energy: 60,
                     Metal: 30
@@ -192,7 +201,6 @@ define("game/Buildings", [
         Create({
             name: 'LethargicCannon',
             constructor: {
-                canvas: CreateCanvas('#fff', '#666', 5),
                 Cost: {
                     Energy: 60,
                     Metal: 30
@@ -206,7 +214,6 @@ define("game/Buildings", [
         Create({
             name: 'Gun',
             constructor: {
-                canvas: CreateCanvas('#fff', '#666', 5),
                 Cost: {
                     Energy: 20,
                     Metal: 10
@@ -220,7 +227,6 @@ define("game/Buildings", [
         Create({
             name: 'FastGun',
             constructor: {
-                canvas: CreateCanvas('#fff', '#666', 5),
                 Cost: {
                     Energy: 30,
                     Metal: 15
@@ -234,7 +240,6 @@ define("game/Buildings", [
         Create({
             name: 'SharpShooter',
             constructor: {
-                canvas: CreateCanvas('#fff', '#666', 5),
                 Cost: {
                     Energy: 40,
                     Metal: 20
@@ -248,7 +253,6 @@ define("game/Buildings", [
         Create({
             name: 'CrossEyes',
             constructor: {
-                canvas: CreateCanvas('#fff', '#aaa', 5),
                 Cost: {
                     Energy: 35,
                     Metal: 20
@@ -262,7 +266,6 @@ define("game/Buildings", [
         Create({
             name: 'MachineGun',
             constructor: {
-                canvas: CreateCanvas('#fff', '#aaa', 5),
                 Cost: {
                     Energy: 45,
                     Metal: 20
@@ -276,7 +279,6 @@ define("game/Buildings", [
         Create({
             name: 'Behemoth',
             constructor: {
-                canvas: CreateCanvas('#fff', '#aaa', 5),
                 Cost: {
                     Energy: 50,
                     Metal: 40
@@ -290,7 +292,6 @@ define("game/Buildings", [
         Create({
             name: 'Laser',
             constructor: {
-                canvas: CreateCanvas('#fff', '#2a2', 5),
                 Cost: {
                     Energy: 50,
                     Metal: 25
@@ -304,7 +305,6 @@ define("game/Buildings", [
         Create({
             name: 'Beam',
             constructor: {
-                canvas: CreateCanvas('#fff', '#2a2', 5),
                 Cost: {
                     Energy: 25,
                     Metal: 20
@@ -318,7 +318,6 @@ define("game/Buildings", [
         Create({
             name: 'Shocker',
             constructor: {
-                canvas: CreateCanvas('#fff', '#2a2', 5),
                 Cost: {
                     Energy: 25,
                     Metal: 20
@@ -326,6 +325,10 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
+                Canvas: function (canvas) {
+                    var context = canvas.getContext("2d");
+                    context.drawImage(Images.test, 0, 0, canvas.width, canvas.width);
+                },
                 Weapons: [ Weapons.Shocker(100, 30, 10, 1) ]
             }
         });
@@ -333,18 +336,16 @@ define("game/Buildings", [
         return list;
 
 
-        function CreateCanvas(color1, color2, width2) {
+        function BasicCanvas(color) {
             var canvas = document.createElement("canvas");
             canvas.width = Settings.BlockSize;
             canvas.height = Settings.BlockSize;
             var context = canvas.getContext("2d");
-            context.fillStyle = color1;
-            context.fillRect(0, 0, Settings.BlockSize, Settings.BlockSize);
-            context.strokeStyle = color2;
-            context.lineWidth = width2;
-            context.strokeRect(5, 5, Settings.BlockSize - 10, Settings.BlockSize - 10);
+            context.lineWidth = 2;
+            context.strokeStyle = color.toCSS();
+            context.strokeRect(0, 0, Settings.BlockSize, Settings.BlockSize);
             return canvas;
         }
+
     }
-)
-;
+);
