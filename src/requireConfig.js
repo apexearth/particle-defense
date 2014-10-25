@@ -6,6 +6,7 @@ require.config({
         'angular': 'lib/angular.min',
         'angular-mocks': 'lib/angular-mocks',
         'domReady': 'lib/domReady',
+        'pixi': 'lib/pixi',
         'color': 'lib/color'
     },
     shim: {
@@ -22,6 +23,9 @@ require.config({
         'angular-mocks': {
             deps: ['jasmine', 'angular'],
             exports: 'angular.mock'
+        },
+        'pixi': {
+            exports: 'PIXI'
         },
         'color': {
             exports: 'Color'
