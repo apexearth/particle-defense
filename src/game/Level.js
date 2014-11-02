@@ -276,44 +276,6 @@
             }
 
         };
-        this.draw = function () {
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.context.drawImage(_map.canvas, 0, 0);
-
-            var i = this.Buildings.length;
-            while (i--)
-                this.Buildings[i].draw(this.context);
-
-            i = this.Units.length;
-            while (i--)
-                this.Units[i].draw(this.context);
-
-            i = this.Projectiles.length;
-            while (i-- > 0)
-                this.Projectiles[i].draw(this.context);
-
-            i = this.Objects.length;
-            while (i-- > 0) {
-                var object = this.Objects[i];
-                object.draw(this.context);
-            }
-
-            if (this.PlacementBuilding != null) {
-                var block = this.getBlockOrNullFromCoords(Mouse.DisplayX, Mouse.DisplayY);
-                if (block != null) {
-                    this.context.save();
-                    this.context.globalAlpha = .75;
-                    this.PlacementBuilding.BlockX = block.x;
-                    this.PlacementBuilding.BlockY = block.y;
-                    this.PlacementBuilding.UpdateXY();
-                    this.PlacementBuilding.draw(this.context);
-                    this.context.fillStyle = (this.IsBlockBuildable(block) ? 'rgba(0,255,0,.5)' : 'rgba(255,0,0,.5)');
-                    this.context.fillRect(block.x * Settings.BlockSize, block.y * Settings.BlockSize, Settings.BlockSize, Settings.BlockSize);
-                    this.context.restore();
-                }
-            }
-
-        };
 
         this.initialize = function (template) {
             General.NestedCopyTo(template, this);

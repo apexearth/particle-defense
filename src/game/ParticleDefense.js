@@ -52,14 +52,6 @@
         if (ParticleDefense.IndexScope != null) ParticleDefense.IndexScope.$apply();
     };
 
-    (function () {
-        if (localStorage.User != null) {
-            localStorage.User = {
-                LifetimeScore: 0
-            }
-        }
-    })();
-    ParticleDefense.User = localStorage.User;
 
     return ParticleDefense;
 });

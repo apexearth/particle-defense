@@ -1,5 +1,5 @@
 define('game/PIXI', ["../lib/pixi", "../util/Mouse"], function (PIXI, Mouse) {
-    var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+    var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, {antialias: true});
     document.body.appendChild(renderer.view);
 
     var stage = new PIXI.Stage(0x151515);

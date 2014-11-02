@@ -1,4 +1,4 @@
-﻿define("util/General", function () {
+﻿define("util/General", ["pixi"], function (PIXI) {
     function General() {
     }
 
@@ -88,6 +88,7 @@
         return !isNaN(parseFloat(n)) && isFinite(n);
     };
 
+    General.Point = PIXI.Point;
     General.Vector2 = function (x, y) {
         this.x = x;
         this.y = y;

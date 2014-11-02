@@ -1,6 +1,7 @@
 define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "game/Attribute"], function (Projectiles, General, Settings, Attribute) {
 
     function Weapon(building) {
+        this.Level = building.Level;
         this.Building = building;
         this.Range = 200;
         this.Damage = 1;
