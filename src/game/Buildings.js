@@ -1,32 +1,38 @@
 define("game/Buildings", [
-        "util/General",
-        "game/Building",
-        "game/Weapons",
-        "game/Settings",
+        "./PIXI",
+        "../util/General",
+        "./Building",
+        "./Weapons",
+        "./Settings",
         "color",
-        "game/Images"
-    ], function (General, Building, Weapons, Settings, Color, Images) {
+        "./Images"
+    ], function (PIXI, General, Building, Weapons, Settings, Color, Images) {
 
         var list = {};
 
         function Create(obj) {
             var constructor = function (level, player, templates) {
-                this.Name = obj.name;
-                Building.call(this, level, player, templates);
+                var building = new PIXI.DisplayObjectContainer();
+                level.addChild(building);
+
+                building.Name = obj.name;
+                Building.call(building, level, player, templates);
+                if (obj.template.Canvas != null) obj.template.Canvas(building.canvas);
+                var sprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(building.canvas));
+                sprite.anchor.x = sprite.anchor.y = .5;
+                building.addChild(sprite);
+
                 if (obj.template.Weapons !== undefined) {
                     for (var w in obj.template.Weapons) {
                         if (obj.template.Weapons.hasOwnProperty(w))
-                            this.Weapons.push(new obj.template.Weapons[w](this));
+                            building.Weapons.push(new obj.template.Weapons[w](building));
                     }
                 }
 
-
-                var color = player !== null ? player.Color : Color([155, 155, 155]);
-                this.Canvas = BasicCanvas(color);
-                if (obj.template.Canvas != null) obj.template.Canvas(this.Canvas);
-
-                this.loadTemplate(obj.template, [obj.template.Weapons, obj.template.Canvas]);
-                if (obj.constructor.ExtendedConstructor !== undefined) obj.constructor.ExtendedConstructor.call(this);
+                building.loadTemplate(obj.template, [obj.template.Weapons, obj.template.Canvas]);
+                if (obj.constructor.ExtendedConstructor !== undefined) obj.constructor.ExtendedConstructor.call(building);
+                building.constructor = this.constructor;
+                return building;
             };
             if (obj.constructor.Cost) {
                 constructor.Cost = {};
@@ -41,7 +47,7 @@ define("game/Buildings", [
                     }
                 }
             }
-            General.CopyTo(obj.constructor, constructor, [obj.constructor.Cost]);
+            General.NestedCopyTo(obj.constructor, constructor, [obj.constructor.Cost]);
             list[obj.name] = constructor;
         }
 
@@ -326,8 +332,7 @@ define("game/Buildings", [
             template: {
                 Health: 5,
                 Canvas: function (canvas) {
-                    var context = canvas.getContext("2d");
-                    context.drawImage(Images.test, 0, 0, canvas.width, canvas.width);
+                    // nothing yet
                 },
                 Weapons: [ Weapons.Shocker(100, 30, 10, 1) ]
             }
@@ -335,17 +340,6 @@ define("game/Buildings", [
 
         return list;
 
-
-        function BasicCanvas(color) {
-            var canvas = document.createElement("canvas");
-            canvas.width = Settings.BlockSize;
-            canvas.height = Settings.BlockSize;
-            var context = canvas.getContext("2d");
-            context.lineWidth = 2;
-            context.strokeStyle = color.toCSS();
-            context.strokeRect(0, 0, Settings.BlockSize, Settings.BlockSize);
-            return canvas;
-        }
 
     }
 );

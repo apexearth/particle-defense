@@ -1,6 +1,17 @@
-﻿define("game/Building", ["game/Settings", "util/General", "util/Display", "game/Attribute"], function (Settings, General, Display, Attribute) {
+﻿define("game/Building", ["./PIXI", "color", "./Settings", "../util/General", "./Attribute"], function (PIXI, Color, Settings, General, Attribute) {
     var arcCircle = 2 * Math.PI;
 
+    var BasicCanvas = function (color) {
+        color = color || Color([155, 155, 155]);
+        var canvas = document.createElement("canvas");
+        canvas.width = Settings.BlockSize;
+        canvas.height = Settings.BlockSize;
+        var context = canvas.getContext("2d");
+        context.lineWidth = 2;
+        context.strokeStyle = color.toCSS();
+        context.strokeRect(0, 0, Settings.BlockSize, Settings.BlockSize);
+        return canvas;
+    };
 
     var Building = function (level, player, templates) {
         var me = this;
@@ -21,7 +32,7 @@
         };
         this.Weapons = [];
         this.Updates = [];
-        this.Canvas = null;
+        this.canvas = BasicCanvas(player ? player.Color : null);
 
         this.NumberOfUpgrades = 0;
         this.Attributes = {  };
@@ -83,7 +94,9 @@
             createAttributeForGeneration("Metal", 8, 13);
 
         };
-
+        this.delete = function () {
+            this.parent.removeChild(this);
+        };
         var _isSelected = false;
         /** @returns bool **/
         this.IsSelected = function () {
@@ -99,20 +112,19 @@
         };
 
         this.draw = function (context) {
-            context.drawImage(this.Canvas, this.TopLeft.X, this.TopLeft.Y);
             if (this.IsSelected()) {
                 context.strokeStyle = 'rgba(100,255,100,.5)';
                 context.lineWidth = 4;
-                context.strokeRect(this.TopLeft.X, this.TopLeft.Y, this.Width, this.Height);
+                context.strokeRect(this.TopLeft.x, this.TopLeft.y, this.Width, this.Height);
                 context.fillStyle = 'rgba(0,0,0,.25)';
-                context.fillRect(this.TopLeft.X, this.TopLeft.Y, this.Width, this.Height);
+                context.fillRect(this.TopLeft.x, this.TopLeft.y, this.Width, this.Height);
             }
             if (this.IsSelected() || level.PlacementBuilding === this) {
                 var i = this.Weapons.length;
                 while (i--) {
                     context.fillStyle = 'rgba(0,0,255,.05)';
                     context.beginPath();
-                    context.arc(this.X, this.Y, this.Weapons[i].Range, 0, arcCircle, false);
+                    context.arc(this.x, this.y, this.Weapons[i].Range, 0, arcCircle, false);
                     context.closePath();
                     context.fill();
                 }
@@ -139,16 +151,13 @@
             while (i--) this.Weapons[i].update();
         };
         this.UpdateXY = function () {
-            this.X = this.BlockX * Settings.BlockSize + Settings.BlockSize / 2;
-            this.Y = this.BlockY * Settings.BlockSize + Settings.BlockSize / 2;
+            this.position.x = this.BlockX * Settings.BlockSize + Settings.BlockSize / 2;
+            this.position.y = this.BlockY * Settings.BlockSize + Settings.BlockSize / 2;
 
             this.TopLeft = {
-                X: this.BlockX * Settings.BlockSize,
-                Y: this.BlockY * Settings.BlockSize
+                x: this.BlockX * Settings.BlockSize,
+                y: this.BlockY * Settings.BlockSize
             };
-            var displayCoords = Display.translateCoordinate(this.TopLeft.X, this.TopLeft.Y);
-            this.TopLeft.DisplayX = displayCoords.x;
-            this.TopLeft.DisplayY = displayCoords.y;
         };
         this.initialize = function () {
             this.UpdateXY();
@@ -159,7 +168,7 @@
             if (this.Block !== null) this.Block.SetBuilding(this);
         };
         this.loadTemplate = function (template, ignoreArray) {
-            General.CopyTo(template, this, ignoreArray);
+            General.NestedCopyTo(template, this, ignoreArray);
             this.UpdateAttributes();
         };
         this.loadTemplates = function () {
@@ -173,7 +182,7 @@
                 this.loadTemplate(templates);
         };
 
-        if(player){
+        if (player) {
             player.AddBuildingCount(this.Name);
         }
         this.loadTemplates();

@@ -9,17 +9,20 @@ define("game/Units", [], function () {
     };
 
     list.UnitCircle = {
-        StrokeColor: '#fff',
-        FillColor: '#fff',
-        draw: function (context) {
-            context.strokeStyle = this.StrokeColor;
-            context.fillStyle = this.FillColor;
+        getCanvas: function () {
+            var canvas = document.createElement("canvas");
+            canvas.width = 50;
+            canvas.height = 50;
+            var context = canvas.getContext("2d");
+            context.strokeStyle = '#fff';
+            context.fillStyle = '#fff';
             context.lineWidth = 2;
             context.beginPath();
-            context.arc(this.X, this.Y, this.Radius, 0, 2 * Math.PI);
+            context.arc(25, 25, 24, 0, 2 * Math.PI);
             context.closePath();
             context.stroke();
             context.fill();
+            return canvas;
         }
     };
 

@@ -1,6 +1,6 @@
-define("game/Settings", ["util/Display"], function (Display) {
+define("game/Settings", [], function () {
     return {
-        BlockSize: 35,
-        Second: 1000 / Display.Settings.FpsTarget
+        BlockSize: 40,
+        Second: 1000 / 60
     };
 });

@@ -8,7 +8,12 @@
     General.is_safari = (General.is_chrome && navigator.userAgent.indexOf("Safari") > -1 ? false : navigator.userAgent.indexOf("Safari") > -1);
     General.is_Opera = navigator.userAgent.indexOf("Presto") > -1;
 
-    General.CopyTo = function (from, to, ignoreArray) {
+    General.CopyTo = function (from, to) {
+        for (var a in from) { to[a] = from[a]; }
+        return to;
+    };
+
+    General.NestedCopyTo = function (from, to, ignoreArray) {
         if (null == from
             || "object" != typeof from
             || from instanceof HTMLCanvasElement
@@ -17,7 +22,7 @@
         for (var o in from) {
             if (from.hasOwnProperty(o)
                 && (ignoreArray === undefined || ignoreArray.indexOf(from[o]) == -1)) {
-                to[o] = General.CopyTo(from[o], to[o]);
+                to[o] = General.NestedCopyTo(from[o], to[o]);
             }
         }
         return to;
@@ -37,7 +42,7 @@
         diry /= hyp;
         if (isNaN(dirx)) dirx = 0;
         if (isNaN(diry)) diry = 0;
-        return { X: dirx, Y: diry };
+        return {x: dirx, y: diry};
     };
     General.AngleRad = function (x1, y1, x2, y2) {
         return Math.atan2(y2 - y1, x2 - x1);
@@ -70,7 +75,7 @@
         if (isNaN(t)) return General.AngleRad(x1, y1, x2, y2);
         var aimTargetX = t * x2v + x2;
         var aimTargetY = t * y2v + y2;
-        return { X: aimTargetX, Y: aimTargetY };
+        return {x: aimTargetX, y: aimTargetY};
     };
 
     General.Distance = function (x, y) {
@@ -84,9 +89,9 @@
     };
 
     General.Vector2 = function (x, y) {
-        this.X = x;
-        this.Y = y;
-    }
+        this.x = x;
+        this.y = y;
+    };
     General.Vector2.create = function (x, y) {
         return new Vector2(x, y);
     };

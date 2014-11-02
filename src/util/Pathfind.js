@@ -69,19 +69,19 @@
         var vectors = [];
         for (var i = 1; i < path.length; i++) {
             var block = path[i];
-            vectors.push({ X: block.X, Y: block.Y });
+            vectors.push({x: block.x, y: block.y});
         }
         return vectors;
     };
     Pathfind.getPathByVector = function (grid, vectorFrom, vectorTo) {
-        var start = grid.getBlockFromCoords(vectorFrom.X, vectorFrom.Y);
-        var target = grid.getBlockFromCoords(vectorTo.X, vectorTo.Y);
+        var start = grid.getBlockFromCoords(vectorFrom.x, vectorFrom.y);
+        var target = grid.getBlockFromCoords(vectorTo.x, vectorTo.y);
         return Pathfind.getPathByBlock(grid, start, target);
     };
 
     Pathfind.processBestScorer = function (grid, current, start, target, open, closed) {
         closed.push(open.splice(open.indexOf(current), 1)[0]);
-        var adjacentBlocks = grid.getAdjacentBlocks(current.X, current.Y, Pathfind.Settings.DiagonalMovement);
+        var adjacentBlocks = grid.getAdjacentBlocks(current.x, current.y, Pathfind.Settings.DiagonalMovement);
         var i = adjacentBlocks.length;
         while (i--) {
             var adjacentBlock = adjacentBlocks[i];
@@ -96,7 +96,7 @@
                     open.push(adjacentBlock);
                     Pathfind.calculate(adjacentBlock, current, start, target);
                 } else {
-                    var cost = Pathfind.calculateScore(current.X, current.Y, adjacentBlock.X, adjacentBlock.Y);
+                    var cost = Pathfind.calculateScore(current.x, current.y, adjacentBlock.x, adjacentBlock.y);
                     if (current.Pathfind.ScoreStart + cost < adjacentBlock.Pathfind.ScoreStart) {
                         Pathfind.calculate(adjacentBlock, current, start, target);
                     }
@@ -116,11 +116,11 @@
     };
 
     Pathfind.diagonalScreen = function (current, adjacent) {
-        return Pathfind.Settings.BlockedDiagonalMovement || adjacent.X == current.X || adjacent.Y == current.Y
-            || adjacent.X < current.X && (adjacent.Y < current.Y && (adjacent.BottomBlock == null || adjacent.BottomBlock.Status() < BlockStatus.NotPassable) && (adjacent.RightBlock == null || adjacent.RightBlock.Status() < BlockStatus.NotPassable)
-            || current.Y < adjacent.Y && (adjacent.TopBlock == null || adjacent.TopBlock.Status() < BlockStatus.NotPassable) && (adjacent.RightBlock == null || adjacent.RightBlock.Status() < BlockStatus.NotPassable))
-            || adjacent.X > current.X && (adjacent.Y < current.Y && (adjacent.BottomBlock == null || adjacent.BottomBlock.Status() < BlockStatus.NotPassable) && (adjacent.LeftBlock == null || adjacent.LeftBlock.Status() < BlockStatus.NotPassable)
-            || current.Y < adjacent.Y && (adjacent.TopBlock == null || adjacent.TopBlock.Status() < BlockStatus.NotPassable) && (adjacent.LeftBlock == null || adjacent.LeftBlock.Status() < BlockStatus.NotPassable));
+        return Pathfind.Settings.BlockedDiagonalMovement || adjacent.x == current.x || adjacent.y == current.y
+            || adjacent.x < current.x && (adjacent.y < current.y && (adjacent.BottomBlock == null || adjacent.BottomBlock.Status() < BlockStatus.NotPassable) && (adjacent.RightBlock == null || adjacent.RightBlock.Status() < BlockStatus.NotPassable)
+            || current.y < adjacent.y && (adjacent.TopBlock == null || adjacent.TopBlock.Status() < BlockStatus.NotPassable) && (adjacent.RightBlock == null || adjacent.RightBlock.Status() < BlockStatus.NotPassable))
+            || adjacent.x > current.x && (adjacent.y < current.y && (adjacent.BottomBlock == null || adjacent.BottomBlock.Status() < BlockStatus.NotPassable) && (adjacent.LeftBlock == null || adjacent.LeftBlock.Status() < BlockStatus.NotPassable)
+            || current.y < adjacent.y && (adjacent.TopBlock == null || adjacent.TopBlock.Status() < BlockStatus.NotPassable) && (adjacent.LeftBlock == null || adjacent.LeftBlock.Status() < BlockStatus.NotPassable));
     };
     Pathfind.calculateScore = function (currentX, currentY, targetX, targetY) {
         var x = Math.abs(targetX - currentX);
@@ -135,8 +135,8 @@
         if (parent == null || parent.Pathfind == null)
             block.Pathfind.ScoreStart = 0;
         else
-            block.Pathfind.ScoreStart = Pathfind.calculateScore(block.X, block.Y, parent.X, parent.Y) + parent.Pathfind.ScoreStart;
-        block.Pathfind.ScoreTarget = Pathfind.calculateScore(block.X, block.Y, target.X, target.Y);
+            block.Pathfind.ScoreStart = Pathfind.calculateScore(block.x, block.y, parent.x, parent.y) + parent.Pathfind.ScoreStart;
+        block.Pathfind.ScoreTarget = Pathfind.calculateScore(block.x, block.y, target.x, target.y);
         block.Pathfind.Score = block.Pathfind.ScoreStart + block.Pathfind.ScoreTarget;
         block.Pathfind.Parent = parent;
     };

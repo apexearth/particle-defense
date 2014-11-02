@@ -1,8 +1,8 @@
-﻿define("game/ParticleDefense", ["util/Display", "game/CommandQueue"], function (Display, CommandQueue) {
+﻿define("game/ParticleDefense", ["./CommandQueue", "./Settings"], function (CommandQueue, Settings) {
     function ParticleDefense() {
     }
 
-    ParticleDefense.Second = 1000 / Display.Settings.FpsTarget;
+    ParticleDefense.Second = 1000 / Settings.Second;
     ParticleDefense.Views = {
         MainMenu: "views/main-menu.html",
         GameUi: "views/game-ui.html",
@@ -23,9 +23,6 @@
 
         ParticleDefense.Level.update();
         ParticleDefense.processCommands();
-
-        Display.update();
-        ParticleDefense.draw();
     };
     ParticleDefense.updateUi = function () {
         if (ParticleDefense.View != ParticleDefense.Views.GameUi) return;
@@ -43,19 +40,9 @@
             }
         }
     };
-    ParticleDefense.draw = function () {
-        ParticleDefense.Level.draw();
-        Display.setDrawCanvas('Main');
-        Display.clear();
-        Display.drawImage(ParticleDefense.Level.canvas, 0, 0);
-    };
 
-    ParticleDefense.startLevel = function (level, canvas) {
+    ParticleDefense.startLevel = function (level) {
         ParticleDefense.Level = level();
-
-        Display.initialize(canvas);
-        Display.drawOffsetX = Display.drawOffsetXT = -ParticleDefense.Level.Width / 2;
-        Display.drawOffsetY = Display.drawOffsetYT = -ParticleDefense.Level.Height / 2;
 
         ParticleDefense.View = ParticleDefense.Views.GameUi;
         ParticleDefense.update();

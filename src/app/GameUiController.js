@@ -1,4 +1,4 @@
-﻿define("app/GameUiController", ["app/App", "game/ParticleDefense", "game/Buildings", "util/Mouse", "util/Display"], function (app, ParticleDefense, Buildings, Mouse, Display) {
+﻿define("app/GameUiController", ["app/App", "game/ParticleDefense", "game/Buildings", "util/Mouse"], function (app, ParticleDefense, Buildings, Mouse) {
     return app.controller('GameUiController', ['$scope', 'Canvas', function ($scope, canvas) {
         $scope.Level = ParticleDefense.Level;
         $scope.Player = ParticleDefense.Level.Player;
@@ -35,7 +35,6 @@
 
         var eventCatcher = document.getElementById('event-catcher');
         Mouse.AddEvents(eventCatcher);
-        Display.AddEvents(eventCatcher);
 
         ParticleDefense.UiScope = $scope;
         setTimeout(ParticleDefense.updateUi, 100);

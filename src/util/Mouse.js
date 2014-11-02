@@ -1,14 +1,14 @@
 ﻿define("util/Mouse", function () {
     var Mouse = {
-        X: 0,
-        Y: 0,
+        x: 0,
+        y: 0,
         LeftButton: false,
         MiddleButton: false,
         RightButton: false,
         AddEvents: function (element) {
             element.addEventListener('mousemove', function (e) {
-                Mouse.X = e.clientX || e.pageX;
-                Mouse.Y = e.clientY || e.pageY;
+                Mouse.x = e.clientX || e.pageX;
+                Mouse.y = e.clientY || e.pageY;
             }, false);
             element.addEventListener('mousedown', function (e) {
                 if (e.button == 0) Mouse.LeftButton = true;

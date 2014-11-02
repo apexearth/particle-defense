@@ -2,8 +2,8 @@
     var Block = function (x, y) {
         var _status = BlockStatus.IsNothing;
         var _building = null;
-        this.X = x;
-        this.Y = y;
+        this.x = x;
+        this.y = y;
         this.Objects = [];
 
         this.SetStatus = function (status) {
@@ -70,7 +70,7 @@
     };
 
     Grid.prototype.getBlockFromVector = function (vector) {
-        return this.getBlock(vector.X, vector.Y);
+        return this.getBlock(vector.x, vector.y);
     };
     Grid.prototype.getBlock = function (x, y) {
         x -= this.MinX;

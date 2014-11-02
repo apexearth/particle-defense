@@ -6,6 +6,6 @@ define('game/Images', function () {
     }
 
     return{
-        test: getImage("http://www.clker.com/cliparts/7/i/M/9/J/4/smiling-baby-small-md.png")
+        test: getImage("")
     };
 });

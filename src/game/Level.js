@@ -1,7 +1,8 @@
-﻿define("game/Level", ["game/Map", "game/PlayerCommands", "util/General", "util/Mouse", "util/Keyboard", "game/CommandQueue", "game/Settings", "util/BlockStatus"], function (Map, PlayerCommands, General, Mouse, Keyboard, CommandQueue, Settings, BlockStatus) {
+﻿define("game/Level", ["./PIXI", "./Map", "./PlayerCommands", "../util/General", "../util/Mouse", "util/Keyboard", "./CommandQueue", "./Settings", "util/BlockStatus"], function (PIXI, Map, PlayerCommands, General, Mouse, Keyboard, CommandQueue, Settings, BlockStatus) {
     var Level = function (width, height, mapTemplate) {
+
         var me = this;
-        var _map = new Map(width, height, mapTemplate);
+        var _map = new Map(this, width, height, mapTemplate);
 
         this.SpawnPoints = [];
 
@@ -22,6 +23,11 @@
         this.Projectiles = [];
         this.Buildings = [];
         this.Objects = [];
+
+        this.Mouse = {
+            x: Mouse.x - PIXI.MainContainer.position.x,
+            y: Mouse.y - PIXI.MainContainer.position.y
+        };
 
         /** @returns Number **/
         this.TotalWaves = function () {
@@ -61,7 +67,7 @@
             return player;
         };
         this.hitTest = function (vector) {
-            return vector.X >= this.Bounds.Left && vector.X <= this.Bounds.Right && vector.Y >= this.Bounds.Top && vector.Y <= this.Bounds.Bottom;
+            return vector.x >= this.Bounds.Left && vector.x <= this.Bounds.Right && vector.y >= this.Bounds.Top && vector.y <= this.Bounds.Bottom;
         };
 
         this.BeginBuildingPlacement = function (building) {
@@ -69,7 +75,7 @@
         };
         this.FinalizeBuildingPlacement = function (block) {
             if (block != null) {
-                var buildResult = PlayerCommands.CreateBuilding(this.Player, this.PlacementBuilding.constructor, block.X, block.Y);
+                var buildResult = PlayerCommands.CreateBuilding(this.Player, this.PlacementBuilding.constructor, block.x, block.y);
                 if (buildResult != null) {
                     this.ResetBuildableBlocks();
                     var i = this.Units.length;
@@ -104,7 +110,7 @@
             var i = this.SpawnPoints.length;
             while (i--) {
                 var spawnPoint = this.SpawnPoints[i];
-                var spawnPointBlock = this.getBlock(spawnPoint.X, spawnPoint.Y);
+                var spawnPointBlock = this.getBlock(spawnPoint.x, spawnPoint.y);
                 var path = this.getPath(spawnPointBlock, this.Player.HomeBase.Block);
                 if (path.length > 0) {
                     _buildableBlocks.push(block);
@@ -139,7 +145,7 @@
 
         this.getPathForUnit = function (unit) {
             return this.getPath(
-                _map.getBlockFromCoords(unit.X, unit.Y),
+                _map.getBlockFromCoords(unit.position.x, unit.position.y),
                 _map.getBlockFromVector(unit.Destination)
             );
         };
@@ -181,7 +187,7 @@
         this.ProcessMouseInput = function () {
             if (Mouse.LeftButton) {
                 Mouse.LeftButton = false;
-                var clickedBlock = this.getBlockOrNullFromCoords(Mouse.DisplayX, Mouse.DisplayY);
+                var clickedBlock = this.getBlockOrNullFromCoords(this.Mouse.x, this.Mouse.y);
                 if (this.PlacementBuilding != null) {
                     this.FinalizeBuildingPlacement(clickedBlock);
                     return;
@@ -195,8 +201,9 @@
             }
 
             if (Mouse.RightButton) {
-                Mouse.RightButton = false;
                 if (this.PlacementBuilding != null) {
+                    Mouse.RightButton = false;
+                    this.PlacementBuilding.delete();
                     this.PlacementBuilding = null;
                     return;
                 }
@@ -204,6 +211,13 @@
         };
         this.update = function () {
             this.FrameCount++;
+
+            this.Mouse = {
+                x: Mouse.x - PIXI.MainContainer.position.x + this.Width / 2,
+                y: Mouse.y - PIXI.MainContainer.position.y + this.Height / 2
+            };
+
+
             var i = this.SpawnPoints.length;
             while (i--) {
                 var spawnPoint = this.SpawnPoints[i];
@@ -239,6 +253,13 @@
                 var player = this.Players[i];
                 player.update();
             }
+
+
+            if (this.PlacementBuilding != null) {
+                this.PlacementBuilding.position.x = this.Mouse.x - (this.Mouse.x % Settings.BlockSize) + Settings.BlockSize / 2;
+                this.PlacementBuilding.position.y = this.Mouse.y - (this.Mouse.y % Settings.BlockSize) + Settings.BlockSize / 2;
+            }
+
 
             this.ProcessMouseInput();
             this.ProcessKeyboardInput();
@@ -282,12 +303,12 @@
                 if (block != null) {
                     this.context.save();
                     this.context.globalAlpha = .75;
-                    this.PlacementBuilding.BlockX = block.X;
-                    this.PlacementBuilding.BlockY = block.Y;
+                    this.PlacementBuilding.BlockX = block.x;
+                    this.PlacementBuilding.BlockY = block.y;
                     this.PlacementBuilding.UpdateXY();
                     this.PlacementBuilding.draw(this.context);
                     this.context.fillStyle = (this.IsBlockBuildable(block) ? 'rgba(0,255,0,.5)' : 'rgba(255,0,0,.5)');
-                    this.context.fillRect(block.X * Settings.BlockSize, block.Y * Settings.BlockSize, Settings.BlockSize, Settings.BlockSize);
+                    this.context.fillRect(block.x * Settings.BlockSize, block.y * Settings.BlockSize, Settings.BlockSize, Settings.BlockSize);
                     this.context.restore();
                 }
             }
@@ -295,11 +316,18 @@
         };
 
         this.initialize = function (template) {
-            General.CopyTo(template, this);
+            General.NestedCopyTo(template, this);
         };
     };
 
+    return function (width, height, mapTemplate) {
+        var level = new PIXI.DisplayObjectContainer();
+        level.position.x = -width * Settings.BlockSize / 2;
+        level.position.y = -height * Settings.BlockSize / 2;
+        PIXI.MainContainer.addChild(level);
 
-    return Level;
+        Level.call(level, width, height, mapTemplate);
+        return level;
+    };
 })
 ;

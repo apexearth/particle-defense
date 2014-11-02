@@ -1,7 +1,7 @@
-﻿define("game/Unit", ["util/General", "game/Settings"], function (General, Settings) {
+﻿define("game/Unit", ["./PIXI", "../util/General", "./Settings"], function (PIXI, General, Settings) {
     function Unit(level, templates) {
-        this.X = 0;
-        this.Y = 0;
+        this.position.x = 0;
+        this.position.y = 0;
         this.VelocityX = 0;
         this.VelocityY = 0;
         this.Radius = 3;
@@ -16,8 +16,8 @@
         this.UpdateBlockLocation = function () {
             var _blockX = this.BlockX;
             var _blockY = this.BlockY;
-            this.BlockX = Math.floor(this.X / Settings.BlockSize);
-            this.BlockY = Math.floor(this.Y / Settings.BlockSize);
+            this.BlockX = Math.floor(this.position.x / Settings.BlockSize);
+            this.BlockY = Math.floor(this.position.y / Settings.BlockSize);
             if (_blockX !== this.BlockX || _blockY !== this.BlockY) {
                 if (_blockX !== undefined && _blockY !== undefined) {
                     level.getBlock(_blockX, _blockY).Remove(this);
@@ -25,19 +25,20 @@
                 level.getBlock(this.BlockX, this.BlockY).Add(this);
             }
         };
+
         this.UpdateBlockLocation();
 
         this.hitTest = function (other) {
-            return General.Distance(this.X - other.X, this.Y - other.Y) < this.Radius + other.Radius;
+            return General.Distance(this.position.x - other.position.x, this.position.y - other.position.y) < this.Radius + other.Radius;
         };
         this.hitTestLine = function (start, finish, width) {
             if (width === undefined) width = 1;
-            var area2 = Math.abs((finish.X - start.X) * (this.Y - start.Y) - (this.X - start.X) * (finish.Y - start.Y));
-            var lab = Math.sqrt(Math.pow(finish.X - start.X, 2) + Math.pow(finish.Y - start.Y, 2));
+            var area2 = Math.abs((finish.x - start.x) * (this.position.y - start.y) - (this.position.x - start.x) * (finish.y - start.y));
+            var lab = Math.sqrt(Math.pow(finish.x - start.x, 2) + Math.pow(finish.y - start.y, 2));
             var h = area2 / lab;
             return h < this.Radius
-                && this.X >= Math.min(start.X, finish.X) - this.Radius - width && this.X <= Math.max(start.X, finish.X) + this.Radius + width
-                && this.Y >= Math.min(start.Y, finish.Y) - this.Radius - width && this.Y <= Math.max(start.Y, finish.Y) + this.Radius + width;
+                && this.position.x >= Math.min(start.x, finish.x) - this.Radius - width && this.position.x <= Math.max(start.x, finish.x) + this.Radius + width
+                && this.position.y >= Math.min(start.y, finish.y) - this.Radius - width && this.position.y <= Math.max(start.y, finish.y) + this.Radius + width;
         };
         this.move = function () {
             if (this.Path == null || this.Path.length == 0) {
@@ -46,24 +47,24 @@
                 return;
             }
             var moveTarget = this.Path[0];
-            var moveAmount = General.normalize(this.X, this.Y, moveTarget.X, moveTarget.Y);
-            moveAmount.X *= this.MoveSpeed;
-            moveAmount.Y *= this.MoveSpeed;
+            var moveAmount = General.normalize(this.position.x, this.position.y, moveTarget.x, moveTarget.y);
+            moveAmount.x *= this.MoveSpeed;
+            moveAmount.y *= this.MoveSpeed;
 
-            this.VelocityX = moveAmount.X;
-            this.VelocityY = moveAmount.Y;
+            this.VelocityX = moveAmount.x;
+            this.VelocityY = moveAmount.y;
 
-            if (Math.abs(this.X - moveTarget.X) > Math.abs(moveAmount.X))
-                this.X += moveAmount.X;
+            if (Math.abs(this.position.x - moveTarget.x) > Math.abs(moveAmount.x))
+                this.position.x += moveAmount.x;
             else
-                this.X = moveTarget.X;
+                this.position.x = moveTarget.x;
 
-            if (Math.abs(this.Y - moveTarget.Y) > Math.abs(moveAmount.Y))
-                this.Y += moveAmount.Y;
+            if (Math.abs(this.position.y - moveTarget.y) > Math.abs(moveAmount.y))
+                this.position.y += moveAmount.y;
             else
-                this.Y = moveTarget.Y;
+                this.position.y = moveTarget.y;
 
-            if (this.X == moveTarget.X && this.Y == moveTarget.Y)
+            if (this.position.x == moveTarget.x && this.position.y == moveTarget.y)
                 this.Path.splice(0, 1);
 
         };
@@ -90,13 +91,14 @@
             var i = this.Level.Units.indexOf(this);
             if (i !== -1) this.Level.Units.splice(i, 1);
             level.getBlock(this.BlockX, this.BlockY).Remove(this);
+            level.removeChild(this);
             this.Level.Player.Score += this.Score;
         };
         this.draw = function (context) {
             context.strokeStyle = '#fff';
             context.lineWidth = 2;
             context.beginPath();
-            context.arc(this.X, this.Y, this.Radius, 0, 2 * Math.PI);
+            context.arc(this.position.x, this.position.y, this.Radius, 0, 2 * Math.PI);
             context.closePath();
             context.stroke();
         };
@@ -111,7 +113,7 @@
             this.Score = this.Health * this.MoveSpeed;
         };
         this.loadTemplate = function (template) {
-            General.CopyTo(template, this);
+            General.NestedCopyTo(template, this);
         };
         this.loadTemplates = function () {
             if (templates === undefined)return;
@@ -132,5 +134,15 @@
         this.initialize();
     }
 
-    return Unit;
+    return function (level, canvas, template) {
+        var unit = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
+        unit.anchor.x = .5;
+        unit.anchor.y = .5;
+        level.addChild(unit);
+
+        Unit.call(unit, level, template);
+        unit.scale.x = (unit.Radius * 2) / unit.width;
+        unit.scale.y = (unit.Radius * 2) / unit.height;
+        return unit;
+    };
 });

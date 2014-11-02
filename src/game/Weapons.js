@@ -78,14 +78,14 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "ga
             var i = this.Building.Level.Units.length;
             while (i--) {
                 var unit = this.Building.Level.Units[i];
-                if (General.Distance(unit.X - this.Building.X, unit.Y - this.Building.Y) <= this.Range) {
+                if (General.Distance(unit.x - this.Building.x, unit.y - this.Building.y) <= this.Range) {
                     this.Target = unit;
                 }
             }
         };
 
         this.TryFireAtTarget = function () {
-            if (General.Distance(this.Target.X - this.Building.X, this.Target.Y - this.Building.Y) > this.Range) {
+            if (General.Distance(this.Target.x - this.Building.x, this.Target.y - this.Building.y) > this.Range) {
                 this.ResetTarget();
             } else if (this.Building.Player.Resources.Ammo >= this.AmmoConsumption()) {
                 this.FireAtTarget();
@@ -106,15 +106,15 @@ define("game/Weapons", ["game/Projectiles", "util/General", "game/Settings", "ga
             }
         };
         this.getTargetAngle = function () {
-            return General.AngleRad(this.Building.X, this.Building.Y, this.Target.X, this.Target.Y)
+            return General.AngleRad(this.Building.x, this.Building.y, this.Target.x, this.Target.y)
                 + this.getAccuracyModification();
         };
         this.getTargetLeadingAngle = function () {
-            return General.LeadingAngleRad(this.Building.X, this.Building.Y, this.ProjectileSpeed, this.Target.X, this.Target.Y, this.Target.VelocityX, this.Target.VelocityY)
+            return General.LeadingAngleRad(this.Building.x, this.Building.y, this.ProjectileSpeed, this.Target.x, this.Target.y, this.Target.VelocityX, this.Target.VelocityY)
                 + this.getAccuracyModification();
         };
         this.getTargetLeadingVector = function () {
-            return General.LeadingVector(this.Building.X, this.Building.Y, this.ProjectileSpeed, this.Target.X, this.Target.Y, this.Target.VelocityX, this.Target.VelocityY);
+            return General.LeadingVector(this.Building.x, this.Building.y, this.ProjectileSpeed, this.Target.x, this.Target.y, this.Target.VelocityX, this.Target.VelocityY);
         };
         this.getAccuracyModification = function () {
             if(this.Accuracy == null) return 0;

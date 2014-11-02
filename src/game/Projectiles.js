@@ -16,8 +16,8 @@
             this.Level = weapon.Building.Level;
             this.Building = weapon.Building;
             this.Weapon = weapon;
-            this.X = weapon.Building.X;
-            this.Y = weapon.Building.Y;
+            this.x = weapon.Building.x;
+            this.y = weapon.Building.y;
             this.Damage = weapon.Damage;
             /** @returns Number **/
             this.EffectiveDamage = function (unit) {
@@ -39,7 +39,7 @@
 
             this.draw = function (context) {
                 context.fillStyle = '#aaa';
-                context.fillRect(this.X - 1, this.Y - 1, 2, 2);
+                context.fillRect(this.x - 1, this.y - 1, 2, 2);
             };
 
             this.update = function () {
@@ -68,8 +68,8 @@
 
         function VelocityProjectile(weapon) {
             Projectile.call(this, weapon);
-            this.LastX = this.X;
-            this.LastY = this.Y;
+            this.LastX = this.x;
+            this.LastY = this.y;
             this.Direction = weapon.getTargetLeadingAngle();
             this.InitialVelocity = weapon.ProjectileSpeed;
             this.VelocityX = Math.cos(this.Direction) * this.InitialVelocity;
@@ -78,13 +78,13 @@
             this.projectileUpdate = this.update;
             this.update = function () {
                 this.projectileUpdate();
-                this.LastX = this.X;
-                this.LastY = this.Y;
-                this.X += this.VelocityX;
-                this.Y += this.VelocityY;
+                this.LastX = this.x;
+                this.LastY = this.y;
+                this.x += this.VelocityX;
+                this.y += this.VelocityY;
             };
             this.hitTest = function (unit) {
-                return unit.hitTestLine({X: this.X, Y: this.Y}, {X: this.LastX, Y: this.LastY}, this.Width);
+                return unit.hitTestLine({X: this.x, Y: this.y}, {X: this.LastX, Y: this.LastY}, this.Width);
             };
             this.draw = function (context) {
                 context.save();
@@ -92,7 +92,7 @@
                 context.lineWidth = this.Width;
                 context.lineCap = "square";
                 context.beginPath();
-                context.moveTo(this.X, this.Y);
+                context.moveTo(this.x, this.y);
                 context.lineTo(this.LastX, this.LastY);
                 context.stroke();
                 context.closePath();
@@ -108,15 +108,15 @@
             this.Width = Math.sqrt(this.Damage);
             this.ExplodeRange = this.Width * 3;
             this.hitTest = function (unit) {
-                return unit.hitTestLine({X: this.X, Y: this.Y}, {X: this.LastX, Y: this.LastY}, this.ExplodeRange);
+                return unit.hitTestLine({X: this.x, Y: this.y}, {X: this.LastX, Y: this.LastY}, this.ExplodeRange);
             };
             this.inheritedUpdateMissileProjectile = this.update;
             this.update = function () {
                 if (this.Target !== null) {
                     if (this.Target.IsDead) this.Target = null;
                     if (this.Target !== null) {
-                        var expectedAverageVelocity = this.Acceleration * General.Distance(this.X - this.Target.X, this.Y - this.Target.Y) / 2 + this.CurrentVelocity;
-                        this.Direction = General.LeadingAngleRad(this.X, this.Y, expectedAverageVelocity, this.Target.X, this.Target.Y, this.Target.VelocityX, this.Target.VelocityY);
+                        var expectedAverageVelocity = this.Acceleration * General.Distance(this.x - this.Target.x, this.y - this.Target.y) / 2 + this.CurrentVelocity;
+                        this.Direction = General.LeadingAngleRad(this.x, this.y, expectedAverageVelocity, this.Target.x, this.Target.y, this.Target.VelocityX, this.Target.VelocityY);
                     }
                 }
                 this.inheritedUpdateMissileProjectile();
@@ -127,7 +127,7 @@
                 context.lineWidth = this.Width;
                 context.lineCap = "square";
                 context.beginPath();
-                context.moveTo(this.X, this.Y);
+                context.moveTo(this.x, this.y);
                 context.lineTo(this.LastX, this.LastY);
                 context.stroke();
                 context.closePath();
@@ -137,31 +137,31 @@
 
         function ThrownProjectile(weapon) {
             Projectile.call(this, weapon);
-            this.LastX = this.X;
-            this.LastY = this.Y;
+            this.LastX = this.x;
+            this.LastY = this.y;
             this.Target = weapon.getTargetLeadingVector();
-            this.InitialDistance = General.Distance(this.X - this.Target.X, this.Y - this.Target.Y);
-            this.Direction = General.AngleRad(this.X, this.Y, this.Target.X, this.Target.Y);
+            this.InitialDistance = General.Distance(this.x - this.Target.x, this.y - this.Target.y);
+            this.Direction = General.AngleRad(this.x, this.y, this.Target.x, this.Target.y);
             this.InitialVelocity = weapon.ProjectileSpeed;
             this.CurrentVelocity = weapon.ProjectileSpeed;
             this.ProjectileSlowFactor = weapon.ProjectileSlowFactor;
             this.projectileUpdate = this.update;
             this.update = function () {
                 this.projectileUpdate();
-                this.LastX = this.X;
-                this.LastY = this.Y;
+                this.LastX = this.x;
+                this.LastY = this.y;
                 if (this.Distance == null || this.Distance > this.Width) {
-                    this.Distance = General.Distance(this.X - this.Target.X, this.Y - this.Target.Y);
+                    this.Distance = General.Distance(this.x - this.Target.x, this.y - this.Target.y);
                     this.CurrentVelocity = this.InitialVelocity * (Math.pow(this.Distance + 25, this.ProjectileSlowFactor) * 2 / Math.pow(this.InitialDistance, this.ProjectileSlowFactor));
                     this.VelocityX = Math.cos(this.Direction) * this.CurrentVelocity;
                     this.VelocityY = Math.sin(this.Direction) * this.CurrentVelocity;
-                    this.X += this.VelocityX;
-                    this.Y += this.VelocityY;
+                    this.x += this.VelocityX;
+                    this.y += this.VelocityY;
                 }
             };
             this.hitTest = function (unit) {
-                if (this.X !== this.LastX && this.Y !== this.LastY) {
-                    return unit.hitTestLine({X: this.X, Y: this.Y}, {X: this.LastX, Y: this.LastY}, this.Width);
+                if (this.x !== this.LastX && this.y !== this.LastY) {
+                    return unit.hitTestLine({X: this.x, Y: this.y}, {X: this.LastX, Y: this.LastY}, this.Width);
                 } else {
                     return unit.hitTest(this);
                 }
@@ -178,7 +178,7 @@
                 context.lineWidth = this.Width;
                 context.lineCap = "square";
                 context.beginPath();
-                context.moveTo(this.X, this.Y);
+                context.moveTo(this.x, this.y);
                 context.lineTo(this.LastX, this.LastY);
                 context.stroke();
                 context.closePath();
@@ -191,20 +191,20 @@
             ExplosiveProperties.call(this, weapon);
 
             this.draw = function (context) {
-                if (this.X !== this.LastX && this.Y !== this.LastY) {
+                if (this.x !== this.LastX && this.y !== this.LastY) {
                     context.save();
                     context.strokeStyle = '#fff';
                     context.lineWidth = this.Width;
                     context.lineCap = "round";
                     context.beginPath();
-                    context.moveTo(this.X, this.Y);
+                    context.moveTo(this.x, this.y);
                     context.lineTo(this.LastX, this.LastY);
                     context.stroke();
                     context.closePath();
                     context.restore();
                 } else {
                     context.fillStyle = '#fff';
-                    context.fillRect(this.X - this.Width / 2, this.Y - this.Width / 2, this.Width, this.Width);
+                    context.fillRect(this.x - this.Width / 2, this.y - this.Width / 2, this.Width, this.Width);
                 }
             };
         }
@@ -228,11 +228,11 @@
             this.Damage = weapon.Damage / weapon.Lifespan;
             this.Width = weapon.Damage * 10 / weapon.Lifespan;
             this.Direction = weapon.getTargetAngle();
-            this.EndX = this.X + Math.cos(this.Direction) * this.Weapon.Range;
-            this.EndY = this.Y + Math.sin(this.Direction) * this.Weapon.Range;
+            this.EndX = this.x + Math.cos(this.Direction) * this.Weapon.Range;
+            this.EndY = this.y + Math.sin(this.Direction) * this.Weapon.Range;
             /** @returns Number */
             this.EffectiveDamage = function (unit) {
-                return this.Damage * General.Distance(this.X - unit.X, this.Y - unit.Y) / this.Weapon.Range;
+                return this.Damage * General.Distance(this.x - unit.x, this.y - unit.y) / this.Weapon.Range;
             };
 
             this.projectileUpdate = this.update;
@@ -244,20 +244,20 @@
                 // Nothing
             };
             this.hitTest = function (unit) {
-                return unit.hitTestLine({X: this.X, Y: this.Y}, {X: this.EndX, Y: this.EndY}, this.Width);
+                return unit.hitTestLine({X: this.x, Y: this.y}, {X: this.EndX, Y: this.EndY}, this.Width);
             };
 
             this.draw = function (context) {
                 context.save();
                 context.globalAlpha = Math.max(1, this.FadeTime - this.FadeTimeCount) / (this.FadeTime / 2);
-                var grad = context.createLinearGradient(this.X, this.Y, this.EndX, this.EndY);
+                var grad = context.createLinearGradient(this.x, this.y, this.EndX, this.EndY);
                 grad.addColorStop(0, '#77f');
                 grad.addColorStop(1, '#227');
                 context.strokeStyle = grad;
                 context.lineWidth = this.Width;
                 context.lineCap = "square";
                 context.beginPath();
-                context.moveTo(this.X, this.Y);
+                context.moveTo(this.x, this.y);
                 context.lineTo(this.EndX, this.EndY);
                 context.stroke();
                 context.closePath();
@@ -290,19 +290,19 @@
             this.Connection = {
                 array: [],
                 unit: null,
-                X: this.X,
-                Y: this.Y,
+                X: this.x,
+                Y: this.y,
                 depth: 0
             };
             this.updateConnections = function (depth, connection) {
                 if (depth == null) depth = 0;
                 if (connection == null) connection = this.Connection;
                 if (connection.unit == null) {
-                    connection.X = this.X;
-                    connection.Y = this.Y;
+                    connection.x = this.x;
+                    connection.y = this.y;
                 } else {
-                    connection.X = connection.unit.X;
-                    connection.Y = connection.unit.Y;
+                    connection.x = connection.unit.x;
+                    connection.y = connection.unit.y;
                     if (connection.unit.IsDead) {
                         connection.unit = null;
                         connection.array = [];
@@ -313,14 +313,14 @@
                 while (i--) {
                     var unit = this.Level.Units[i];
                     if (this.ConnectedUnits.indexOf(unit) === -1) {
-                        var distance = General.Distance(connection.X - unit.X, connection.Y - unit.Y);
+                        var distance = General.Distance(connection.x - unit.x, connection.y - unit.y);
                         var range = this.Range / this.getDepthDecay(depth);
                         if (distance < range) {
                             connection.array.push({
                                 array: [],
                                 unit: unit,
-                                X: unit.X,
-                                Y: unit.Y,
+                                X: unit.x,
+                                Y: unit.y,
                                 depth: depth
                             });
                             this.ConnectedUnits.push(unit);
@@ -341,27 +341,27 @@
             this.draw = function (context) {
                 context.strokeStyle = 'rgba(150,150,255,' + (1 - this.LifespanCount / this.Lifespan) + ')';
                 this.drawConnection(context, this.Connection, null);
-                context.fillRect(this.X - 1, this.Y - 1, 2, 2);
+                context.fillRect(this.x - 1, this.y - 1, 2, 2);
             };
             this.drawConnection = function (context, connection, parentConnection) {
                 var i = connection.array.length;
                 var wild = Math.sqrt(this.Damage) * 5;
                 while (i--) this.drawConnection(context, connection.array[i], connection);
-                if (parentConnection !== null && !isNaN(connection.X) && !isNaN(connection.Y) && !isNaN(parentConnection.X) && !isNaN(parentConnection.Y)) {
+                if (parentConnection !== null && !isNaN(connection.x) && !isNaN(connection.y) && !isNaN(parentConnection.x) && !isNaN(parentConnection.y)) {
                     context.beginPath();
-                    var px = parentConnection.X;
-                    var py = parentConnection.Y;
+                    var px = parentConnection.x;
+                    var py = parentConnection.y;
                     context.moveTo(px, py);
-                    var x = parentConnection.X;
-                    var y = parentConnection.Y;
-                    while (x != connection.X || y != connection.Y) {
+                    var x = parentConnection.x;
+                    var y = parentConnection.y;
+                    while (x != connection.x || y != connection.y) {
 
-                        x += (connection.X - x) * .2 + (connection.X - x) * .25 * Math.random() * Math.random() + (Math.random() * wild * 2 - wild);
-                        y += (connection.Y - y) * .2 + (connection.Y - y) * .25 * Math.random() * Math.random() + (Math.random() * wild * 2 - wild);
+                        x += (connection.x - x) * .2 + (connection.x - x) * .25 * Math.random() * Math.random() + (Math.random() * wild * 2 - wild);
+                        y += (connection.y - y) * .2 + (connection.y - y) * .25 * Math.random() * Math.random() + (Math.random() * wild * 2 - wild);
 
-                        if (Math.abs(x - connection.X) < wild * 3 && Math.abs(y - connection.Y) < wild * 3) {
-                            x = connection.X;
-                            y = connection.Y;
+                        if (Math.abs(x - connection.x) < wild * 3 && Math.abs(y - connection.y) < wild * 3) {
+                            x = connection.x;
+                            y = connection.y;
                         }
 
                         context.lineTo(x, y);
@@ -378,8 +378,8 @@
             Basic: function (particle) {
                 particle.Level.Objects.push(this);
                 this.Level = particle.Level;
-                this.X = particle.X;
-                this.Y = particle.Y;
+                this.x = particle.x;
+                this.y = particle.y;
                 this.ExplosiveSpeed = particle.ExplosiveSpeed;
                 this.ExplosiveTime = particle.ExplosiveTime * Settings.Second;
                 this.ExplosiveTimeCount = 0;
@@ -405,7 +405,7 @@
                     var alpha = ((this.ExplosiveTime - this.ExplosiveTimeCount) / this.ExplosiveTime / 1.2);
                     context.fillStyle = 'rgba(255,50,50,' + alpha + ')';
                     context.beginPath();
-                    context.arc(this.X, this.Y, this.Radius, 0, arcCircle, false);
+                    context.arc(this.x, this.y, this.Radius, 0, arcCircle, false);
                     context.fill();
                     context.closePath();
                 };
