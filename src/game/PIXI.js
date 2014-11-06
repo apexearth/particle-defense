@@ -1,12 +1,11 @@
-define('game/PIXI', ["../lib/pixi", "../util/Mouse"], function (PIXI, Mouse) {
+define('game/PIXI', ["pixi", "../util/Mouse"], function (PIXI, Mouse) {
+
     var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, {antialias: true});
     document.body.appendChild(renderer.view);
-
     var stage = new PIXI.Stage(0x151515);
     PIXI.MainContainer = stage.addChild(new PIXI.DisplayObjectContainer());
     PIXI.MainContainer.position.x = window.innerWidth / 2;
     PIXI.MainContainer.position.y = window.innerHeight / 2;
-
 
     var lastMouseX = Mouse.x;
     var lastMouseY = Mouse.y;
@@ -26,5 +25,16 @@ define('game/PIXI', ["../lib/pixi", "../util/Mouse"], function (PIXI, Mouse) {
     }
 
     requestAnimFrame(animate);
+
+
+    PIXI.CreateDisplayObjectContainerFunction = function (func) {
+        return function (parent) {
+            var container = new PIXI.DisplayObjectContainer();
+            parent.addChild(container);
+            func.call(container, parent);
+            return container;
+        };
+    };
+
     return PIXI;
 });

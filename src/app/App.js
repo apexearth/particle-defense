@@ -1,6 +1,5 @@
-﻿define("app/App", ["angular"], function (angular) {
-    return angular.module("ParticleDefense", [])
-        .factory('Canvas', function () {
-            return document.getElementById('canvas') || document.createElement('canvas');
-        });
+﻿define("app/app", ["angular", "app/app.core"], function (angular) {
+    return angular.module("app", [
+        "app.core"
+    ]);
 });

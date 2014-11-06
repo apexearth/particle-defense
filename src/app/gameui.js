@@ -1,5 +1,6 @@
-﻿define("app/GameUiController", ["app/App", "game/ParticleDefense", "game/Buildings", "util/Mouse"], function (app, ParticleDefense, Buildings, Mouse) {
-    return app.controller('GameUiController', ['$scope', 'Canvas', function ($scope, canvas) {
+﻿define("app/gameui", ["./app", "game/ParticleDefense", "game/Buildings", "util/Mouse"], function (app, ParticleDefense, Buildings, Mouse) {
+    return app.controller('GameUi', ['$scope', GameUi]);
+    function GameUi($scope) {
         $scope.Level = ParticleDefense.Level;
         $scope.Player = ParticleDefense.Level.Player;
         $scope.Buildings = Buildings;
@@ -38,5 +39,5 @@
 
         ParticleDefense.UiScope = $scope;
         setTimeout(ParticleDefense.updateUi, 100);
-    }]);
+    }
 });

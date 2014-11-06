@@ -1,6 +1,12 @@
 ﻿define("game/Building", ["./PIXI", "color", "./Settings", "../util/General", "./Attribute"], function (PIXI, Color, Settings, General, Attribute) {
     var arcCircle = 2 * Math.PI;
 
+    function setConstructor(Func) {
+        Func.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+        Func.prototype.constructor = Func;
+        return Func;
+    }
+
     var BasicCanvas = function (color) {
         color = color || Color([155, 155, 155]);
         var canvas = document.createElement("canvas");
@@ -14,6 +20,8 @@
     };
 
     var Building = function (level, player, templates) {
+        PIXI.DisplayObjectContainer.call(this);
+        level.addChild(this);
         var me = this;
         this.BlockX = NaN;
         this.BlockY = NaN;
@@ -35,7 +43,7 @@
         this.canvas = BasicCanvas(player ? player.Color : null);
 
         this.NumberOfUpgrades = 0;
-        this.Attributes = {  };
+        this.Attributes = {};
         this.UpdateAttributes = function () {
 
             var createAttributeForStorage = function (resourceName, energyFactor, metalFactor) {
@@ -189,6 +197,8 @@
         Building.prototype.addStorageToPlayer.call(this);
         this.initialize();
     };
+    setConstructor(Building);
+
     Building.prototype.addStorageToPlayer = function () {
         if (this.Player === null) return;
         for (var key in this.ResourceStorage) {

@@ -28,8 +28,8 @@
 
         this.UpdateBlockLocation();
 
-        this.hitTest = function (other) {
-            return General.Distance(this.position.x - other.position.x, this.position.y - other.position.y) < this.Radius + other.Radius;
+        this.hitTest = function (point, radius) {
+            return General.Distance(this.position.x - point.x, this.position.y - point.y) < this.Radius + radius;
         };
         this.hitTestLine = function (start, finish, width) {
             if (width === undefined) width = 1;

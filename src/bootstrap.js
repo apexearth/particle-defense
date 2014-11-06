@@ -1,15 +1,15 @@
 require([
     'require',
     'angular',
-    'app/App'
+    'app/app'
 ], function (require, ng) {
     'use strict';
 
     require(['domReady!',
-        "app/IndexController",
-        "app/MainMenuController",
-        "app/GameUiController",
-        "app/GameOverController"], function (document) {
-        ng.bootstrap(document, ['ParticleDefense']);
+        "app/index",
+        "app/mainmenu",
+        "app/gameui",
+        "app/gameover"], function (document) {
+        ng.bootstrap(document, ['app']);
     });
 });

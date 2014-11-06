@@ -2,7 +2,7 @@
     var MainMenuController, ParticleDefense, Level;
     beforeEach(function () {
         runs(function () {
-            require(["app/MainMenuController", "game/ParticleDefense", "game/Level"], function (mainMenuController, particleDefense, level) {
+            require(["../src/app/mainmenu", "game/ParticleDefense", "game/Level"], function (mainMenuController, particleDefense, level) {
                 MainMenuController = mainMenuController;
                 ParticleDefense = particleDefense;
                 Level = level;

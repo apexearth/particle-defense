@@ -2,21 +2,15 @@ define("game/Buildings", [
         "./PIXI",
         "../util/General",
         "./Building",
-        "./Weapons",
-        "./Settings",
-        "color",
-        "./Images"
-    ], function (PIXI, General, Building, Weapons, Settings, Color, Images) {
+        "./Weapons"
+    ], function (PIXI, General, Building, Weapons) {
 
         var list = {};
 
         function Create(obj) {
             var constructor = function (level, player, templates) {
-                var building = new PIXI.DisplayObjectContainer();
-                level.addChild(building);
-
+                var building = new Building(level, player, templates);
                 building.Name = obj.name;
-                Building.call(building, level, player, templates);
                 if (obj.template.Canvas != null) obj.template.Canvas(building.canvas);
                 var sprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(building.canvas));
                 sprite.anchor.x = sprite.anchor.y = .5;
@@ -24,8 +18,11 @@ define("game/Buildings", [
 
                 if (obj.template.Weapons !== undefined) {
                     for (var w in obj.template.Weapons) {
-                        if (obj.template.Weapons.hasOwnProperty(w))
-                            building.Weapons.push(new obj.template.Weapons[w](building));
+                        if (obj.template.Weapons.hasOwnProperty(w)) {
+                            var weapon = new obj.template.Weapons[w](building);
+                            building.Weapons.push(weapon);
+                            building.addChild(weapon);
+                        }
                     }
                 }
 
@@ -175,7 +172,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Cannon(100, 30, 3, 1.5, .95, 1, .35, 1, 5) ]
+                Weapons: [Weapons.Cannon(100, 30, 3, 1.5, .95, 1, .35, 1, 5)]
             }
         });
         Create({
@@ -188,7 +185,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Missile(150, 45, 2, .1, 1, .95, .5, 1, 8) ]
+                Weapons: [Weapons.Missile(150, 45, 2, .1, 1, .95, .5, 1, 8)]
             }
         });
         Create({
@@ -201,7 +198,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.GrenadeLauncher(100, 30, 3, 2, 1, .95, 1, .35, 1, 5) ]
+                Weapons: [Weapons.GrenadeLauncher(100, 30, 3, 2, 1, .95, 1, .35, 1, 5)]
             }
         });
         Create({
@@ -214,7 +211,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Cannon(85, 30, 1.75, 1.75, .95, 1, .15, 4, 7) ]
+                Weapons: [Weapons.Cannon(85, 30, 1.75, 1.75, .95, 1, .15, 4, 7)]
             }
         });
         Create({
@@ -227,7 +224,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Gun(100, 30, 3, 1, .95, 1) ]
+                Weapons: [Weapons.Gun(100, 30, 3, 1, .95, 1)]
             }
         });
         Create({
@@ -240,7 +237,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Gun(75, 25, 5, 1, .96, 1) ]
+                Weapons: [Weapons.Gun(75, 25, 5, 1, .96, 1)]
             }
         });
         Create({
@@ -253,7 +250,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Gun(150, 20, 7, 3, .97, 1) ]
+                Weapons: [Weapons.Gun(150, 20, 7, 3, .97, 1)]
             }
         });
         Create({
@@ -266,7 +263,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Gun(100, 15, 2.5, .5, .85, 3) ]
+                Weapons: [Weapons.Gun(100, 15, 2.5, .5, .85, 3)]
             }
         });
         Create({
@@ -279,7 +276,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Gun(100, 5, 2.5, 1.25, .9, 2) ]
+                Weapons: [Weapons.Gun(100, 5, 2.5, 1.25, .9, 2)]
             }
         });
         Create({
@@ -292,7 +289,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Gun(300, 60, 8, 6, .98, 1) ]
+                Weapons: [Weapons.Gun(300, 60, 8, 6, .98, 1)]
             }
         });
         Create({
@@ -305,7 +302,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Laser(100, 60, 45, 4, .95) ]
+                Weapons: [Weapons.Laser(100, 60, 45, 4, .95)]
             }
         });
         Create({
@@ -318,7 +315,7 @@ define("game/Buildings", [
             },
             template: {
                 Health: 5,
-                Weapons: [ Weapons.Laser(100, 1, 3, .05, .95) ]
+                Weapons: [Weapons.Laser(100, 1, 3, .05, .95)]
             }
         });
         Create({
@@ -334,7 +331,7 @@ define("game/Buildings", [
                 Canvas: function (canvas) {
                     // nothing yet
                 },
-                Weapons: [ Weapons.Shocker(100, 30, 10, 1) ]
+                Weapons: [Weapons.Shocker(100, 30, 10, 1)]
             }
         });
 
