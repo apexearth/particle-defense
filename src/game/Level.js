@@ -1,5 +1,10 @@
 ﻿define("game/Level", ["./PIXI", "./Map", "./PlayerCommands", "../util/General", "../util/Mouse", "util/Keyboard", "./CommandQueue", "./Settings", "util/BlockStatus"], function (PIXI, Map, PlayerCommands, General, Mouse, Keyboard, CommandQueue, Settings, BlockStatus) {
     var Level = function (width, height, mapTemplate) {
+        PIXI.DisplayObjectContainer.call(this);
+        this.position.x = -width * Settings.BlockSize / 2;
+        this.position.y = -height * Settings.BlockSize / 2;
+        PIXI.MainContainer.addChild(this);
+
 
         var me = this;
         var _map = new Map(this, width, height, mapTemplate);
@@ -281,15 +286,9 @@
             General.NestedCopyTo(template, this);
         };
     };
+    Level.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+    Level.prototype.constructor = Level;
 
-    return function (width, height, mapTemplate) {
-        var level = new PIXI.DisplayObjectContainer();
-        level.position.x = -width * Settings.BlockSize / 2;
-        level.position.y = -height * Settings.BlockSize / 2;
-        PIXI.MainContainer.addChild(level);
-
-        Level.call(level, width, height, mapTemplate);
-        return level;
-    };
+    return Level;
 })
 ;

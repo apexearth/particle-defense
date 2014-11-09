@@ -1,11 +1,5 @@
-﻿define("game/Building", ["./PIXI", "color", "./Settings", "../util/General", "./Attribute"], function (PIXI, Color, Settings, General, Attribute) {
+﻿define(["../PIXI", "color", "../Settings", "../../util/General", "../Attribute"], function (PIXI, Color, Settings, General, Attribute) {
     var arcCircle = 2 * Math.PI;
-
-    function setConstructor(Func) {
-        Func.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
-        Func.prototype.constructor = Func;
-        return Func;
-    }
 
     var BasicCanvas = function (color) {
         color = color || Color([155, 155, 155]);
@@ -197,7 +191,8 @@
         Building.prototype.addStorageToPlayer.call(this);
         this.initialize();
     };
-    setConstructor(Building);
+    Building.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+    Building.prototype.constructor = Building;
 
     Building.prototype.addStorageToPlayer = function () {
         if (this.Player === null) return;

@@ -2,7 +2,7 @@
     var Levels, Projectiles, General, Unit;
     beforeEach(function () {
         runs(function () {
-            require(["game/Levels", "game/Projectiles", "util/General", "game/Unit"], function (levels, projectiles, general, unit) {
+            require(["game/Levels", "../src/game/projectiles/index", "util/General", "game/Unit"], function (levels, projectiles, general, unit) {
                 Levels = levels;
                 Projectiles = projectiles;
                 General = general;

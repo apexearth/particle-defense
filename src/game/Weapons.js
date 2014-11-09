@@ -1,4 +1,4 @@
-define("game/Weapons", ["./PIXI", "game/Projectiles", "util/General", "game/Settings", "game/Attribute"], function (PIXI, Projectiles, General, Settings, Attribute) {
+define("game/Weapons", ["./PIXI", "./projectiles/list", "util/General", "game/Settings", "game/Attribute"], function (PIXI, Projectiles, General, Settings, Attribute) {
 
         function Weapon(building) {
             this.Level = building.Level;
@@ -65,8 +65,7 @@ define("game/Weapons", ["./PIXI", "game/Projectiles", "util/General", "game/Sett
                 this.Target = null;
             };
             this.ResetTarget();
-            this.CreateProjectile = function () {
-            };
+            this.CreateProjectile = function () { };
             this.FireAtTarget = function () {
                 this.Building.Player.Resources.Ammo -= this.AmmoConsumption();
                 var shots = this.ShotsPerShot;
@@ -174,7 +173,7 @@ define("game/Weapons", ["./PIXI", "game/Projectiles", "util/General", "game/Sett
                     return this.Damage / 2 * this.ProjectileSpeed / 3;
                 };
                 this.CreateProjectile = function () {
-                    return this.Level.addChild(new this.ProjectileClass(this));
+                    return new this.ProjectileClass(this);
                 };
             };
             return setConstructor(func);
@@ -185,7 +184,7 @@ define("game/Weapons", ["./PIXI", "game/Projectiles", "util/General", "game/Sett
             var func = function (building) {
                 var me = this;
                 constructor.call(me, building);
-                this.ProjectileClass = Projectiles.ExplosiveBullet;
+                this.ProjectileClass = Projectiles.Cannon;
                 this.ExplosiveSpeed = explosiveSpeed;
                 this.ExplosiveTime = explosiveTime;
                 this.ExplosiveInitialSize = explosiveInitialSize;
