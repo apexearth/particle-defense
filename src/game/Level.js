@@ -1,4 +1,8 @@
-﻿define("game/Level", ["./PIXI", "./Map", "./PlayerCommands", "../util/General", "../util/Mouse", "util/Keyboard", "./CommandQueue", "./Settings", "util/BlockStatus"], function (PIXI, Map, PlayerCommands, General, Mouse, Keyboard, CommandQueue, Settings, BlockStatus) {
+﻿define("game/Level", ["./PIXI", "./Map", "./PlayerCommands", "../util/General", "../util/input!", "./CommandQueue", "./common", "../util/grid/block-status"], function (PIXI, Map, PlayerCommands, General, input, CommandQueue, common, BlockStatus) {
+    var Settings = common.Settings;
+    var Mouse = input.Mouse;
+    var Keyboard = input.Keyboard;
+
     var Level = function (width, height, mapTemplate) {
         PIXI.DisplayObjectContainer.call(this);
         this.position.x = -width * Settings.BlockSize / 2;

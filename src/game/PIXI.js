@@ -1,4 +1,5 @@
-define('game/PIXI', ["pixi", "../util/Mouse"], function (PIXI, Mouse) {
+define('game/PIXI', ["pixi", "../util/input!"], function (PIXI, input) {
+    var Mouse = input.Mouse;
 
     var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, {antialias: true});
     document.body.appendChild(renderer.view);

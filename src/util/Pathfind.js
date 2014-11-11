@@ -1,15 +1,12 @@
-﻿define("util/Pathfind", ["util/BlockStatus"], function (BlockStatus) {
-    function Pathfind() {
-    }
+﻿define("util/Pathfind", ["./grid/block-status"], function (BlockStatus) {
+    function Pathfind() {}
 
-    Pathfind.Settings = function () {
-    };
+    Pathfind.Settings = function () { };
     Pathfind.Settings.DiagonalMovement = true;
     Pathfind.Settings.BlockedDiagonalMovement = false;
     Pathfind.Settings.CleanObjects = false;
 
-    Pathfind.LastPath = function () {
-    };
+    Pathfind.LastPath = function () { };
     Pathfind.LastPath.path = null;
     Pathfind.LastPath.open = null;
     Pathfind.LastPath.closed = null;
@@ -30,8 +27,8 @@
         Pathfind.calculate(current, null, current, target);
         open.push(current);
         while (
-            (open.length > 0 || closed.indexOf(target) === -1)
-            && current !== target && current !== null
+        (open.length > 0 || closed.indexOf(target) === -1)
+        && current !== target && current !== null
             ) {
             Pathfind.processBestScorer(grid, current, start, target, open, closed);
             current = Pathfind.getBestScorer(current, open);

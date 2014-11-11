@@ -1,4 +1,4 @@
-﻿define("game/PathfindExample", ["util/Grid", "util/General", "util/Display", "util/Pathfind", "util/BlockStatus"], function (Grid, General, Display, Pathfind, BlockStatus) {
+﻿define("game/PathfindExample", ["../util/grid/index", "util/General", "util/Display", "util/Pathfind", "../util/grid/block-status"], function (Grid, General, Display, Pathfind, BlockStatus) {
     var Vector2 = General.Vector2;
     PathfindExample.instance = new PathfindExample();
     function PathfindExample() {

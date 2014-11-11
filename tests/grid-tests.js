@@ -2,7 +2,7 @@
     var Grid;
     beforeEach(function () {
         runs(function(){
-            require(["util/Grid"], function (grid) {
+            require(["../src/util/grid/index"], function (grid) {
                 Grid = grid;
             });
         });

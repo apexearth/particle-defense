@@ -1,4 +1,4 @@
-define("game/Weapons", ["./PIXI", "./projectiles/list", "util/General", "game/Settings", "game/Attribute"], function (PIXI, Projectiles, General, Settings, Attribute) {
+define("game/Weapons", ["./PIXI", "./projectiles!", "util/General", "game/Settings", "game/Attribute"], function (PIXI, Projectiles, General, Settings, Attribute) {
 
         function Weapon(building) {
             this.Level = building.Level;

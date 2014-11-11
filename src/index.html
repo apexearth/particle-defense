@@ -8,7 +8,11 @@
     <link href='http://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/pd.css" />
 
-    <script type="text/javascript" src="lib/require.js" data-main="bootstrap"></script>
+    <script type="text/javascript" src="lib/require.js"></script>
+    <script type="text/javascript" src="requireWrap.js"></script>
+    <script type="text/javascript">
+        require(["./bootstrap"]);
+    </script>
     <script type="text/javascript" src="requireConfig.js"></script>
 
 </head>

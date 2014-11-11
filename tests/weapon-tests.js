@@ -2,7 +2,7 @@
     var Weapons, Buildings, Player;
     beforeEach(function () {
         runs(function () {
-            require(["game/Weapons", "game/buildings/list", "game/Player"], function (weapons, buildings, player) {
+            require(["game/Weapons", "game/buildings!", "game/Player"], function (weapons, buildings, player) {
                 Weapons = weapons;
                 Buildings = buildings;
                 Player = player;

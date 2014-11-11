@@ -1,4 +1,5 @@
-﻿define("app/gameui", ["./app", "game/ParticleDefense", "../game/buildings/list", "util/Mouse"], function (app, ParticleDefense, Buildings, Mouse) {
+﻿define("app/gameui", ["./app", "game/ParticleDefense", "../game/buildings!", "../util/input!"], function (app, ParticleDefense, Buildings, input) {
+    var Mouse = input.Mouse;
     return app.controller('GameUi', ['$scope', GameUi]);
     function GameUi($scope) {
         $scope.Level = ParticleDefense.Level;

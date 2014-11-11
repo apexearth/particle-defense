@@ -1,4 +1,4 @@
-﻿define("util/Keyboard", function () {
+﻿define(function () {
     var Keyboard = {
         keys: new Array(),
         CheckKey: function (keyCode) {

@@ -1,4 +1,4 @@
-﻿define("util/Mouse", function () {
+﻿define(function () {
     var Mouse = {
         x: 0,
         y: 0,

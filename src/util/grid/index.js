@@ -1,4 +1,4 @@
-﻿define("util/Grid", ["util/BlockStatus"], function (BlockStatus) {
+﻿define(["./block-status"], function (BlockStatus) {
     var Block = function (x, y) {
         var _status = BlockStatus.IsNothing;
         var _building = null;

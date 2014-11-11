@@ -1,4 +1,4 @@
-define("util/BlockStatus", function () {
+define(function () {
     return {
         IsEmpty: 1,
         OnlyPassable: 2,

@@ -1,4 +1,4 @@
-﻿define("game/Levels", ["game/Level", "game/Settings", "game/Player", "./buildings/list", "game/Units", "game/Unit", "game/SpawnPoint"], function (Level, Settings, Player, Buildings, Units, Unit, SpawnPoint) {
+﻿define("game/Levels", ["game/Level", "game/Settings", "game/Player", "./buildings!", "game/Units", "game/Unit", "game/SpawnPoint"], function (Level, Settings, Player, Buildings, Units, Unit, SpawnPoint) {
 
     var Levels = {};
 
