@@ -20,8 +20,8 @@ define(["../PIXI", "./projectile"], function (PIXI, Projectile) {
 
             this.graphics.clear();
             this.graphics.lineStyle(this.Width, 0xFFFFFF, 1);
-            this.graphics.moveTo(this.lastPosition.x, this.lastPosition.y);
-            this.graphics.lineTo(this.position.x, this.position.y);
+            this.graphics.moveTo(this.lastPosition.x - this.position.x, this.lastPosition.y - this.position.y);
+            this.graphics.lineTo(0, 0);
         };
         this.hitTest = function (unit) {
             return unit.hitTestLine(this.position, this.lastPosition, this.Width);

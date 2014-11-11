@@ -38,7 +38,7 @@ define([
               wall) {
 
         var list = {};
-        Add(wall);
+        Add(ammoFab);
         Add(beam);
         Add(behemoth);
         Add(cannon);
