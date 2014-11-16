@@ -1,5 +1,5 @@
-define(["./building.loader", "./building"],
-    function (loader, Building) {
+define(["../PIXI", "../Settings", "./building.loader", "./building"],
+    function (PIXI, Settings, loader, Building) {
         return loader({
             name: 'HomeBase',
             constructor: {
@@ -12,16 +12,18 @@ define(["./building.loader", "./building"],
                     Building.prototype.addStorageToPlayer.call(this);
                 }
             },
+            image: (function () {
+                var graphics = new PIXI.Graphics();
+                graphics.beginFill(0xA0FFA0, 1);
+                graphics.drawRect(1, 1, Settings.BlockSize - 2, Settings.BlockSize - 2);
+                graphics.beginFill(0x88AA88, .6);
+                graphics.drawRect(5, 5, Settings.BlockSize - 10, Settings.BlockSize - 10);
+                graphics.beginFill(0x44AA44, .3);
+                graphics.drawRect(10, 10, Settings.BlockSize - 20, Settings.BlockSize - 20);
+                graphics.position.x = graphics.position.y = -Settings.BlockSize / 2;
+                return graphics;
+            })(),
             template: {
-                Canvas: function (canvas) {
-                    var context = canvas.getContext("2d");
-                    context.fillStyle = 'rgba(200,2555,200,1)';
-                    context.fillRect(1, 1, canvas.width - 2, canvas.height - 2);
-                    context.fillStyle = 'rgba(100,125,100,.6)';
-                    context.fillRect(5, 5, canvas.width - 10, canvas.height - 10);
-                    context.fillStyle = 'rgba(50,125,50,.3)';
-                    context.fillRect(10, 10, canvas.width - 20, canvas.height - 20);
-                },
                 Health: 50,
                 ResourceStorage: {
                     Ammo: 200,

@@ -19,8 +19,10 @@ define(["../PIXI", "../Settings"], function (PIXI, Settings) {
         this.IsDead = false;
 
         this.die = function () {
+            if (this.IsDead) return;
             this.IsDead = true;
-            this.Level.removeChild(this);
+            var result = this.Level.removeChild(this);
+            if (result == null) return;
             this.Level.Projectiles.splice(this.Level.Projectiles.indexOf(this), 1);
         };
 

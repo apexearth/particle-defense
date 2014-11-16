@@ -1,25 +1,19 @@
 ﻿define(["../PIXI", "color", "../Settings", "../../util/General", "../Attribute"], function (PIXI, Color, Settings, General, Attribute) {
-    var arcCircle = 2 * Math.PI;
-
-    var BasicCanvas = function (color) {
-        color = color || Color([155, 155, 155]);
-        var canvas = document.createElement("canvas");
-        canvas.width = Settings.BlockSize;
-        canvas.height = Settings.BlockSize;
-        var context = canvas.getContext("2d");
-        context.lineWidth = 2;
-        context.strokeStyle = color.toCSS();
-        context.strokeRect(0, 0, Settings.BlockSize, Settings.BlockSize);
-        return canvas;
-    };
 
     var Building = function (level, player, templates) {
         PIXI.DisplayObjectContainer.call(this);
         level.addChild(this);
         var me = this;
 
+        this.overlayGraphics = new PIXI.Graphics();
+        this.addChild(this.overlayGraphics);
+
         this.graphics = new PIXI.Graphics();
         this.addChild(this.graphics);
+        this.graphics.beginFill(0x77FF77, .1);
+        this.graphics.lineStyle(1, 0x77FF77, 1);
+        this.graphics.drawRect(-Settings.BlockSize / 2, -Settings.BlockSize / 2, Settings.BlockSize, Settings.BlockSize);
+        this.graphics.endFill();
 
         this.BlockX = NaN;
         this.BlockY = NaN;
@@ -38,7 +32,6 @@
         };
         this.Weapons = [];
         this.Updates = [];
-        this.canvas = BasicCanvas(player ? player.Color : null);
 
         this.NumberOfUpgrades = 0;
         this.Attributes = {};
@@ -138,20 +131,20 @@
             while (i--) this.Weapons[i].update();
 
             // Graphics
-            this.graphics.clear();
+            this.overlayGraphics.clear();
             if (this.IsSelected() || level.PlacementBuilding === this) {
-                this.graphics.lineStyle(2, 0x7799FF, .2);
+                this.overlayGraphics.lineStyle(2, 0x7799FF, .2);
                 i = this.Weapons.length;
                 var weaponRadius = 0;
                 while (i--) weaponRadius = Math.max(weaponRadius, this.Weapons[i].Range);
-                this.graphics.beginFill(0x7799FF, .1);
-                this.graphics.drawCircle(0, 0, weaponRadius);
-                this.graphics.endFill();
+                this.overlayGraphics.beginFill(0x7799FF, .1);
+                this.overlayGraphics.drawCircle(0, 0, weaponRadius);
+                this.overlayGraphics.endFill();
             }
             if (this.IsSelected()) {
-                this.graphics.beginFill(0x77FF77, .3);
-                this.graphics.drawRect(-Settings.BlockSize / 2, -Settings.BlockSize / 2, Settings.BlockSize, Settings.BlockSize);
-                this.graphics.endFill();
+                this.overlayGraphics.beginFill(0x77FF77, .3);
+                this.overlayGraphics.drawRect(-Settings.BlockSize / 2, -Settings.BlockSize / 2, Settings.BlockSize, Settings.BlockSize);
+                this.overlayGraphics.endFill();
             }
         };
         this.updatePosition = function () {

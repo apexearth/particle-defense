@@ -1,9 +1,9 @@
-﻿define("game/Player", ["color"], function (Color) {
+﻿define("game/Player", [], function () {
     function Player(level) {
         this.Level = level;
         this.HomeBase = null;
         this.Buildings = [];
-        this.Color = Color([100, 255, 100]);
+        this.Color = 0x88FF88;
         this.BuildingCounts = {};
         this.Resources = {
             Energy: 0,

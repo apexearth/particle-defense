@@ -3,10 +3,7 @@ define(["../PIXI", "../../util/General", "./building"], function (PIXI, General,
         var constructor = function (level, player, templates) {
             var building = new Building(level, player, templates);
             building.Name = obj.name;
-            if (obj.template.Canvas != null) obj.template.Canvas(building.canvas);
-            var sprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(building.canvas));
-            sprite.anchor.x = sprite.anchor.y = .5;
-            building.addChild(sprite);
+            if (obj.image != null) building.addChild(obj.image);
 
             if (obj.template.Weapons !== undefined) {
                 for (var w in obj.template.Weapons) {
