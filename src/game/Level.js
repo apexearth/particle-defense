@@ -189,7 +189,6 @@
             if (Keyboard.CheckKey(Keyboard.Keys.Escape)) {
                 if (this.PlacementBuilding != null) {
                     this.PlacementBuilding = null;
-                    return;
                 }
             }
         };

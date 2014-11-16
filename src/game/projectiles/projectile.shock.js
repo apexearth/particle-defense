@@ -1,10 +1,22 @@
-define(["../PIXI","./projectile", "../Settings"], function(PIXI, Projectile, Settings){
+define(["../PIXI", "./projectile", "../Settings", "util/math!"], function (PIXI, Projectile, Settings, math) {
     function ShockProjectile(weapon) {
         Projectile.call(this, weapon);
 
+        this.graphics = new PIXI.Graphics();
+        this.addChild(this.graphics);
+
+        // Vars
         this.Lifespan = Settings.Second / 3;
-        this.Width = this.Damage * 10 / this.Lifespan;
+        this.Width = this.Damage * 5 / this.Lifespan;
         this.Range = weapon.Range;
+        this.ConnectedUnits = [];
+        this.Connection = {
+            array: [],
+            unit: null,
+            x: this.position.x,
+            y: this.position.y,
+            depth: 0
+        };
 
         /** @returns Number */
         this.EffectiveDamage = function (depth) {
@@ -20,14 +32,6 @@ define(["../PIXI","./projectile", "../Settings"], function(PIXI, Projectile, Set
             while (i--) this.unitHitCheck(connection.array[i]);
         };
 
-        this.ConnectedUnits = [];
-        this.Connection = {
-            array: [],
-            unit: null,
-            x: this.position.x,
-            y: this.position.y,
-            depth: 0
-        };
         this.updateConnections = function (depth, connection) {
             if (depth == null) depth = 0;
             if (connection == null) connection = this.Connection;
@@ -35,11 +39,12 @@ define(["../PIXI","./projectile", "../Settings"], function(PIXI, Projectile, Set
                 connection.x = this.position.x;
                 connection.y = this.position.y;
             } else {
-                connection.x = connection.unit.x;
-                connection.y = connection.unit.y;
                 if (connection.unit.IsDead) {
                     connection.unit = null;
                     connection.array = [];
+                } else {
+                    connection.x = connection.unit.position.x;
+                    connection.y = connection.unit.position.y;
                 }
             }
 
@@ -47,14 +52,14 @@ define(["../PIXI","./projectile", "../Settings"], function(PIXI, Projectile, Set
             while (i--) {
                 var unit = this.Level.Units[i];
                 if (this.ConnectedUnits.indexOf(unit) === -1) {
-                    var distance = General.Distance(connection.x - unit.x, connection.y - unit.y);
+                    var distance = math.Distance(connection.x - unit.position.x, connection.y - unit.position.y);
                     var range = this.Range / this.getDepthDecay(depth);
                     if (distance < range) {
                         connection.array.push({
                             array: [],
                             unit: unit,
-                            x: unit.x,
-                            y: unit.y,
+                            x: unit.position.x,
+                            y: unit.position.y,
                             depth: depth
                         });
                         this.ConnectedUnits.push(unit);
@@ -70,45 +75,54 @@ define(["../PIXI","./projectile", "../Settings"], function(PIXI, Projectile, Set
         this.update = function () {
             this.projectileUpdate();
             this.updateConnections();
+
+            this.graphics.clear();
+            this.graphics.lineStyle(this.Width, 0x8888BB, .35);
+            this.drawConnection(this.Connection, null);
+            this.graphics.lineStyle(this.Width * 2, 0xAAAAFF, .15);
+            this.drawConnection(this.Connection, null);
         };
 
-        this.draw = function (context) {
-            context.strokeStyle = 'rgba(150,150,255,' + (1 - this.LifespanCount / this.Lifespan) + ')';
-            this.drawConnection(context, this.Connection, null);
-            context.fillRect(this.position.x - 1, this.position.y - 1, 2, 2);
-        };
-        this.drawConnection = function (context, connection, parentConnection) {
+        this.drawConnection = function (connection, parentConnection) {
             var i = connection.array.length;
-            var wild = Math.sqrt(this.Damage) * 5;
-            while (i--) this.drawConnection(context, connection.array[i], connection);
+            while (i--) this.drawConnection(connection.array[i], connection);
             if (parentConnection !== null && !isNaN(connection.x) && !isNaN(connection.y) && !isNaN(parentConnection.x) && !isNaN(parentConnection.y)) {
-                context.beginPath();
-                var px = parentConnection.x;
-                var py = parentConnection.y;
-                context.moveTo(px, py);
-                var x = parentConnection.x;
-                var y = parentConnection.y;
-                while (x != connection.x || y != connection.y) {
 
-                    x += (connection.x - x) * .2 + (connection.x - x) * .25 * Math.random() * Math.random() + (Math.random() * wild * 2 - wild);
-                    y += (connection.y - y) * .2 + (connection.y - y) * .25 * Math.random() * Math.random() + (Math.random() * wild * 2 - wild);
+                var px = parentConnection.x,
+                    py = parentConnection.y,
+                    x = parentConnection.x,
+                    y = parentConnection.y,
+                    distance = math.Distance(connection.x - parentConnection.x, connection.y - parentConnection.y),
+                    iteration = 0,
+                    iterationLimit = Math.ceil(distance / 15),
+                    distPerIteration = 1 /iterationLimit;
 
-                    if (Math.abs(x - connection.x) < wild * 3 && Math.abs(y - connection.y) < wild * 3) {
+                this.graphics.moveTo(px - this.position.x, py - this.position.y);
+
+                while (iteration++ < iterationLimit && (x != connection.x || y != connection.y)) {
+
+                    var direction = math.angle(x, y, connection.x, connection.y),
+                        rand = Math.PI * .2 * Math.random() - Math.PI * .1,
+                        xMove = distance * distPerIteration * Math.cos(direction + rand),
+                        yMove = distance * distPerIteration * Math.sin(direction + rand);
+
+                    x += xMove;
+                    y += yMove;
+
+                    if (iteration === iterationLimit) {
                         x = connection.x;
                         y = connection.y;
                     }
 
-                    context.lineTo(x, y);
+                    this.graphics.lineTo(x - this.position.x, y - this.position.y);
                     px = x;
                     py = y;
                 }
-                context.stroke();
-                context.closePath();
             }
         }
     }
+
     ShockProjectile.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
     ShockProjectile.prototype.constructor = ShockProjectile;
     return ShockProjectile;
-
 });

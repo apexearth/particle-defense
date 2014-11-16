@@ -1,4 +1,4 @@
-define("game/Weapons", ["./PIXI", "./projectiles!", "util/General", "game/Settings", "game/Attribute"], function (PIXI, Projectiles, General, Settings, Attribute) {
+define("game/Weapons", ["./PIXI", "./projectiles!", "../util/math!", "game/Settings", "game/Attribute"], function (PIXI, Projectiles, math, Settings, Attribute) {
 
         function Weapon(building) {
             this.Level = building.Level;
@@ -78,14 +78,14 @@ define("game/Weapons", ["./PIXI", "./projectiles!", "util/General", "game/Settin
                 var i = this.Building.Level.Units.length;
                 while (i--) {
                     var unit = this.Building.Level.Units[i];
-                    if (General.Distance(unit.x - this.Building.x, unit.y - this.Building.y) <= this.Range) {
+                    if (math.Distance(unit.x - this.Building.x, unit.y - this.Building.y) <= this.Range) {
                         this.Target = unit;
                     }
                 }
             };
 
             this.TryFireAtTarget = function () {
-                if (General.Distance(this.Target.x - this.Building.x, this.Target.y - this.Building.y) > this.Range) {
+                if (math.Distance(this.Target.x - this.Building.x, this.Target.y - this.Building.y) > this.Range) {
                     this.ResetTarget();
                 } else if (this.Building.Player.Resources.Ammo >= this.AmmoConsumption()) {
                     this.FireAtTarget();
@@ -106,15 +106,15 @@ define("game/Weapons", ["./PIXI", "./projectiles!", "util/General", "game/Settin
                 }
             };
             this.getTargetAngle = function () {
-                return General.AngleRad(this.Building.x, this.Building.y, this.Target.x, this.Target.y)
+                return math.angle(this.Building.x, this.Building.y, this.Target.x, this.Target.y)
                     + this.getAccuracyModification();
             };
             this.getTargetLeadingAngle = function () {
-                return General.LeadingAngleRad(this.Building.x, this.Building.y, this.ProjectileSpeed, this.Target.x, this.Target.y, this.Target.VelocityX, this.Target.VelocityY)
+                return math.leadingAngle(this.Building.x, this.Building.y, this.ProjectileSpeed, this.Target.x, this.Target.y, this.Target.VelocityX, this.Target.VelocityY)
                     + this.getAccuracyModification();
             };
             this.getTargetLeadingVector = function () {
-                return General.LeadingVector(this.Building.x, this.Building.y, this.ProjectileSpeed, this.Target.x, this.Target.y, this.Target.VelocityX, this.Target.VelocityY);
+                return math.leadingVector(this.Building.x, this.Building.y, this.ProjectileSpeed, this.Target.x, this.Target.y, this.Target.VelocityX, this.Target.VelocityY);
             };
             this.getAccuracyModification = function () {
                 if (this.Accuracy == null) return 0;

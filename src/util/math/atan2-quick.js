@@ -1,4 +1,4 @@
-﻿define("util/Atan2", function () {
+﻿define(function () {
     function Atan2() {
         this.ATAN2_BITS = 6; // 4096 total angles
 
@@ -23,9 +23,8 @@
     }
 
     Atan2.prototype.atan2Deg = function (y, x) {
-        return this.atan2(y, x) * DEG;
+        return this.atan2(y, x) * this.DEG;
     };
-
     Atan2.prototype.atan2 = function (y, x) {
         var add, mul;
 
@@ -58,6 +57,5 @@
 
         return (this.atan2Array[yi * this.ATAN2_DIM + xi] + add) * mul;
     };
-    var Atan2 = new Atan2();
-    return Atan2;
+    return new Atan2();
 });

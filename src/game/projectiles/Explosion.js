@@ -35,7 +35,7 @@ define(["../PIXI", "../Settings"], function (PIXI, Settings) {
                 this.die();
             }
             this.graphics.clear();
-            this.graphics.beginFill("#FFAAAA", ((this.ExplosiveTime - this.ExplosiveTimeCount) / this.ExplosiveTime / 1.2));
+            this.graphics.beginFill(0xFF8800, ((this.ExplosiveTime - this.ExplosiveTimeCount) / this.ExplosiveTime / 1.2));
             this.graphics.drawCircle(0, 0, this.Radius);
             this.graphics.endFill();
         }

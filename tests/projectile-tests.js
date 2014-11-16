@@ -1,11 +1,11 @@
 ﻿describe('Projectile Tests', function () {
-    var Levels, Projectiles, General, Unit;
+    var Levels, Projectiles, math, Unit;
     beforeEach(function () {
         runs(function () {
-            require(["game/Levels", "../src/game/projectiles/index", "util/General", "game/Unit"], function (levels, projectiles, general, unit) {
+            require(["game/Levels", "../src/game/projectiles/index", "util/math!", "game/Unit"], function (levels, projectiles, customMath, unit) {
                 Levels = levels;
                 Projectiles = projectiles;
-                General = general;
+                math = customMath;
                 Unit = unit;
             });
         });
@@ -13,7 +13,7 @@
             return Levels != null
                 && Projectiles != null
                 && Unit != null
-                && General != null;
+                && math != null;
         }, 300);
     });
     it('should move', function () {
@@ -21,7 +21,7 @@
         var building = level.Buildings[1];
         var projectile = new Projectiles.Bullet(
             building.Weapons[0],
-            General.AngleRad(0, 0, 50, 50),
+            math.angle(0, 0, 50, 50),
             2);
         level.Projectiles.push(projectile);
         level.update();
@@ -37,7 +37,7 @@
 
         var projectile = new Projectiles.Bullet(
             building.Weapons[0],
-            General.AngleRad(building.X, building.Y, unit.X, unit.Y),
+            math.angle(building.X, building.Y, unit.X, unit.Y),
             3);
         level.Projectiles.push(projectile);
 

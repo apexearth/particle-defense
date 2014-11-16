@@ -1,4 +1,4 @@
-define('game/PIXI', ["pixi", "../util/input!"], function (PIXI, input) {
+define('game/PIXI', ["pixi", "../util/input!", "../util/math!"], function (PIXI, input, math) {
     var Mouse = input.Mouse;
 
     var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, {antialias: true});
@@ -10,7 +10,6 @@ define('game/PIXI', ["pixi", "../util/input!"], function (PIXI, input) {
 
     var lastMouseX = Mouse.x;
     var lastMouseY = Mouse.y;
-
     function animate() {
         requestAnimFrame(animate);
         if (window.innerWidth !== renderer.view.width) renderer.view.width = window.innerWidth;
@@ -25,9 +24,6 @@ define('game/PIXI', ["pixi", "../util/input!"], function (PIXI, input) {
         lastMouseY = Mouse.y;
     }
 
-    requestAnimFrame(animate);
-
-
     PIXI.CreateDisplayObjectContainerFunction = function (func) {
         return function (parent) {
             var container = new PIXI.DisplayObjectContainer();
@@ -36,6 +32,8 @@ define('game/PIXI', ["pixi", "../util/input!"], function (PIXI, input) {
             return container;
         };
     };
+    PIXI.Point = math.Vector;
 
+    requestAnimFrame(animate);
     return PIXI;
 });

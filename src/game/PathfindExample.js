@@ -1,13 +1,15 @@
-﻿define("game/PathfindExample", ["../util/grid/index", "util/General", "util/Display", "util/Pathfind", "../util/grid/block-status"], function (Grid, General, Display, Pathfind, BlockStatus) {
-    var Vector2 = General.Vector2;
+﻿define("game/PathfindExample", ["../util/math!", "util/Display", "../util/grid!", "../util/grid/block-status"], function (math, Display, Grid, BlockStatus) {
+    var Vector = math.Vector;
+    var Pathfind = Grid.Pathfind;
+
     PathfindExample.instance = new PathfindExample();
     function PathfindExample() {
         this.grid = new Grid(0, 0, 10 + Math.floor(Math.random() * 10), 10 + Math.floor(Math.random() * 10));
         var i = Math.floor(this.grid.MaxX * this.grid.MaxY * .25);
         while (i--)
             this.grid.SetBlockStatus(Math.round(this.grid.MaxX * Math.random()), Math.round(this.grid.MaxY * Math.random()), BlockStatus.NotPassable);
-        this.start = Vector2.create(Math.floor(Math.random() * this.grid.MaxX), Math.floor(Math.random() * this.grid.MaxY));
-        this.stop = Vector2.create(Math.floor(Math.random() * this.grid.MaxX), Math.floor(Math.random() * this.grid.MaxY));
+        this.start = Vector.create(Math.floor(Math.random() * this.grid.MaxX), Math.floor(Math.random() * this.grid.MaxY));
+        this.stop = Vector.create(Math.floor(Math.random() * this.grid.MaxX), Math.floor(Math.random() * this.grid.MaxY));
         this.path = Pathfind.getPathByVector(this.grid, this.start, this.stop);
 
         Display.drawOffsetXT = Display.drawOffsetX = -this.grid.MaxX / 2 * 100 - 50;
@@ -27,11 +29,11 @@
         Display.Settings.DisableTranslation = true;
         var blockSize = 100;
         Display.createDrawCanvas('Path', PathfindExample.instance.grid.MaxX * blockSize + blockSize, PathfindExample.instance.grid.MaxY * blockSize + blockSize);
-        if (Pathfind.LastPath.open) {
+        if (pathfind.LastPath.open) {
             Display.setFill('rgb(175,175,175)');
-            var c = Pathfind.LastPath.closed.length;
+            var c = pathfind.LastPath.closed.length;
             while (c--) {
-                var closedBlock = Pathfind.LastPath.closed[c];
+                var closedBlock = pathfind.LastPath.closed[c];
                 Display.fillRect(closedBlock.X * blockSize, closedBlock.Y * blockSize, blockSize, blockSize);
             }
         }
@@ -48,12 +50,12 @@
         Display.fillRect(PathfindExample.instance.stop.X * blockSize + 25, PathfindExample.instance.stop.Y * blockSize + 25, blockSize - 50, blockSize - 50);
 
 
-        if (Pathfind.LastPath.open) {
+        if (pathfind.LastPath.open) {
             Display.setFill('rgb(55,55,55)');
             Display.setFont(20, 'sans-serif');
-            c = Pathfind.LastPath.closed.length;
+            c = pathfind.LastPath.closed.length;
             while (c--) {
-                closedBlock = Pathfind.LastPath.closed[c];
+                closedBlock = pathfind.LastPath.closed[c];
                 Display.fillText('c' + c.toFixed(0), closedBlock.X * blockSize + 5, closedBlock.Y * blockSize + 21);
             }
         }

@@ -45,7 +45,7 @@
     Levels.LevelEmpty.Name = "Level Empty";
 
     Levels.LevelTest = function () {
-        var level = CreateLevel({
+        return CreateLevel({
             Player: {Resources: {Ammo: 0, Energy: 200, Metal: 100}},
             Buildings: [
                 {constructor: "HomeBase", Template: {BlockX: 5, BlockY: 5}},
@@ -90,13 +90,11 @@
                 ]
             }
         });
-
-        return level;
     };
     Levels.LevelTest.Name = "Level Test";
 
     Levels.LevelOne = function () {
-        var level = CreateLevel({
+        return CreateLevel({
             Player: {Resources: {Ammo: 0, Energy: 200, Metal: 100}},
             WaveDelay: Settings.Second * 10,
             Buildings: [
@@ -199,12 +197,11 @@
                 ]
             }
         });
-        return level;
     };
     Levels.LevelOne.Name = "Level One";
 
     Levels.LevelTwo = function () {
-        var level = CreateLevel({
+        return CreateLevel({
             Player: {Resources: {Ammo: 0, Energy: 200, Metal: 100}},
             WaveDelay: Settings.Second * 7,
             Buildings: [
@@ -286,13 +283,11 @@
                 ]
             }
         });
-
-        return level;
     };
     Levels.LevelTwo.Name = "Level Two";
 
     Levels.LevelThree = function () {
-        var level = CreateLevel({
+        return CreateLevel({
             Player: {Resources: {Ammo: 0, Energy: 200, Metal: 100}},
             WaveDelay: Settings.Second * 7,
             Buildings: [
@@ -374,8 +369,6 @@
                 ]
             }
         });
-
-        return level;
     };
     Levels.LevelThree.Name = "Level Three";
 

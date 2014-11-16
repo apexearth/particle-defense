@@ -1,4 +1,4 @@
-﻿define("game/Map", ["./PIXI", "../util/General", "../util/grid!", "./Settings", "util/Pathfind", "../util/grid/block-status"], function (PIXI, General, Grid, Settings, Pathfind, BlockStatus) {
+﻿define("game/Map", ["./PIXI", "../util/General", "../util/grid!", "./Settings", "../util/grid/pathfind", "../util/grid/block-status"], function (PIXI, General, Grid, Settings, Pathfind, BlockStatus) {
     function Map(level, width, height, template) {
         this.Level = level;
         this.BlockSize = Settings.BlockSize;

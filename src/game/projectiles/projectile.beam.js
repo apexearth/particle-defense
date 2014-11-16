@@ -1,23 +1,33 @@
-define(["../PIXI","./projectile", "util/General"], function (PIXI, Projectile, General) {
+define(["../PIXI", "./projectile", "util/math!"], function (PIXI, Projectile, math) {
     function BeamProjectile(weapon) {
         Projectile.call(this, weapon);
+
+        this.graphics = new PIXI.Graphics();
+        this.addChild(this.graphics);
+
         this.Lifespan = weapon.Lifespan;
         this.FadeTime = weapon.Lifespan / 2;
         this.FadeTimeCount = 0;
         this.Damage = weapon.Damage / weapon.Lifespan;
-        this.Width = weapon.Damage * 10 / weapon.Lifespan;
+        this.Width = Math.max(1, this.Damage * 10);
         this.Direction = weapon.getTargetAngle();
         this.EndX = this.position.x + Math.cos(this.Direction) * this.Weapon.Range;
         this.EndY = this.position.y + Math.sin(this.Direction) * this.Weapon.Range;
+
+        this.graphics.lineStyle(this.Width, 0xAAAAFF, .35);
+        this.graphics.moveTo(0, 0);
+        this.graphics.lineTo(Math.cos(this.Direction) * this.Weapon.Range, Math.sin(this.Direction) * this.Weapon.Range);
+
         /** @returns Number */
         this.EffectiveDamage = function (unit) {
-            return this.Damage * General.Distance(this.position.x - unit.x, this.position.y - unit.y) / this.Weapon.Range;
+            return this.Damage * math.Distance(this.position.x - unit.x, this.position.y - unit.y) / this.Weapon.Range;
         };
 
         this.projectileUpdate = this.update;
         this.update = function () {
             if (this.LifespanCount > this.Lifespan - this.FadeTime) this.FadeTimeCount++;
             this.projectileUpdate();
+            this.alpha = Math.max(1, this.FadeTime - this.FadeTimeCount) / (this.FadeTime / 2);
         };
         this.onHit = function () {
             // Nothing
@@ -29,22 +39,6 @@ define(["../PIXI","./projectile", "util/General"], function (PIXI, Projectile, G
             }, this.Width);
         };
 
-        this.draw = function (context) {
-            context.save();
-            context.globalAlpha = Math.max(1, this.FadeTime - this.FadeTimeCount) / (this.FadeTime / 2);
-            var grad = context.createLinearGradient(this.position.x, this.position.y, this.EndX, this.EndY);
-            grad.addColorStop(0, '#77f');
-            grad.addColorStop(1, '#227');
-            context.strokeStyle = grad;
-            context.lineWidth = this.Width;
-            context.lineCap = "square";
-            context.beginPath();
-            context.moveTo(this.position.x, this.position.y);
-            context.lineTo(this.EndX, this.EndY);
-            context.stroke();
-            context.closePath();
-            context.restore();
-        };
     }
 
     BeamProjectile.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);

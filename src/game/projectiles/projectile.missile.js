@@ -1,5 +1,5 @@
-define(["../PIXI", "./projectile.accelerating", "./explosion", "util/General"],
-    function (PIXI, AcceleratingProjectile, Explosion, General) {
+define(["../PIXI", "./projectile.accelerating", "./explosion", "../../util/math!"],
+    function (PIXI, AcceleratingProjectile, Explosion, math) {
         function MissileProjectile(weapon) {
             AcceleratingProjectile.call(this, weapon);
             Explosion.addExplosiveProperties(this, weapon);
@@ -15,8 +15,8 @@ define(["../PIXI", "./projectile.accelerating", "./explosion", "util/General"],
                 if (this.Target !== null) {
                     if (this.Target.IsDead) this.Target = null;
                     if (this.Target !== null) {
-                        var expectedAverageVelocity = this.Acceleration * General.Distance(this.position.x - this.Target.x, this.position.y - this.Target.y) / 2 + this.CurrentVelocity;
-                        this.Direction = General.LeadingAngleRad(this.position.x, this.position.y, expectedAverageVelocity, this.Target.x, this.Target.y, this.Target.VelocityX, this.Target.VelocityY);
+                        var expectedAverageVelocity = this.Acceleration * math.Distance(this.position.x - this.Target.x, this.position.y - this.Target.y) / 2 + this.CurrentVelocity;
+                        this.Direction = math.leadingAngle(this.position.x, this.position.y, expectedAverageVelocity, this.Target.x, this.Target.y, this.Target.VelocityX, this.Target.VelocityY);
                     }
                 }
                 this.inheritedUpdateMissileProjectile();

@@ -1,4 +1,4 @@
-﻿define("util/General", ["pixi"], function (PIXI) {
+﻿define("util/General", [], function () {
     function General() {
     }
 
@@ -34,67 +34,9 @@
         })(navigator.userAgent || navigator.vendor || window.opera);
         return check;
     };
-    General.normalize = function (x1, y1, x2, y2) {
-        var dirx = x2 - x1;
-        var diry = y2 - y1;
-        var hyp = Math.sqrt(dirx * dirx + diry * diry);
-        dirx /= hyp;
-        diry /= hyp;
-        if (isNaN(dirx)) dirx = 0;
-        if (isNaN(diry)) diry = 0;
-        return {x: dirx, y: diry};
-    };
-    General.AngleRad = function (x1, y1, x2, y2) {
-        return Math.atan2(y2 - y1, x2 - x1);
-    };
-    General.Angle = function (x1, y1, x2, y2) {
-        return Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-    };
-    General.LeadingAngleRad = function (x1, y1, speed1, x2, y2, x2v, y2v) {
-        var a = Math.pow(x2v, 2) + Math.pow(y2v, 2) - Math.pow(speed1, 2);
-        var b = 2 * (x2v * (x2 - x1) + y2v * (y2 - y1));
-        var c = Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2);
-        var disc = Math.pow(b, 2) - 4 * a * c;
-        var t1 = (-b + Math.sqrt(disc)) / (2 * a);
-        var t2 = (-b - Math.sqrt(disc)) / (2 * a);
-        var t = (t1 < t2 && t1 > 0 ? t1 : t2);
-        if (isNaN(t)) return General.AngleRad(x1, y1, x2, y2);
-        var aimTargetX = t * x2v + x2;
-        var aimTargetY = t * y2v + y2;
-        return General.AngleRad(x1, y1, aimTargetX, aimTargetY);
-    };
 
-    General.LeadingVector = function (x1, y1, speed1, x2, y2, x2v, y2v) {
-        var a = Math.pow(x2v, 2) + Math.pow(y2v, 2) - Math.pow(speed1, 2);
-        var b = 2 * (x2v * (x2 - x1) + y2v * (y2 - y1));
-        var c = Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2);
-        var disc = Math.pow(b, 2) - 4 * a * c;
-        var t1 = (-b + Math.sqrt(disc)) / (2 * a);
-        var t2 = (-b - Math.sqrt(disc)) / (2 * a);
-        var t = (t1 < t2 && t1 > 0 ? t1 : t2);
-        if (isNaN(t)) return General.AngleRad(x1, y1, x2, y2);
-        var aimTargetX = t * x2v + x2;
-        var aimTargetY = t * y2v + y2;
-        return {x: aimTargetX, y: aimTargetY};
-    };
 
-    General.Distance = function (x, y) {
-        return Math.sqrt(Math.abs((x * x) + (y * y)));
-    };
-    General.DistanceSq = function (x, y) {
-        return Math.abs((x * x) + (y * y));
-    };
-    General.isNumber = function (n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-    };
 
-    General.Point = PIXI.Point;
-    General.Vector2 = function (x, y) {
-        this.x = x;
-        this.y = y;
-    };
-    General.Vector2.create = function (x, y) {
-        return new Vector2(x, y);
-    };
+
     return General;
 });

@@ -1,4 +1,4 @@
-﻿define("game/Unit", ["./PIXI", "../util/General", "./Settings"], function (PIXI, General, Settings) {
+﻿define("game/Unit", ["./PIXI", "../util/math!", "./Settings", "../util/General"], function (PIXI, math, Settings, General) {
     function Unit(level, templates) {
         this.position.x = 0;
         this.position.y = 0;
@@ -29,7 +29,7 @@
         this.UpdateBlockLocation();
 
         this.hitTest = function (point, radius) {
-            return General.Distance(this.position.x - point.x, this.position.y - point.y) < this.Radius + radius;
+            return math.Distance(this.position.x - point.x, this.position.y - point.y) < this.Radius + radius;
         };
         this.hitTestLine = function (start, finish, width) {
             if (width === undefined) width = 1;
@@ -47,7 +47,7 @@
                 return;
             }
             var moveTarget = this.Path[0];
-            var moveAmount = General.normalize(this.position.x, this.position.y, moveTarget.x, moveTarget.y);
+            var moveAmount = math.normalize(this.position.x, this.position.y, moveTarget.x, moveTarget.y);
             moveAmount.x *= this.MoveSpeed;
             moveAmount.y *= this.MoveSpeed;
 

@@ -1,4 +1,4 @@
-define(["./building.loader"], function(loader){
+define(["./building.loader", "./building"], function(loader, Building){
     return loader({
         name: 'AmmoFab',
         constructor: {

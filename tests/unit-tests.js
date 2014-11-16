@@ -1,19 +1,19 @@
 ﻿describe('Unit Tests', function () {
-    var Levels, Unit, Units, General;
+    var Levels, Unit, Units, math;
     beforeEach(function () {
         runs(function () {
-            require(["game/Levels", "game/Unit", "game/Units", "util/General"], function (levels, unit, units, general) {
+            require(["game/Levels", "game/Unit", "game/Units", "util/math!"], function (levels, unit, units, customMath) {
                 Levels = levels;
                 Unit = unit;
                 Units = units;
-                General = general;
+                math = customMath;
             });
         });
         waitsFor(function () {
             return Levels != null
                 && Units != null
                 && Unit != null
-                && General != null;
+                && math != null;
         }, 300);
 
     });
@@ -25,10 +25,10 @@
 
         var i = 5;
         while (i--) {
-            var initialDistance = General.Distance(unit.X - unit.Destination.X, unit.Y - unit.Destination.Y);
+            var initialDistance = math.Distance(unit.X - unit.Destination.X, unit.Y - unit.Destination.Y);
             level.update();
             //jasmine.log(unit.Path[0].X + "," + unit.Path[0].Y + "\r\n");
-            var distanceAfterUpdate = General.Distance(unit.X - unit.Destination.X, unit.Y - unit.Destination.Y);
+            var distanceAfterUpdate = math.Distance(unit.X - unit.Destination.X, unit.Y - unit.Destination.Y);
             expect(initialDistance).toBeGreaterThan(distanceAfterUpdate);
         }
     });

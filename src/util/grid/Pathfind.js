@@ -1,4 +1,4 @@
-﻿define("util/Pathfind", ["./grid/block-status"], function (BlockStatus) {
+﻿define(["./block-status"], function (BlockStatus) {
     function Pathfind() {}
 
     Pathfind.Settings = function () { };

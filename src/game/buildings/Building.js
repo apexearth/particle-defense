@@ -17,6 +17,10 @@
         PIXI.DisplayObjectContainer.call(this);
         level.addChild(this);
         var me = this;
+
+        this.graphics = new PIXI.Graphics();
+        this.addChild(this.graphics);
+
         this.BlockX = NaN;
         this.BlockY = NaN;
         this.Block = null;
@@ -113,25 +117,6 @@
             _isSelected = false;
         };
 
-        this.draw = function (context) {
-            if (this.IsSelected()) {
-                context.strokeStyle = 'rgba(100,255,100,.5)';
-                context.lineWidth = 4;
-                context.strokeRect(this.TopLeft.x, this.TopLeft.y, this.Width, this.Height);
-                context.fillStyle = 'rgba(0,0,0,.25)';
-                context.fillRect(this.TopLeft.x, this.TopLeft.y, this.Width, this.Height);
-            }
-            if (this.IsSelected() || level.PlacementBuilding === this) {
-                var i = this.Weapons.length;
-                while (i--) {
-                    context.fillStyle = 'rgba(0,0,255,.05)';
-                    context.beginPath();
-                    context.arc(this.x, this.y, this.Weapons[i].Range, 0, arcCircle, false);
-                    context.closePath();
-                    context.fill();
-                }
-            }
-        };
         this.update = function () {
             if (this.Health <= 0) {
                 Building.prototype.removeStorageFromPlayer.call(this);
@@ -151,18 +136,30 @@
             while (i--) this.Updates[i].call(this);
             i = this.Weapons.length;
             while (i--) this.Weapons[i].update();
+
+            // Graphics
+            this.graphics.clear();
+            if (this.IsSelected() || level.PlacementBuilding === this) {
+                this.graphics.lineStyle(2, 0x7799FF, .2);
+                i = this.Weapons.length;
+                var weaponRadius = 0;
+                while (i--) weaponRadius = Math.max(weaponRadius, this.Weapons[i].Range);
+                this.graphics.beginFill(0x7799FF, .1);
+                this.graphics.drawCircle(0, 0, weaponRadius);
+                this.graphics.endFill();
+            }
+            if (this.IsSelected()) {
+                this.graphics.beginFill(0x77FF77, .3);
+                this.graphics.drawRect(-Settings.BlockSize / 2, -Settings.BlockSize / 2, Settings.BlockSize, Settings.BlockSize);
+                this.graphics.endFill();
+            }
         };
-        this.UpdateXY = function () {
+        this.updatePosition = function () {
             this.position.x = this.BlockX * Settings.BlockSize + Settings.BlockSize / 2;
             this.position.y = this.BlockY * Settings.BlockSize + Settings.BlockSize / 2;
-
-            this.TopLeft = {
-                x: this.BlockX * Settings.BlockSize,
-                y: this.BlockY * Settings.BlockSize
-            };
         };
         this.initialize = function () {
-            this.UpdateXY();
+            this.updatePosition();
             if (this.Block != null) {           // Reset Block if Reinitializing.
                 this.Block.RemoveBuilding();
             }
