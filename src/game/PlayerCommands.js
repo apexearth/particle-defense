@@ -1,7 +1,7 @@
 ﻿define("game/PlayerCommands", function () {
     return {
         CreateBuilding: function (player, buildingConstructor, blockX, blockY) {
-            if (player.Level.IsBlockCoordBuildable(blockX, blockY) === true
+            if (player.Level.isBlockCoordBuildable(blockX, blockY) === true
                 && player.TryApplyCost(buildingConstructor.Cost)) {
                 var building = new buildingConstructor(player.Level, player, {BlockX: blockX, BlockY: blockY});
                 player.Buildings.push(building);

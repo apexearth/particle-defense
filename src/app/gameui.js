@@ -14,7 +14,7 @@
         $scope.Cost = null;
 
         $scope.CreateBuilding = function (building) {
-            $scope.Level.BeginBuildingPlacement(building);
+            $scope.Level.beginBuildingPlacement(building);
             $scope.Cost = building.Cost;
         };
         $scope.ShowCost = function (cost) {

@@ -1,13 +1,28 @@
 define("game/Weapons", ["./PIXI", "./projectiles!", "../util/math!", "game/Settings", "game/Attribute"], function (PIXI, Projectiles, math, Settings, Attribute) {
+        var pi2 = Math.PI * 2,
+            degree = pi2 / 360;
 
         function Weapon(building) {
             this.Level = building.Level;
             this.Building = building;
             this.Range = 200;
             this.Damage = 1;
+            this.FiringCone = degree * 15;
+            this.RotateSpeed = degree * 5;
+            this.getTargetAngle = function () {
+                if (this.Target == null) return NaN;
+                return math.angle(this.Building.x, this.Building.y, this.Target.x, this.Target.y);
+            };
+
+            // Simple Line graphic for now...
+            this.graphics = new PIXI.Graphics();
+            this.addChild(this.graphics);
+            this.graphics.lineStyle(2, 0x990000, 1);
+            this.graphics.moveTo(0, 0);
+            this.graphics.lineTo(10, 0);
 
             /** @return {number} **/
-            this.AmmoConsumption = function () {
+            this.getAmmoConsumption = function () {
                 return this.Damage;
             };
             this.FireRate = 10;
@@ -65,9 +80,10 @@ define("game/Weapons", ["./PIXI", "./projectiles!", "../util/math!", "game/Setti
                 this.Target = null;
             };
             this.ResetTarget();
-            this.CreateProjectile = function () { };
+            this.CreateProjectile = function () {
+            };
             this.FireAtTarget = function () {
-                this.Building.Player.Resources.Ammo -= this.AmmoConsumption();
+                this.Building.Player.Resources.Ammo -= this.getAmmoConsumption();
                 var shots = this.ShotsPerShot;
                 while (shots--) {
                     var projectile = this.CreateProjectile();
@@ -87,9 +103,12 @@ define("game/Weapons", ["./PIXI", "./projectiles!", "../util/math!", "game/Setti
             this.TryFireAtTarget = function () {
                 if (math.Distance(this.Target.x - this.Building.x, this.Target.y - this.Building.y) > this.Range) {
                     this.ResetTarget();
-                } else if (this.Building.Player.Resources.Ammo >= this.AmmoConsumption()) {
-                    this.FireAtTarget();
-                    this.FireRateCount = 0;
+                } else if (this.Building.Player.Resources.Ammo >= this.getAmmoConsumption()) {
+                    var difference = Math.abs(this.rotation - this.getTargetAngle());
+                    if (Math.abs(difference) < this.FiringCone / 2) {
+                        this.FireAtTarget();
+                        this.FireRateCount = 0;
+                    }
                 }
             };
             this.update = function () {
@@ -98,11 +117,23 @@ define("game/Weapons", ["./PIXI", "./projectiles!", "../util/math!", "game/Setti
                 }
                 if (this.Target == null) {
                     this.FindTarget();
+                } else {
+                    this.updateRotation();
                 }
 
                 if (this.FireRateCount < this.FireRate) this.FireRateCount++;
                 if (this.Target != null && this.FireRateCount >= this.FireRate) {
                     this.TryFireAtTarget();
+                }
+            };
+
+            this.updateRotation = function () {
+                var targetAngle = this.getTargetAngle();
+                var direction = ((this.rotation - targetAngle) * 57.2957795 + 360) % 360 > 180;
+                if (direction) {
+                    this.rotation = Math.min(targetAngle, this.rotation + this.RotateSpeed);
+                } else {
+                    this.rotation = Math.max(targetAngle, this.rotation - this.RotateSpeed);
                 }
             };
             this.getTargetAngle = function () {
@@ -136,7 +167,7 @@ define("game/Weapons", ["./PIXI", "./projectiles!", "../util/math!", "game/Setti
                 this.Acceleration = acceleration;
                 this.ShotSpeedVariance = accuracy;
                 /** @return {number} **/
-                this.AmmoConsumption = function () {
+                this.getAmmoConsumption = function () {
                     return this.Damage / 1.5;
                 };
                 this.CreateAttributeForStat("ProjectileSpeed", true, 10, 1.25, this.AttributeCost);
@@ -169,7 +200,7 @@ define("game/Weapons", ["./PIXI", "./projectiles!", "../util/math!", "game/Setti
                     return me.WeaponAttributeCost() * (1 + me.ProjectileSpeed / 5);
                 };
                 /** @return {number} **/
-                this.AmmoConsumption = function () {
+                this.getAmmoConsumption = function () {
                     return this.Damage / 2 * this.ProjectileSpeed / 3;
                 };
                 this.CreateProjectile = function () {
@@ -190,7 +221,7 @@ define("game/Weapons", ["./PIXI", "./projectiles!", "../util/math!", "game/Setti
                 this.ExplosiveInitialSize = explosiveInitialSize;
                 this.GunAttributeCost = this.AttributeCost;
                 /** @return {number} **/
-                this.AmmoConsumption = function () {
+                this.getAmmoConsumption = function () {
                     return this.Damage * 2 * (this.ExplosiveSpeed + this.ExplosiveTime + this.ExplosiveInitialSize / 20);
                 };
                 /** @return {number} **/
@@ -216,7 +247,7 @@ define("game/Weapons", ["./PIXI", "./projectiles!", "../util/math!", "game/Setti
                 this.ExplosiveInitialSize = explosiveInitialSize;
                 this.GunAttributeCost = this.AttributeCost;
                 /** @return {number} **/
-                this.AmmoConsumption = function () {
+                this.getAmmoConsumption = function () {
                     return this.Damage * 2 * (this.ExplosiveSpeed + this.ExplosiveTime + this.ExplosiveInitialSize / 20);
                 };
                 /** @return {number} **/
@@ -245,7 +276,7 @@ define("game/Weapons", ["./PIXI", "./projectiles!", "../util/math!", "game/Setti
                 this.FireRate = this.FireRateCount = fireRate;
                 this.Accuracy = 1 - accuracy;
                 /** @return {number} **/
-                this.AmmoConsumption = function () {
+                this.getAmmoConsumption = function () {
                     return this.Damage * 3 / this.Lifespan;
                 };
                 this.CreateProjectile = function () {
@@ -265,7 +296,7 @@ define("game/Weapons", ["./PIXI", "./projectiles!", "../util/math!", "game/Setti
                 this.Damage = damage;
                 this.FireRate = this.FireRateCount = fireRate;
                 /** @return {number} **/
-                this.AmmoConsumption = function () {
+                this.getAmmoConsumption = function () {
                     return this.Damage * 3 / this.Lifespan;
                 };
                 this.CreateProjectile = function () {

@@ -66,12 +66,12 @@
 
         this.CheckCount = 0;
 
-        this.AddBuilding = function (building) {
+        this.addBuilding = function (building) {
             this.Buildings.push(building);
             building.Player.Buildings.push(building);
             return building;
         };
-        this.AddPlayer = function (player) {
+        this.addPlayer = function (player) {
             this.Players.push(player);
             return player;
         };
@@ -79,33 +79,37 @@
             return vector.x >= this.Bounds.Left && vector.x <= this.Bounds.Right && vector.y >= this.Bounds.Top && vector.y <= this.Bounds.Bottom;
         };
 
-        this.BeginBuildingPlacement = function (building) {
+        this.beginBuildingPlacement = function (building) {
             this.PlacementBuilding = new building(this, null);
         };
-        this.FinalizeBuildingPlacement = function (block) {
+        this.finalizeBuildingPlacement = function (block) {
             if (block != null) {
                 var buildResult = PlayerCommands.CreateBuilding(this.Player, this.PlacementBuilding.constructor, block.x, block.y);
                 if (buildResult != null) {
-                    this.ResetBuildableBlocks();
+                    this.resetBuildableBlocks();
                     var i = this.Units.length;
                     while (i--) this.Units[i].findPath();
                     if (!Keyboard.CheckKey(Keyboard.Keys.Shift)) {
-                        this.PlacementBuilding = null;
+                        this.endBuildingPlacement();
                     }
                 }
             }
         };
+        this.endBuildingPlacement = function(){
+            this.removeChild(this.PlacementBuilding);
+            this.PlacementBuilding = null;
+        };
         var _buildableBlocks = [];
         var _notBuildableBlocks = [];
         /** @returns bool **/
-        this.IsBlockCoordBuildable = function (blockX, blockY) {
-            return this.IsBlockBuildable(_map.getBlock(blockX, blockY));
+        this.isBlockCoordBuildable = function (blockX, blockY) {
+            return this.isBlockBuilding(_map.getBlock(blockX, blockY));
         };
 
         /** @summary The idea behind this is to check if a block is buildable when placing a building. **/
         /** @returns bool **/
-        this.IsBlockBuildable = function (block) {
-            if (block.Status() == BlockStatus.OnlyPassable) return false;       // It's blocked
+        this.isBlockBuilding = function (block) {
+            if (block.Status() >= BlockStatus.OnlyPassable) return false;       // It's blocked
             if (block.Objects.length > 0) return false;                         // The block has an object in it.
             if (_buildableBlocks.indexOf(block) >= 0) return true;              // Is within list of buildable blocks.
             if (_notBuildableBlocks.indexOf(block) >= 0) return false;          // Is within list of not buildable blocks.
@@ -133,7 +137,7 @@
             return true;
         };
         /** @summary Should be called whenever block BlockStatus changes. **/
-        this.ResetBuildableBlocks = function () {
+        this.resetBuildableBlocks = function () {
             _buildableBlocks = [];
             _notBuildableBlocks = [];
         };
@@ -188,7 +192,7 @@
         this.ProcessKeyboardInput = function () {
             if (Keyboard.CheckKey(Keyboard.Keys.Escape)) {
                 if (this.PlacementBuilding != null) {
-                    this.PlacementBuilding = null;
+                    this.endBuildingPlacement();
                 }
             }
         };
@@ -197,7 +201,7 @@
                 Mouse.LeftButton = false;
                 var clickedBlock = this.getBlockOrNullFromCoords(this.Mouse.x, this.Mouse.y);
                 if (this.PlacementBuilding != null) {
-                    this.FinalizeBuildingPlacement(clickedBlock);
+                    this.finalizeBuildingPlacement(clickedBlock);
                     return;
                 }
 
@@ -211,8 +215,7 @@
             if (Mouse.RightButton) {
                 if (this.PlacementBuilding != null) {
                     Mouse.RightButton = false;
-                    this.PlacementBuilding.delete();
-                    this.PlacementBuilding = null;
+                    this.endBuildingPlacement();
                     return;
                 }
             }

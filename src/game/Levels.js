@@ -1,4 +1,4 @@
-﻿define("game/Levels", ["game/Level", "game/Settings", "game/Player", "./buildings!", "game/Units", "game/Unit", "game/SpawnPoint"], function (Level, Settings, Player, Buildings, Units, Unit, SpawnPoint) {
+﻿define("game/Levels", ["game/Level", "game/Settings", "game/Player", "./buildings!", "./units!", "./units/unit", "game/SpawnPoint"], function (Level, Settings, Player, Buildings, Units, Unit, SpawnPoint) {
 
     var Levels = {};
 
@@ -12,13 +12,13 @@
         delete json.MapTemplate;
 
         var player = new Player(level);
-        level.AddPlayer(player);
+        level.addPlayer(player);
         level.Player = player;
 
         for (var _b in json.Buildings) {
             var b = json.Buildings[_b];
             var building = new Buildings[b.constructor](level, player, b.Template);
-            level.AddBuilding(building);
+            level.addBuilding(building);
         }
         delete json.Buildings;
 
@@ -36,9 +36,9 @@
         var level = new Level(11, 11);
 
         var player = new Player(level);
-        level.AddPlayer(player);
+        level.addPlayer(player);
         level.Player = player;
-        level.AddBuilding(new Buildings.HomeBase(level, player, 5, 5));
+        level.addBuilding(new Buildings.HomeBase(level, player, 5, 5));
 
         return level;
     };
@@ -68,7 +68,7 @@
                             Count: 10,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second,
-                            Customization: {Health: 12, Radius: 3, MoveSpeed: 1}
+                            Customization: {Health: 12, Radius: 3.5, MoveSpeed: 1}
                         }
                     ]
 

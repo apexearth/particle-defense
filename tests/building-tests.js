@@ -3,7 +3,7 @@
     var Gun;
     beforeEach(function () {
         runs(function () {
-            require(["game/Levels", "game/buildings!", "../src/game/buildings/building", "game/Unit", "game/PlayerCommands"], function (levels, buildings, building, unit, playerCommands) {
+            require(["game/Levels", "game/buildings!", "../src/game/buildings/building", "../src/game/units/unit", "game/PlayerCommands"], function (levels, buildings, building, unit, playerCommands) {
                 Levels = levels;
                 Buildings = buildings;
                 Building = building;

@@ -1,4 +1,4 @@
-define('game/SpawnPoint', ["./PIXI", "./Units", "./Unit", "./Settings"], function (PIXI, Units, Unit, Settings) {
+define('game/SpawnPoint', ["./PIXI", "./units!", "./Settings"], function (PIXI, Units, Settings) {
 
     function SpawnPoint(level, template) {
         this.Level = level;
@@ -51,7 +51,7 @@ define('game/SpawnPoint', ["./PIXI", "./Units", "./Unit", "./Settings"], functio
             var wave = Units.Array(function () {
                 if (w.TemplateName !== undefined) {
                     var unitTemplate = Units[w.TemplateName];
-                    var unit = new Unit(level, unitTemplate.getCanvas());
+                    var unit = new Units.Unit(level);
                     unit.visible = false;
                     unit.loadTemplate(unitTemplate);
                     if (w.Template !== undefined) unit.loadTemplate(w.Template);

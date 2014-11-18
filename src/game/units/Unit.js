@@ -1,5 +1,7 @@
-﻿define("game/Unit", ["./PIXI", "../util/math!", "./Settings", "../util/General"], function (PIXI, math, Settings, General) {
+﻿define(["../PIXI", "../../util/math!", "../Settings", "../../util/General"], function (PIXI, math, Settings, General) {
     function Unit(level, templates) {
+        PIXI.DisplayObjectContainer.call(this);
+        level.addChild(this);
         this.position.x = 0;
         this.position.y = 0;
         this.VelocityX = 0;
@@ -13,6 +15,9 @@
         this.Score = 0;
         this.IsDead = false;
 
+        this.graphics = new PIXI.Graphics();
+        this.addChild(this.graphics);
+
         this.UpdateBlockLocation = function () {
             var _blockX = this.BlockX;
             var _blockY = this.BlockY;
@@ -25,8 +30,6 @@
                 level.getBlock(this.BlockX, this.BlockY).Add(this);
             }
         };
-
-        this.UpdateBlockLocation();
 
         this.hitTest = function (point, radius) {
             return math.Distance(this.position.x - point.x, this.position.y - point.y) < this.Radius + radius;
@@ -128,21 +131,20 @@
         this.initialize = function () {
             this.UpdateBlockLocation();
             this.calculateScore();
+
+            this.graphics.clear();
+            this.graphics.beginFill(0xFFFFFF, .75);
+            this.graphics.drawCircle(0, 0, this.Radius);
+            this.graphics.endFill();
         };
 
         this.loadTemplates();
         this.initialize();
     }
 
-    return function (level, canvas, template) {
-        var unit = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
-        unit.anchor.x = .5;
-        unit.anchor.y = .5;
-        level.addChild(unit);
+    Unit.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+    Unit.prototype.constructor = Unit;
 
-        Unit.call(unit, level, template);
-        unit.scale.x = (unit.Radius * 2) / unit.width;
-        unit.scale.y = (unit.Radius * 2) / unit.height;
-        return unit;
-    };
+
+    return Unit;
 });

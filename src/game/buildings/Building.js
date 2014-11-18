@@ -93,9 +93,6 @@
             createAttributeForGeneration("Metal", 8, 13);
 
         };
-        this.delete = function () {
-            this.parent.removeChild(this);
-        };
         var _isSelected = false;
         /** @returns bool **/
         this.IsSelected = function () {

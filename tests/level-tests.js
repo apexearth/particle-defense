@@ -2,7 +2,7 @@
     var Settings, Levels, Buildings, Unit;
     beforeEach(function () {
         runs(function () {
-            require(["game/Settings", "game/Levels", "game/buildings!", "game/Unit"], function (settings, levels, buildings, unit) {
+            require(["game/Settings", "game/Levels", "game/buildings!", "../src/game/units/unit"], function (settings, levels, buildings, unit) {
                 Settings = settings;
                 Levels = levels;
                 Buildings = buildings;

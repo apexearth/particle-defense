@@ -2,7 +2,7 @@
     var Levels, Unit, Units, math;
     beforeEach(function () {
         runs(function () {
-            require(["game/Levels", "game/Unit", "game/Units", "util/math!"], function (levels, unit, units, customMath) {
+            require(["game/Levels", "../src/game/units/unit", "../src/game/units!", "util/math!"], function (levels, unit, units, customMath) {
                 Levels = levels;
                 Unit = unit;
                 Units = units;
