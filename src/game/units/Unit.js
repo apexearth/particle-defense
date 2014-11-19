@@ -17,6 +17,10 @@
 
         this.graphics = new PIXI.Graphics();
         this.addChild(this.graphics);
+        this.graphics.beginFill(0xFFFFFF, .75);
+        this.graphics.drawCircle(0, 0, this.Radius);
+        this.graphics.endFill();
+
 
         this.UpdateBlockLocation = function () {
             var _blockX = this.BlockX;
@@ -131,11 +135,6 @@
         this.initialize = function () {
             this.UpdateBlockLocation();
             this.calculateScore();
-
-            this.graphics.clear();
-            this.graphics.beginFill(0xFFFFFF, .75);
-            this.graphics.drawCircle(0, 0, this.Radius);
-            this.graphics.endFill();
         };
 
         this.loadTemplates();

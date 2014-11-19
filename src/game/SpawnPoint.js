@@ -49,11 +49,9 @@ define('game/SpawnPoint', ["./PIXI", "./units!", "./Settings"], function (PIXI, 
         for (var _w in template.Waves) {
             var w = template.Waves[_w];
             var wave = Units.Array(function () {
-                if (w.TemplateName !== undefined) {
-                    var unitTemplate = Units[w.TemplateName];
-                    var unit = new Units.Unit(level);
+                if (w.UnitType !== undefined) {
+                    var unit = new Units[w.UnitType](level);
                     unit.visible = false;
-                    unit.loadTemplate(unitTemplate);
                     if (w.Template !== undefined) unit.loadTemplate(w.Template);
                     if (w.Customization !== undefined) unit.loadTemplate(w.Customization);
                     unit.position.x = me.x * Settings.BlockSize + Settings.BlockSize / 2;

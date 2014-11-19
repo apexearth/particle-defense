@@ -57,14 +57,14 @@
                     y: 5,
                     Waves: [
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 10,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second,
                             Customization: {Health: 10, Radius: 3, MoveSpeed: 1}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 10,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second,
@@ -106,63 +106,63 @@
                     y: 0,
                     Waves: [
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 10,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second,
                             Customization: {Health: 8, Radius: 3, MoveSpeed: 1}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 20,
                             WaveDelay: Settings.Second,
                             SpawnInterval: Settings.Second * 3,
                             Customization: {Health: 24, Radius: 5, MoveSpeed: .6, FillColor: '#afa'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 40,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second * .75,
                             Customization: {Health: 18, Radius: 4, MoveSpeed: 1.15, FillColor: '#4f4'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 50,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second * 1.5,
                             Customization: {Health: 22, Radius: 4, MoveSpeed: .8, FillColor: '#44f'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 60,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second * .75,
                             Customization: {Health: 15, Radius: 4, MoveSpeed: 2, FillColor: '#f44'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 30,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second * .5,
                             Customization: {Health: 30, Radius: 8, MoveSpeed: .65, FillColor: '#444'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 100,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second * .3,
                             Customization: {Health: 10, Radius: 3, MoveSpeed: 1}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 10,
                             WaveDelay: Settings.Second,
                             SpawnInterval: Settings.Second,
                             Customization: {Health: 20, Radius: 2, MoveSpeed: 2}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 10,
                             WaveDelay: Settings.Second * 10,
                             SpawnInterval: Settings.Second,
@@ -213,42 +213,42 @@
                     y: 0,
                     Waves: [
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 20,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second,
                             Customization: {Health: 5, Radius: 3, MoveSpeed: 1, FillColor: '#afa'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 20,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second,
                             Customization: {Health: 10, Radius: 3.5, MoveSpeed: 1, FillColor: '#0fa'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 20,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second * 2,
                             Customization: {Health: 20, Radius: 4, MoveSpeed: 1, FillColor: '#af0'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 20,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second * 2,
                             Customization: {Health: 20, Radius: 2.5, MoveSpeed: 1.5, FillColor: '#a0a'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 40,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second,
                             Customization: {Health: 25, Radius: 3, MoveSpeed: 1, FillColor: '#00a'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 80,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second * .5,
@@ -299,42 +299,42 @@
                     y: 0,
                     Waves: [
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 20,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second,
                             Customization: {Health: 5, Radius: 3, MoveSpeed: 2, FillColor: '#afa'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 20,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second,
                             Customization: {Health: 10, Radius: 3.5, MoveSpeed: 2, FillColor: '#0fa'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 20,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second * 2,
                             Customization: {Health: 30, Radius: 5, MoveSpeed: 1, FillColor: '#af0'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 20,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second * 2,
                             Customization: {Health: 20, Radius: 2.5, MoveSpeed: 2.5, FillColor: '#a0a'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 40,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second,
                             Customization: {Health: 25, Radius: 3, MoveSpeed: 2, FillColor: '#00a'}
                         },
                         {
-                            TemplateName: "UnitCircle",
+                            UnitType: "UnitCircle",
                             Count: 80,
                             WaveDelay: Settings.Second * 5,
                             SpawnInterval: Settings.Second * .5,

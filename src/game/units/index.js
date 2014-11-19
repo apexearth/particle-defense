@@ -1,7 +1,7 @@
-define(["./unit"], function (Unit) {
+define(["./unit.circle"], function (UnitCircle) {
 
     var list = {};
-    list.Unit = Unit;
+    list.UnitCircle = UnitCircle;
     list.Array = function (unitFunction, count) {
         var array = [];
         while (count--) array.push(unitFunction());
