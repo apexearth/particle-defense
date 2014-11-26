@@ -1,6 +1,10 @@
-define(["../PIXI","./projectile", "../../util/math!"], function (PIXI, Projectile, math) {
+define(["../PIXI", "./projectile", "../../util/math!"], function (PIXI, Projectile, math) {
     function ThrownProjectile(weapon) {
         Projectile.call(this, weapon);
+
+        this.graphics = new PIXI.Graphics();
+        this.addChild(this.graphics);
+
         this.lastPosition = this.position;
         this.Target = weapon.getTargetLeadingVector();
         this.InitialDistance = math.Distance(this.position.x - this.Target.x, this.position.y - this.Target.y);
@@ -11,7 +15,7 @@ define(["../PIXI","./projectile", "../../util/math!"], function (PIXI, Projectil
         this.projectileUpdate = this.update;
         this.update = function () {
             this.projectileUpdate();
-            this.lastPosition = this.position;
+            this.lastPosition = this.position.clone();
             if (this.Distance == null || this.Distance > this.Width) {
                 this.Distance = math.Distance(this.position.x - this.Target.x, this.position.y - this.Target.y);
                 this.CurrentVelocity = this.InitialVelocity * (Math.pow(this.Distance + 25, this.ProjectileSlowFactor) * 2 / Math.pow(this.InitialDistance, this.ProjectileSlowFactor));
@@ -20,12 +24,20 @@ define(["../PIXI","./projectile", "../../util/math!"], function (PIXI, Projectil
                 this.position.x += this.VelocityX;
                 this.position.y += this.VelocityY;
             }
+            this.graphics.clear();
+            this.graphics.lineStyle(this.Width, 0xFFFFFF, .5);
+            this.graphics.moveTo(0, 0);
+            this.graphics.lineTo(this.lastPosition.x - this.position.x, this.lastPosition.y - this.position.y);
+            this.graphics.lineStyle(0, 0xFFFFFF, 0);
+            this.graphics.beginFill(0xFFFFFF, 1);
+            this.graphics.drawRect(0, 0, this.Width, this.Width);
+            this.graphics.endFill();
         };
         this.hitTest = function (unit) {
-            if (this.position.x !== this.lastPosition.x && this.position.y !== this.lastPosition.y) {
+            if (this.position.x - this.lastPosition.x > 1 && this.position.y - this.lastPosition.y > 1) {
                 return unit.hitTestLine(this.position, this.lastPosition, this.Width);
             } else {
-                return unit.hitTest(this);
+                return unit.hitTest(this, this.Width);
             }
         };
     }

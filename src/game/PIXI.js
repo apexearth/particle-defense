@@ -1,4 +1,5 @@
 define('game/PIXI', ["pixi", "../util/input!", "../util/math!"], function (PIXI, input, math) {
+    PIXI.Point = math.Vector;
     var Mouse = input.Mouse;
 
     var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, {antialias: true});
@@ -10,10 +11,12 @@ define('game/PIXI', ["pixi", "../util/input!", "../util/math!"], function (PIXI,
 
     var lastMouseX = Mouse.x;
     var lastMouseY = Mouse.y;
+
     function animate() {
         requestAnimFrame(animate);
-        if (window.innerWidth !== renderer.view.width) renderer.view.width = window.innerWidth;
-        if (window.innerHeight !== renderer.view.height) renderer.view.height = window.innerHeight;
+        if (window.innerWidth !== renderer.view.width || window.innerHeight !== renderer.view.height) {
+            renderer.resize(window.innerWidth, window.innerHeight);
+        }
 
         if (Mouse.RightButton) {
             PIXI.MainContainer.position.x += Mouse.x - lastMouseX;
@@ -24,15 +27,10 @@ define('game/PIXI', ["pixi", "../util/input!", "../util/math!"], function (PIXI,
         lastMouseY = Mouse.y;
     }
 
-    PIXI.CreateDisplayObjectContainerFunction = function (func) {
-        return function (parent) {
-            var container = new PIXI.DisplayObjectContainer();
-            parent.addChild(container);
-            func.call(container, parent);
-            return container;
-        };
-    };
-    PIXI.Point = math.Vector;
+    Mouse.AddWheelEvent(function (delta) {
+        PIXI.MainContainer.scale.x = PIXI.MainContainer.scale.y = Math.max(.2, Math.min(5, PIXI.MainContainer.scale.y - (delta < 0 ? .2 : -.2)));
+
+    });
 
     requestAnimFrame(animate);
     return PIXI;

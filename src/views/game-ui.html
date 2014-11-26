@@ -126,27 +126,27 @@
         <li class="title">Buildings</li>
         <li class="button right smaller {{value == PlacementBuilding() && 'button-active' || ''}}"
             ng-repeat="(key, value) in Buildings" ng-click="CreateBuilding(value)"
-            ng-mouseover="ShowCost(value.Cost)" ng-mouseleave="HideCost()">
+            ng-mouseover="setCost(value.Cost)" ng-mouseleave="hideCost()">
             {{ToTitle(key)}}
         </li>
     </ul>
     <ul class="stat-bar" ng-show="Level.Selection != null">
         <li ng-show="Level.Selection != null" ng-repeat="(key, value) in Level.Selection.Abilities.Upgrades.Weapon"
             ng-click="value.Upgrade()"
-            ng-mouseover="ShowCost(value.Cost)"
-            ng-mouseleave="HideCost()"
+            ng-mouseover="setCost(value.Cost)"
+            ng-mouseleave="hideCost()"
             class="{{value.CanUpgrade() == false && 'disabled' || 'enabled'}}">
             <div>{{ToTitle(key)}}</div>
             <div>{{value() | number : 2}}</div>
         </li>
         <li ng-repeat="(key, value) in Level.Selection.Abilities.Upgrades.Building"
             ng-click="value.Upgrade()"
-            ng-mouseover="ShowCost(value.Cost)"
-            ng-mouseleave="HideCost()"
+            ng-mouseover="setCost(value.Cost)"
+            ng-mouseleave="hideCost()"
             class="{{value.CanUpgrade() == false && 'disabled' || 'enabled'}}">
             <div>{{ToTitle(key)}}</div>
             <div>{{value() | number : 2}}</div>
         </li>
     </ul>
-    <div id="event-catcher" ng-click="HideCost()"></div>
+    <div id="event-catcher" ng-click="hideCost()"></div>
 </div>

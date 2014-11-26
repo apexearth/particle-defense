@@ -1,4 +1,4 @@
-define(["./building.loader", "./building"], function (loader, Building) {
+define(["../../img!", "./building.loader", "./building"], function (Images, loader, Building) {
     return loader({
         name: 'EnergyFab',
         constructor: {
@@ -10,6 +10,7 @@ define(["./building.loader", "./building"], function (loader, Building) {
                 Building.prototype.addStorageToPlayer.call(this);
             }
         },
+        getSprite: Images.Buildings.EnergyFab,
         template: {
             Health: 20,
             ResourceStorage: {

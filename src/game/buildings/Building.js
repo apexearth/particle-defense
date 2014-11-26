@@ -5,15 +5,15 @@
         level.addChild(this);
         var me = this;
 
-        this.overlayGraphics = new PIXI.Graphics();
-        this.addChild(this.overlayGraphics);
 
         this.graphics = new PIXI.Graphics();
-        this.addChild(this.graphics);
+        this.addChildAt(this.graphics, 0);
         this.graphics.beginFill(0x77FF77, .1);
-        this.graphics.lineStyle(1, 0x77FF77, 1);
         this.graphics.drawRect(-Settings.BlockSize / 2, -Settings.BlockSize / 2, Settings.BlockSize, Settings.BlockSize);
         this.graphics.endFill();
+
+        this.overlayGraphics = new PIXI.Graphics();
+        this.addChild(this.overlayGraphics);
 
         this.BlockX = NaN;
         this.BlockY = NaN;
@@ -129,7 +129,7 @@
 
             // Graphics
             this.overlayGraphics.clear();
-            if (this.IsSelected() || level.PlacementBuilding === this) {
+            if (this.IsSelected() || level.getPlacementBuilding === this) {
                 this.overlayGraphics.lineStyle(2, 0x7799FF, .2);
                 i = this.Weapons.length;
                 var weaponRadius = 0;
@@ -139,7 +139,7 @@
                 this.overlayGraphics.endFill();
             }
             if (this.IsSelected()) {
-                this.overlayGraphics.beginFill(0x77FF77, .3);
+                this.overlayGraphics.beginFill(0x77FF77, .25);
                 this.overlayGraphics.drawRect(-Settings.BlockSize / 2, -Settings.BlockSize / 2, Settings.BlockSize, Settings.BlockSize);
                 this.overlayGraphics.endFill();
             }

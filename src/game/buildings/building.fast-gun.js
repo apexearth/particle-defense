@@ -1,4 +1,4 @@
-define(["./building.loader", "../Weapons"], function (loader, Weapons) {
+define(["../../img!", "./building.loader", "../Weapons"], function (Images, loader, Weapons) {
     return loader({
         name: 'FastGun',
         constructor: {
@@ -7,6 +7,7 @@ define(["./building.loader", "../Weapons"], function (loader, Weapons) {
                 Metal: 15
             }
         },
+        getSprite: Images.Buildings.Platform,
         template: {
             Health: 5,
             Weapons: [Weapons.Gun(75, 25, 5, 1, .96, 1)]

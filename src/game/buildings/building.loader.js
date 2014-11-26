@@ -3,9 +3,8 @@ define(["../PIXI", "../../util/General", "./building"], function (PIXI, General,
         var constructor = function (level, player, templates) {
             var building = new Building(level, player, templates);
             building.Name = obj.name;
-            if (obj.image != null) {
-                var sprite = building.addChildAt(new PIXI.Sprite(obj.image), 0);
-                sprite.anchor.x = sprite.anchor.y = .5;
+            if (obj.getSprite != null) {
+                building.addChildAt(obj.getSprite(), 0);
             }
 
             if (obj.template.Weapons !== undefined) {

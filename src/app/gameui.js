@@ -5,24 +5,13 @@
         $scope.Level = ParticleDefense.Level;
         $scope.Player = ParticleDefense.Level.Player;
         $scope.Buildings = Buildings;
-
-        $scope.PlacementBuilding = function () {
-            return $scope.Level.PlacementBuilding != null
-                ? $scope.Level.PlacementBuilding.constructor
-                : null;
-        };
         $scope.Cost = null;
-
-        $scope.CreateBuilding = function (building) {
-            $scope.Level.beginBuildingPlacement(building);
-            $scope.Cost = building.Cost;
-        };
-        $scope.ShowCost = function (cost) {
+        $scope.setCost = function (cost) {
             $scope.Cost = cost;
         };
-        $scope.HideCost = function () {
-            $scope.Cost = $scope.PlacementBuilding() != null
-                ? $scope.PlacementBuilding().Cost
+        $scope.hideCost = function () {
+            $scope.Cost = $scope.getPlacementBuilding() != null
+                ? $scope.getPlacementBuilding().Cost
                 : null;
         };
         /** @returns String, Number */
@@ -31,6 +20,19 @@
             if (typeof(cost[key]) == "function" && cost[key]($scope.Player) > 0) return -Math.round(cost[key]($scope.Player));
             if (cost[key] > 0) return -Math.round(cost[key]);
         };
+
+
+        $scope.getPlacementBuilding = function () {
+            return $scope.Level.getPlacementBuilding != null
+                ? $scope.Level.getPlacementBuilding.constructor
+                : null;
+        };
+
+        $scope.CreateBuilding = function (building) {
+            $scope.Level.beginBuildingPlacement(building);
+            $scope.Cost = building.Cost;
+        };
+
         $scope.ToTitle = function (s) {
             return s.replace(/([a-z])([A-Z0-9])/g, '$1 $2');
         };

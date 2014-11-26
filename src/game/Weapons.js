@@ -238,8 +238,8 @@ define("game/Weapons", ["./PIXI", "./projectiles!", "../util/math!", "game/Setti
         function GrenadeLauncher(range, fireRate, projectileSpeed, projectileSlowFactor, damage, accuracy, shotsPerShot, explosiveSpeed, explosiveTime, explosiveInitialSize) {
             var constructor = Gun(range, fireRate, projectileSpeed, damage, accuracy, shotsPerShot);
             var func = function (building) {
-                constructor.call(this, building);
                 var me = this;
+                constructor.call(this, building);
                 this.ProjectileClass = Projectiles.Grenade;
                 this.ProjectileSlowFactor = projectileSlowFactor;
                 this.ExplosiveSpeed = explosiveSpeed;
@@ -257,10 +257,6 @@ define("game/Weapons", ["./PIXI", "./projectiles!", "../util/math!", "game/Setti
                 this.CreateAttributeForStat("ExplosiveSpeed", true, 4, 1.1, this.AttributeCost);
                 this.CreateAttributeForStat("ExplosiveTime", true, 10, 1.1, this.AttributeCost);
                 this.CreateAttributeForStat("ExplosiveInitialSize", true, 30, 1.1, this.AttributeCost);
-
-                this.CreateProjectile = function () {
-                    return new this.ProjectileClass(this);
-                };
             };
             return setConstructor(func);
         }

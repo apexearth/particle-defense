@@ -1,4 +1,4 @@
-define(["./building.loader"], function (loader) {
+define(["../../img!", "./building.loader"], function (Images, loader) {
     return loader({
         name: 'Wall',
         constructor: {
@@ -7,6 +7,7 @@ define(["./building.loader"], function (loader) {
                 Metal: 2
             }
         },
+        getSprite: Images.Buildings.SmallPlatform,
         template: {
             Health: 20
         }

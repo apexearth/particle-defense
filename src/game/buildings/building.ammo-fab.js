@@ -1,4 +1,4 @@
-define(["../PIXI", "../Settings", "./building.loader", "./building"], function (PIXI, Settings, loader, Building) {
+define(["../../img!", "../Settings", "./building.loader", "./building"], function (Images, Settings, loader, Building) {
     return loader({
         name: 'AmmoFab',
         constructor: {
@@ -10,7 +10,7 @@ define(["../PIXI", "../Settings", "./building.loader", "./building"], function (
                 Building.prototype.addStorageToPlayer.call(this);
             }
         },
-        image: PIXI.Texture.fromImage("./img/buildings/homebase.png", false, 1),
+        getSprite: Images.Buildings.AmmoFab,
         template: {
             Health: 20,
             ResourceStorage: {

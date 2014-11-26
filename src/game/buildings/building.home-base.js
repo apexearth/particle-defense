@@ -1,5 +1,5 @@
-define(["../PIXI", "../Settings", "./building.loader", "./building"],
-    function (PIXI, Settings, loader, Building) {
+define(["../../img!", "../Settings", "./building.loader", "./building"],
+    function (Images, Settings, loader, Building) {
         return loader({
             name: 'HomeBase',
             constructor: {
@@ -12,7 +12,8 @@ define(["../PIXI", "../Settings", "./building.loader", "./building"],
                     Building.prototype.addStorageToPlayer.call(this);
                 }
             },
-            image: PIXI.Texture.fromImage("./img/buildings/homebase.png", false, 1),
+            getSprite: Images.Buildings.HomeBase,
+            imageScale: 2,
             template: {
                 Health: 50,
                 ResourceStorage: {

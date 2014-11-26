@@ -80,11 +80,12 @@
         };
 
         this.beginBuildingPlacement = function (building) {
-            this.PlacementBuilding = new building(this, null);
+            if(this.getPlacementBuilding) this.endBuildingPlacement();
+            this.getPlacementBuilding = new building(this, null);
         };
         this.finalizeBuildingPlacement = function (block) {
             if (block != null) {
-                var buildResult = PlayerCommands.CreateBuilding(this.Player, this.PlacementBuilding.constructor, block.x, block.y);
+                var buildResult = PlayerCommands.CreateBuilding(this.Player, this.getPlacementBuilding.constructor, block.x, block.y);
                 if (buildResult != null) {
                     this.resetBuildableBlocks();
                     var i = this.Units.length;
@@ -96,8 +97,8 @@
             }
         };
         this.endBuildingPlacement = function(){
-            this.removeChild(this.PlacementBuilding);
-            this.PlacementBuilding = null;
+            this.removeChild(this.getPlacementBuilding);
+            this.getPlacementBuilding = null;
         };
         var _buildableBlocks = [];
         var _notBuildableBlocks = [];
@@ -191,7 +192,7 @@
         };
         this.ProcessKeyboardInput = function () {
             if (Keyboard.CheckKey(Keyboard.Keys.Escape)) {
-                if (this.PlacementBuilding != null) {
+                if (this.getPlacementBuilding != null) {
                     this.endBuildingPlacement();
                 }
             }
@@ -200,7 +201,7 @@
             if (Mouse.LeftButton) {
                 Mouse.LeftButton = false;
                 var clickedBlock = this.getBlockOrNullFromCoords(this.Mouse.x, this.Mouse.y);
-                if (this.PlacementBuilding != null) {
+                if (this.getPlacementBuilding != null) {
                     this.finalizeBuildingPlacement(clickedBlock);
                     return;
                 }
@@ -213,7 +214,7 @@
             }
 
             if (Mouse.RightButton) {
-                if (this.PlacementBuilding != null) {
+                if (this.getPlacementBuilding != null) {
                     Mouse.RightButton = false;
                     this.endBuildingPlacement();
                     return;
@@ -224,8 +225,8 @@
             this.FrameCount++;
 
             this.Mouse = {
-                x: Mouse.x - PIXI.MainContainer.position.x + this.Width / 2,
-                y: Mouse.y - PIXI.MainContainer.position.y + this.Height / 2
+                x: (Mouse.x - PIXI.MainContainer.position.x) / PIXI.MainContainer.scale.x + this.Width / 2,
+                y: (Mouse.y - PIXI.MainContainer.position.y) / PIXI.MainContainer.scale.y + this.Height / 2
             };
 
 
@@ -266,9 +267,9 @@
             }
 
 
-            if (this.PlacementBuilding != null) {
-                this.PlacementBuilding.position.x = this.Mouse.x - (this.Mouse.x % Settings.BlockSize) + Settings.BlockSize / 2;
-                this.PlacementBuilding.position.y = this.Mouse.y - (this.Mouse.y % Settings.BlockSize) + Settings.BlockSize / 2;
+            if (this.getPlacementBuilding != null) {
+                this.getPlacementBuilding.position.x = this.Mouse.x - (this.Mouse.x % Settings.BlockSize) + Settings.BlockSize / 2;
+                this.getPlacementBuilding.position.y = this.Mouse.y - (this.Mouse.y % Settings.BlockSize) + Settings.BlockSize / 2;
             }
 
 
