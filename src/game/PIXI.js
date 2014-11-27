@@ -22,14 +22,30 @@ define('game/PIXI', ["pixi", "../util/input!", "../util/math!"], function (PIXI,
             PIXI.MainContainer.position.x += Mouse.x - lastMouseX;
             PIXI.MainContainer.position.y += Mouse.y - lastMouseY;
         }
+
         renderer.render(stage);
         lastMouseX = Mouse.x;
         lastMouseY = Mouse.y;
     }
 
     Mouse.AddWheelEvent(function (delta) {
-        PIXI.MainContainer.scale.x = PIXI.MainContainer.scale.y = Math.max(.2, Math.min(5, PIXI.MainContainer.scale.y - (delta < 0 ? .2 : -.2)));
-
+        var containerOffsetX, containerOffsetY;
+        var container = PIXI.MainContainer,
+            change = (delta < 0 ? .2 : -.2);
+        if (delta < 0 && container.scale.y >= .2) {
+            containerOffsetX = -Mouse.x + window.innerWidth / 2;
+            containerOffsetY = -Mouse.y + window.innerHeight / 2;
+            container.position.x -= containerOffsetX * change;
+            container.position.y -= containerOffsetY * change;
+            container.scale.x = container.scale.y = container.scale.y - change;
+        }
+        if (delta > 0 && container.scale.y <= 4) {
+            containerOffsetX = Mouse.x - window.innerWidth / 2;
+            containerOffsetY = Mouse.y - window.innerHeight / 2;
+            container.position.x += containerOffsetX * change;
+            container.position.y += containerOffsetY * change;
+            container.scale.x = container.scale.y = container.scale.y - change;
+        }
     });
 
     requestAnimFrame(animate);
