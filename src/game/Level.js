@@ -90,7 +90,7 @@
                     this.resetBuildableBlocks();
                     var i = this.Units.length;
                     while (i--) this.Units[i].findPath();
-                    if (!Keyboard.CheckKey(Keyboard.Keys.Shift)) {
+                    if (!Keyboard.CheckKey(Keyboard.Keys.shift)) {
                         this.endBuildingPlacement();
                     }
                 }
@@ -191,7 +191,7 @@
             return _map.getBlockOrNullFromCoords(x, y);
         };
         this.ProcessKeyboardInput = function () {
-            if (Keyboard.CheckKey(Keyboard.Keys.Escape)) {
+            if (Keyboard.CheckKey(Keyboard.Keys.escape)) {
                 if (this.getPlacementBuilding != null) {
                     this.endBuildingPlacement();
                 }

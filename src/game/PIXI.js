@@ -1,6 +1,7 @@
 define('game/PIXI', ["pixi", "../util/input!", "../util/math!"], function (PIXI, input, math) {
     PIXI.Point = math.Vector;
     var Mouse = input.Mouse;
+    var Keyboard = input.Keyboard;
 
     var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, {antialias: true});
     document.body.appendChild(renderer.view);
@@ -18,9 +19,33 @@ define('game/PIXI', ["pixi", "../util/input!", "../util/math!"], function (PIXI,
             renderer.resize(window.innerWidth, window.innerHeight);
         }
 
+        var container = PIXI.MainContainer;
         if (Mouse.RightButton) {
-            PIXI.MainContainer.position.x += Mouse.x - lastMouseX;
-            PIXI.MainContainer.position.y += Mouse.y - lastMouseY;
+            container.position.x += Mouse.x - lastMouseX;
+            container.position.y += Mouse.y - lastMouseY;
+        }
+
+        if (Keyboard.CheckKey(Keyboard.Keys.up_arrow) || Keyboard.CheckKey(Keyboard.Keys.w)) {
+            container.position.y += 3;
+        }
+        if (Keyboard.CheckKey(Keyboard.Keys.down_arrow) || Keyboard.CheckKey(Keyboard.Keys.s)) {
+            container.position.y -= 3;
+        }
+        if (Keyboard.CheckKey(Keyboard.Keys.left_arrow) || Keyboard.CheckKey(Keyboard.Keys.a)) {
+            container.position.x += 3;
+        }
+        if (Keyboard.CheckKey(Keyboard.Keys.right_arrow) || Keyboard.CheckKey(Keyboard.Keys.d)) {
+            container.position.x -= 3;
+        }
+        if (Keyboard.CheckKey(Keyboard.Keys.dash) && container.scale.y > .2) {
+            container.position.x -= (container.position.x - window.innerWidth / 2) * .05 / container.scale.y;
+            container.position.y -= (container.position.y - window.innerHeight / 2) * .05 / container.scale.y;
+            container.scale.x = container.scale.y = Math.max(.2, container.scale.y - .05);
+        }
+        if (Keyboard.CheckKey(Keyboard.Keys.equal_sign) && container.scale.y < 4) {
+            container.position.x += (container.position.x - window.innerWidth / 2) * .05 / container.scale.y;
+            container.position.y += (container.position.y - window.innerHeight / 2) * .05 / container.scale.y;
+            container.scale.x = container.scale.y = Math.min(4, container.scale.y + .05);
         }
 
         renderer.render(stage);
@@ -32,19 +57,18 @@ define('game/PIXI', ["pixi", "../util/input!", "../util/math!"], function (PIXI,
         var containerOffsetX, containerOffsetY;
         var container = PIXI.MainContainer,
             change = (delta < 0 ? .2 : -.2);
-        if (delta < 0 && container.scale.y >= .2) {
-            containerOffsetX = -Mouse.x + window.innerWidth / 2;
-            containerOffsetY = -Mouse.y + window.innerHeight / 2;
-            container.position.x -= containerOffsetX * change;
-            container.position.y -= containerOffsetY * change;
-            container.scale.x = container.scale.y = container.scale.y - change;
+
+        if (delta < 0 && container.scale.y > .2) {
+            container.position.x -= (container.position.x - window.innerWidth / 2) * change / container.scale.y;
+            container.position.y -= (container.position.y - window.innerHeight / 2) * change / container.scale.y;
+            container.scale.x = container.scale.y = Math.max(.2, container.scale.y - change);
         }
-        if (delta > 0 && container.scale.y <= 4) {
+        if (delta > 0 && container.scale.y < 4) {
             containerOffsetX = Mouse.x - window.innerWidth / 2;
             containerOffsetY = Mouse.y - window.innerHeight / 2;
             container.position.x += containerOffsetX * change;
             container.position.y += containerOffsetY * change;
-            container.scale.x = container.scale.y = container.scale.y - change;
+            container.scale.x = container.scale.y = Math.min(4, container.scale.y - change);
         }
     });
 
