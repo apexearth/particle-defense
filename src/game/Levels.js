@@ -1,4 +1,4 @@
-﻿define("game/Levels", ["game/Level", "game/Settings", "game/Player", "./buildings!", "./units!", "./units/unit", "game/SpawnPoint"], function (Level, Settings, Player, Buildings, Units, Unit, SpawnPoint) {
+﻿define("game/Levels", ["game/Level", "game/Settings", "game/Player", "./buildings!", "./units!", "./units/unit", "game/SpawnPoint", "util/grid/block-status"], function (Level, Settings, Player, Buildings, Units, Unit, SpawnPoint, BlockStatus) {
 
     var Levels = {};
 
@@ -27,6 +27,70 @@
             level.SpawnPoints.push(new SpawnPoint(level, s));
         }
         delete json.SpawnPoints;
+
+        level.initialize(json);
+        return level;
+    }
+
+    function CreateRandomLevel(json) {
+        var width = 15 + Math.floor(Math.random() * (json.Width || 30));
+        var height = 15 + Math.floor(Math.random() * (json.Height || 30));
+
+        var template = [];
+        var k, i = height;
+        while (i--) {
+            template[i] = [];
+            k = width;
+            while (k--) {
+                template[i][k] = 1 + Math.floor(Math.random() * 2);
+            }
+        }
+
+        var level = new Level(width, height, {BuildableBlocks: template});
+
+        var player = new Player(level);
+        level.addPlayer(player);
+        level.Player = player;
+
+        var randomX = Math.floor(Math.random() * (1 + width));
+        var randomY = Math.floor(Math.random() * (1 + height));
+        var building = new Buildings.HomeBase(level, player, {BlockX: randomX, BlockY: randomY});
+        level.addBuilding(building);
+
+        // Add Spawn Points
+        i = 1 + Math.floor(Math.random() * 20);
+        while (i--) {
+            var spawnTemplate;
+            while (!spawnTemplate) {
+                spawnTemplate = {
+                    x: Math.floor(Math.random() * (1 + width)),
+                    y: Math.floor(Math.random() * (1 + height)),
+                    Waves: []
+                };
+                var blockStatus = template[spawnTemplate.x][spawnTemplate.y];
+                if (blockStatus !== BlockStatus.OnlyPassable && blockStatus !== BlockStatus.IsEmpty) {
+                    spawnTemplate = null;
+                }
+            }
+            k = 1 + Math.floor(Math.random() * 3);
+            while (k--) {
+                spawnTemplate.Waves.push({
+                    UnitType: "UnitCircle",
+                    Count: 1 + Math.floor(Math.random() * 50),
+                    WaveDelay: Settings.Second * 5,
+                    SpawnInterval: Settings.Second,
+                    Customization: {
+                        Health: Math.random() * k * 5 + k,
+                        Radius: Math.random() * 6,
+                        MoveSpeed: Math.sqrt(Math.random()) * k + 1,
+                        FillColor: '#afa'
+                    }
+                });
+            }
+            level.SpawnPoints.push(
+                new SpawnPoint(level, spawnTemplate)
+            )
+        }
 
         level.initialize(json);
         return level;
@@ -371,6 +435,11 @@
         });
     };
     Levels.LevelThree.Name = "Level Three";
+
+    Levels.Random = function () {
+        return CreateRandomLevel({});
+    };
+    Levels.Random.Name = "Random";
 
     return Levels;
 });

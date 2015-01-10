@@ -4,12 +4,13 @@
     return MainMenu;
 
     function MainMenu($scope) {
-        $scope.Title = "Particle Defense";
+        $scope.Title = "...";
         $scope.Levels = [
             Levels.LevelTest,
             Levels.LevelOne,
             Levels.LevelTwo,
-            Levels.LevelThree
+            Levels.LevelThree,
+            Levels.Random
         ];
         $scope.BeginLevel = function (level) {
             ParticleDefense.startLevel(level);

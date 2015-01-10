@@ -25,27 +25,29 @@ define('game/PIXI', ["pixi", "../util/input!", "../util/math!"], function (PIXI,
             container.position.y += Mouse.y - lastMouseY;
         }
 
+        var scrollSpeed = 6;
         if (Keyboard.CheckKey(Keyboard.Keys.up_arrow) || Keyboard.CheckKey(Keyboard.Keys.w)) {
-            container.position.y += 3;
+            container.position.y += scrollSpeed;
         }
         if (Keyboard.CheckKey(Keyboard.Keys.down_arrow) || Keyboard.CheckKey(Keyboard.Keys.s)) {
-            container.position.y -= 3;
+            container.position.y -= scrollSpeed;
         }
         if (Keyboard.CheckKey(Keyboard.Keys.left_arrow) || Keyboard.CheckKey(Keyboard.Keys.a)) {
-            container.position.x += 3;
+            container.position.x += scrollSpeed;
         }
         if (Keyboard.CheckKey(Keyboard.Keys.right_arrow) || Keyboard.CheckKey(Keyboard.Keys.d)) {
-            container.position.x -= 3;
+            container.position.x -= scrollSpeed;
         }
+        var zoomSpeed = .02;
         if (Keyboard.CheckKey(Keyboard.Keys.dash) && container.scale.y > .2) {
-            container.position.x -= (container.position.x - window.innerWidth / 2) * .05 / container.scale.y;
-            container.position.y -= (container.position.y - window.innerHeight / 2) * .05 / container.scale.y;
-            container.scale.x = container.scale.y = Math.max(.2, container.scale.y - .05);
+            container.position.x -= (container.position.x - window.innerWidth / 2) * zoomSpeed / container.scale.y;
+            container.position.y -= (container.position.y - window.innerHeight / 2) * zoomSpeed / container.scale.y;
+            container.scale.x = container.scale.y = Math.max(.2, container.scale.y - zoomSpeed);
         }
         if (Keyboard.CheckKey(Keyboard.Keys.equal_sign) && container.scale.y < 4) {
-            container.position.x += (container.position.x - window.innerWidth / 2) * .05 / container.scale.y;
-            container.position.y += (container.position.y - window.innerHeight / 2) * .05 / container.scale.y;
-            container.scale.x = container.scale.y = Math.min(4, container.scale.y + .05);
+            container.position.x += (container.position.x - window.innerWidth / 2) * zoomSpeed / container.scale.y;
+            container.position.y += (container.position.y - window.innerHeight / 2) * zoomSpeed / container.scale.y;
+            container.scale.x = container.scale.y = Math.min(4, container.scale.y + zoomSpeed);
         }
 
         renderer.render(stage);
