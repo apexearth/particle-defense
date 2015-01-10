@@ -1,9 +1,20 @@
 define('game/SpawnPoint', ["./PIXI", "./units!", "./Settings"], function (PIXI, Units, Settings) {
 
     function SpawnPoint(level, template) {
+        PIXI.DisplayObjectContainer.call(this);
+        level.addChild(this);
+
+        var graphics = new PIXI.Graphics();
+        this.addChild(graphics);
+        graphics.beginFill(0x660000, 1);
+        graphics.drawRect(0, 0, Settings.BlockSize, Settings.BlockSize);
+
         this.Level = level;
-        this.x = template.x;
-        this.y = template.y;
+        this.position.x = template.x * Settings.BlockSize;
+        this.position.y = template.y * Settings.BlockSize;
+        this.BlockX = template.x;
+        this.BlockY = template.y;
+
         this.CurrentWave = null;
         this.Waves = [];
         this.CreateWave = function (waveDelay, spawnInterval, units) {
@@ -54,8 +65,8 @@ define('game/SpawnPoint', ["./PIXI", "./units!", "./Settings"], function (PIXI, 
                     unit.visible = false;
                     if (w.Template !== undefined) unit.loadTemplate(w.Template);
                     if (w.Customization !== undefined) unit.loadTemplate(w.Customization);
-                    unit.position.x = me.x * Settings.BlockSize + Settings.BlockSize / 2;
-                    unit.position.y = me.y * Settings.BlockSize + Settings.BlockSize / 2;
+                    unit.position.x = me.BlockX * Settings.BlockSize + Settings.BlockSize / 2;
+                    unit.position.y = me.BlockY * Settings.BlockSize + Settings.BlockSize / 2;
                     unit.initialize();
                     return unit;
                 } else throw new Error("A wave must have a unit template.");

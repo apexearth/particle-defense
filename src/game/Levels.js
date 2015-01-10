@@ -37,12 +37,12 @@
         var height = 15 + Math.floor(Math.random() * (json.Height || 30));
 
         var template = [];
-        var k, i = height;
+        var k, i = width;
         while (i--) {
             template[i] = [];
-            k = width;
+            k = height;
             while (k--) {
-                template[i][k] = 1 + Math.floor(Math.random() * 2);
+                template[i][k] = 1;
             }
         }
 
@@ -52,8 +52,8 @@
         level.addPlayer(player);
         level.Player = player;
 
-        var randomX = Math.floor(Math.random() * (1 + width));
-        var randomY = Math.floor(Math.random() * (1 + height));
+        var randomX = Math.floor(Math.random() * width);
+        var randomY = Math.floor(Math.random() * height);
         var building = new Buildings.HomeBase(level, player, {BlockX: randomX, BlockY: randomY});
         level.addBuilding(building);
 
@@ -63,8 +63,8 @@
             var spawnTemplate;
             while (!spawnTemplate) {
                 spawnTemplate = {
-                    x: Math.floor(Math.random() * (1 + width)),
-                    y: Math.floor(Math.random() * (1 + height)),
+                    x: Math.floor(Math.random() * width),
+                    y: Math.floor(Math.random() * height),
                     Waves: []
                 };
                 var blockStatus = template[spawnTemplate.x][spawnTemplate.y];

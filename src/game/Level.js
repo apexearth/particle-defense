@@ -80,7 +80,7 @@
         };
 
         this.beginBuildingPlacement = function (building) {
-            if(this.getPlacementBuilding) this.endBuildingPlacement();
+            if (this.getPlacementBuilding) this.endBuildingPlacement();
             this.getPlacementBuilding = new building(this, null);
         };
         this.finalizeBuildingPlacement = function (block) {
@@ -96,7 +96,7 @@
                 }
             }
         };
-        this.endBuildingPlacement = function(){
+        this.endBuildingPlacement = function () {
             this.removeChild(this.getPlacementBuilding);
             this.getPlacementBuilding = null;
         };
@@ -124,7 +124,7 @@
             var i = this.SpawnPoints.length;
             while (i--) {
                 var spawnPoint = this.SpawnPoints[i];
-                var spawnPointBlock = this.getBlock(spawnPoint.x, spawnPoint.y);
+                var spawnPointBlock = this.getBlock(spawnPoint.BlockX, spawnPoint.BlockY);
                 var path = this.getPath(spawnPointBlock, this.Player.HomeBase.Block);
                 if (path.length > 0) {
                     _buildableBlocks.push(block);
