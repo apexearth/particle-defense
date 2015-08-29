@@ -4,7 +4,7 @@
     return MainMenu;
 
     function MainMenu($scope) {
-        $scope.Title = "...";
+        $scope.Title = "Particle Defense";
         $scope.Levels = [
             Levels.LevelTest,
             Levels.LevelOne,

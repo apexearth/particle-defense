@@ -37,12 +37,12 @@
         var height = 15 + Math.floor(Math.random() * (json.Height || 30));
 
         var template = [];
-        var k, i = width;
+        var k, i = height;
         while (i--) {
             template[i] = [];
-            k = height;
+            k = width;
             while (k--) {
-                template[i][k] = 1;
+                template[i][k] = 1 + Math.floor(Math.random() * 1.2);
             }
         }
 
@@ -67,7 +67,7 @@
                     y: Math.floor(Math.random() * height),
                     Waves: []
                 };
-                var blockStatus = template[spawnTemplate.x][spawnTemplate.y];
+                var blockStatus = template[spawnTemplate.y][spawnTemplate.x];
                 if (blockStatus !== BlockStatus.OnlyPassable && blockStatus !== BlockStatus.IsEmpty) {
                     spawnTemplate = null;
                 }
