@@ -1,6 +1,8 @@
-define(["../../img!", "../Settings", "./building.loader", "./building"],
-    function (Images, Settings, loader, Building) {
-        return loader({
+var loader   = require("./building.loader")
+var Images   = require("../../img")
+var Building = require("./building")
+
+module.exports =  loader({
             name: 'HomeBase',
             constructor: {
                 Cost: {
@@ -28,5 +30,4 @@ define(["../../img!", "../Settings", "./building.loader", "./building"],
                 },
                 Updates: []
             }
-        });
-    });
+        })

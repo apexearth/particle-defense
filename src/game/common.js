@@ -1,5 +1,4 @@
-define(["./Settings"], function (Settings) {
-    return {
-        Settings: Settings
-    };
-});
+var Settings   = require("./Settings")
+module.exports = {
+    Settings: Settings
+}

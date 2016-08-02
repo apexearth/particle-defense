@@ -1,11 +1,13 @@
-define(["../PIXI","./projectile.velocity", "./explosion"], function (PIXI, VelocityProjectile, Explosion) {
-    function CannonProjectile(weapon) {
-        VelocityProjectile.call(this, weapon);
-        Explosion.addExplosiveProperties(this, weapon);
+var PIXI               = require("pixi.js")
+var VelocityProjectile = require("./projectile.velocity")
+var Explosion          = require("./explosion")
+
+module.exports = CannonProjectile
+
+function CannonProjectile(weapon) {
+    VelocityProjectile.call(this, weapon);
+    Explosion.addExplosiveProperties(this, weapon);
 }
 
-    CannonProjectile.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
-    CannonProjectile.prototype.constructor = CannonProjectile;
-    return CannonProjectile;
-
-});
+CannonProjectile.prototype             = Object.create(PIXI.Container.prototype);
+CannonProjectile.prototype.constructor = CannonProjectile;

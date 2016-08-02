@@ -1,5 +1,8 @@
-define(["../../img!", "./building.loader", "../Weapons"], function (Images, loader, Weapons) {
-    return loader({
+var loader   = require("./building.loader")
+var Images   = require("../../img")
+var Weapons = require("../Weapons")
+
+module.exports = loader({
         name: 'Shocker',
         constructor: {
             Cost: {
@@ -15,5 +18,4 @@ define(["../../img!", "./building.loader", "../Weapons"], function (Images, load
             },
             Weapons: [Weapons.Shocker(100, 30, 10, 1)]
         }
-    });
-});
+    })

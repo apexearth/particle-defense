@@ -1,8 +1,15 @@
-﻿define("app/index", ["./app", "game/ParticleDefense"], function (app, ParticleDefense) {
-    return app.controller('Index', ['$scope', Index]);
+﻿require("./app.core")
+var app = require("./app")
+require("./gameover")
+require("./gameui")
+require("./index")
+require("./mainmenu")
 
-    function Index($scope) {
-        $scope.ParticleDefense = ParticleDefense;
-        ParticleDefense.IndexScope = $scope;
-    }
-});
+var ParticleDefense = require("../game/ParticleDefense")
+
+module.exports = app.controller('Index', ['$scope', Index]);
+
+function Index($scope) {
+    $scope.ParticleDefense     = ParticleDefense;
+    ParticleDefense.IndexScope = $scope;
+}

@@ -1,14 +1,8 @@
-﻿define(["./projectile.beam", "./projectile.velocity", "./projectile.cannon", "./projectile.grenade", "./projectile.missile", "./projectile.shock"],
-    function (Laser,Bullet,Cannon,Grenade,Missile,Shock) {
-
-        return {
-            Laser: Laser,
-            Bullet: Bullet,
-            Cannon: Cannon,
-            Grenade: Grenade,
-            Missile: Missile,
-            Shock: Shock
-        };
-
-    }
-);
+﻿module.exports = {
+    Laser:   require("./projectile.beam"),
+    Bullet:  require("./projectile.velocity"),
+    Cannon:  require("./projectile.cannon"),
+    Grenade: require("./projectile.grenade"),
+    Missile: require("./projectile.missile"),
+    Shock:   require("./projectile.shock")
+}

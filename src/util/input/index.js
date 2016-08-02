@@ -1,6 +1,7 @@
-define(["./keyboard", "./mouse"], function (keyboard, mouse) {
-    return {
-        Keyboard: keyboard,
-        Mouse: mouse
-    };
-});
+var keyboard = require("./keyboard")
+var mouse    = require("./mouse")
+
+module.exports = {
+    Keyboard: keyboard,
+    Mouse:    mouse
+};

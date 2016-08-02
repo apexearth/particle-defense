@@ -1,5 +1,8 @@
-define(["../../img!", "./building.loader", "../Weapons"], function (Images, loader, Weapons) {
-    return loader({
+var loader   = require("./building.loader")
+var Images   = require("../../img")
+var Weapons = require("../Weapons")
+
+module.exports = loader({
         name: 'CrossEyes',
         constructor: {
             Cost: {
@@ -12,5 +15,4 @@ define(["../../img!", "./building.loader", "../Weapons"], function (Images, load
             Health: 5,
             Weapons: [Weapons.Gun(100, 15, 2.5, .5, .85, 3)]
         }
-    });
-});
+    })

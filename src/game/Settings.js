@@ -1,6 +1,4 @@
-define("game/Settings", [], function () {
-    return {
-        BlockSize: 40,
-        Second: 1000 / 60
-    };
-});
+module.exports = {
+    BlockSize: 40,
+    Second:    1000 / 60
+}

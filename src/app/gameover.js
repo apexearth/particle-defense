@@ -1,15 +1,15 @@
-﻿define("app/gameover", ["./app", "game/ParticleDefense"], function (app, ParticleDefense) {
+﻿var app             = require("./app.js")
+var ParticleDefense = require("../game/ParticleDefense")
 
-    return app.controller('GameOver', ['$scope', GameOver]);
+module.exports = app.controller('GameOver', ['$scope', GameOver]);
 
-    function GameOver($scope) {
-        $scope.Level = ParticleDefense.Level;
-        $scope.Player = ParticleDefense.Level.Player;
-        $scope.Result = ParticleDefense.Level.Result;
-        $scope.Title = ($scope.Result.Victory ? "Victory!" : "Failure!");
-        $scope.MainMenu = function () {
-            ParticleDefense.View = ParticleDefense.Views.MainMenu;
-            //ParticleDefense.IndexScope.$apply();
-        };
-    }
-});
+function GameOver($scope) {
+    $scope.Level    = ParticleDefense.Level;
+    $scope.Player   = ParticleDefense.Level.Player;
+    $scope.Result   = ParticleDefense.Level.Result;
+    $scope.Title    = ($scope.Result.Victory ? "Victory!" : "Failure!");
+    $scope.MainMenu = function () {
+        ParticleDefense.View = ParticleDefense.Views.MainMenu;
+        //ParticleDefense.IndexScope.$apply();
+    };
+}

@@ -1,0 +1,34 @@
+{
+  "name": "particle-defense",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apexearth/particle-defense.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/apexearth/particle-defense/issues"
+  },
+  "homepage": "https://github.com/apexearth/particle-defense#readme",
+  "devDependencies": {
+    "angular": "^1.5.8",
+    "angular-mocks": "^1.5.8",
+    "color": "^0.11.3",
+    "grunt": "^1.0.1",
+    "grunt-browserify": "^5.0.0",
+    "grunt-contrib-uglify": "^2.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "ng-grid": "^2.0.1",
+    "pixi.js": "git+https://github.com/apexearth/pixi.js.git",
+    "raf": "^3.2.0"
+  }
+}

@@ -1,66 +1,24 @@
-define([
-        "./building.ammo-fab",
-        "./building.beam",
-        "./building.behemoth",
-        "./building.cannon",
-        "./building.cross-eyes",
-        "./building.energy-fab",
-        "./building.fast-gun",
-        "./building.grenade",
-        "./building.gun",
-        "./building.home-base",
-        "./building.laser",
-        "./building.lethargic-cannon",
-        "./building.machine-gun",
-        "./building.metal-fab",
-        "./building.missile",
-        "./building.sharp-shooter",
-        "./building.shocker",
-        "./building.wall"
-    ],
-    function (ammoFab,
-              beam,
-              behemoth,
-              cannon,
-              crossEyes,
-              energyFab,
-              fastGun,
-              grenade,
-              gun,
-              homeBase,
-              laser,
-              lethargicCannon,
-              machineGun,
-              metalFab,
-              missile,
-              sharpShooter,
-              shocker,
-              wall) {
-
-        var list = {};
-        Add(ammoFab);
-        Add(beam);
-        Add(behemoth);
-        Add(cannon);
-        Add(crossEyes);
-        Add(energyFab);
-        Add(fastGun);
-        Add(grenade);
-        Add(gun);
-        Add(homeBase);
-        Add(laser);
-        Add(lethargicCannon);
-        Add(machineGun);
-        Add(metalFab);
-        Add(missile);
-        Add(sharpShooter);
-        Add(shocker);
-        Add(wall);
-        return list;
-
-        function Add(func) {
-            list[func.Name] = func;
-        }
-
-    }
-);
+var buildings = module.exports = {}
+var requires = [
+    require("./building.ammo-fab"),
+    require("./building.beam"),
+    require("./building.behemoth"),
+    require("./building.cannon"),
+    require("./building.cross-eyes"),
+    require("./building.energy-fab"),
+    require("./building.fast-gun"),
+    require("./building.grenade"),
+    require("./building.gun"),
+    require("./building.home-base"),
+    require("./building.laser"),
+    require("./building.lethargic-cannon"),
+    require("./building.machine-gun"),
+    require("./building.metal-fab"),
+    require("./building.missile"),
+    require("./building.sharp-shooter"),
+    require("./building.shocker"),
+    require("./building.wall")
+]
+requires.forEach(function (building) {
+    buildings[building.Name] = building;
+})

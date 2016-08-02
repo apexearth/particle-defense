@@ -1,5 +1,3 @@
-define(["./buildings!"], function(buildings) {
-    return {
-        Buildings: buildings
-    };
-});
+module.exports = {
+    Buildings: require("./buildings")
+};

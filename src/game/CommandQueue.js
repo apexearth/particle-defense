@@ -1,7 +1,4 @@
-define("game/CommandQueue",function(){
-   var queue = [];
-    queue.Commands = {
-        StopGame: "StopGame"
-    };
-   return queue;
-});
+var queue = module.exports = [];
+queue.Commands = {
+    StopGame: "StopGame"
+};
