@@ -10,8 +10,10 @@ module.exports = function (level, width, height, template) {
     level.addChild(map);
     Map.call(map, level, width, height, template);
 
-    var mapSprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(map.canvas));
-    map.addChild(mapSprite);
+    if(typeof document !== 'undefined') {
+        var mapSprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(map.canvas));
+        map.addChild(mapSprite);
+    }
 
     return map;
 };
@@ -24,12 +26,14 @@ function Map(level, width, height, template) {
     var _grid          = new Grid(0, 0, this.Width, this.Height);
     this.PixelWidth    = this.Width * this.BlockSize;
     this.PixelHeight   = this.Height * this.BlockSize;
-    this.canvas        = document.createElement('canvas');
-    this.canvas.width  = this.PixelWidth;
-    this.canvas.height = this.PixelHeight;
 
+    if(typeof document !== 'undefined') {
+        this.canvas        = document.createElement('canvas');
+        this.context      = this.canvas.getContext("2d");
+        this.canvas.width  = this.PixelWidth;
+        this.canvas.height = this.PixelHeight;
+    }
 
-    this.context      = this.canvas.getContext("2d");
     this.RequiresDraw = true;
 
     this.BlockStatus        = function (x, y) {
@@ -99,20 +103,18 @@ function Map(level, width, height, template) {
         }
     };
 
-    (function () {
-        if (template) {
-            if (template.BuildableBlocks) {
-                var yCount = template.BuildableBlocks.length;
-                while (yCount--) {
-                    var row    = template.BuildableBlocks[yCount];
-                    var xCount = row.length;
-                    while (xCount--) {
-                        _grid.SetBlockStatus(xCount, yCount, row[xCount]);
-                    }
+    if (template) {
+        if (template.BuildableBlocks) {
+            var yCount = template.BuildableBlocks.length;
+            while (yCount--) {
+                var row    = template.BuildableBlocks[yCount];
+                var xCount = row.length;
+                while (xCount--) {
+                    _grid.SetBlockStatus(xCount, yCount, row[xCount]);
                 }
             }
         }
-    })();
+    }
 
     this.draw();
 }

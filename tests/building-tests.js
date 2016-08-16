@@ -1,25 +1,11 @@
 ﻿describe('Building Tests', function () {
-    var Levels, Buildings, Building, Unit, PlayerCommands;
-    var Gun;
-    beforeEach(function () {
-        runs(function () {
-            require(["game/Levels", "game/buildings!", "../src/game/buildings/building", "../src/game/units/unit", "game/PlayerCommands"], function (levels, buildings, building, unit, playerCommands) {
-                Levels = levels;
-                Buildings = buildings;
-                Building = building;
-                Unit = unit;
-                PlayerCommands = playerCommands;
-                Gun = Buildings.Gun;
-            });
-        });
-        waitsFor(function () {
-            return Levels != null
-                && Buildings != null
-                && Building != null
-                && Unit != null
-                && PlayerCommands != null;
-        }, 300);
-    });
+    var Levels = require("../src/game/Levels");
+    var Buildings = require("../src/game/buildings/");
+    var Building = require("../src/game/buildings/building");
+    var Unit = require("../src/game/units/unit");
+    var PlayerCommands = require("../src/game/PlayerCommands");
+    var expect = require("chai").expect;
+    var Gun = Buildings.Gun;
 
     it('should attack units in range of any of it\'s weapons', function () {
         var level = Levels.LevelTest();
@@ -34,13 +20,13 @@
         var health = unit.Health;
 
         level.update();
-        expect(turret.Weapons[0].Target).not.toBe(null);
-        expect(level.Projectiles.length).toBeGreaterThan(0);
+        expect(turret.Weapons[0].Target).not.to.equal(null);
+        expect(level.Projectiles.length).to.be.above(0);
 
         var i = 50;
         while (i--)
             level.update();
-        expect(health).toBeGreaterThan(unit.Health);
+        expect(health).to.be.above(unit.Health);
     });
 
     it('should not attack units out of range', function () {
@@ -54,7 +40,7 @@
 
         var health = unit.Health;
         level.update();
-        expect(health).toBe(unit.Health);
+        expect(health).to.equal(unit.Health);
     });
 
     it('can provide energy and metal', function () {
@@ -65,8 +51,8 @@
         level.update();
         level.update();
         level.update();
-        expect(energy).toBeLessThan(level.Player.Resources.Energy);
-        expect(metal).toBeLessThan(level.Player.Resources.Metal);
+        expect(energy).to.be.below(level.Player.Resources.Energy);
+        expect(metal).to.be.below(level.Player.Resources.Metal);
     });
 
     it('can be sold', function () {
@@ -75,29 +61,29 @@
         level.Player.Resources.Metal = Gun.Cost.Metal;
         var building = PlayerCommands.CreateBuilding(level.Player, Gun, 1, 1);
         PlayerCommands.SellBuilding(building);
-        expect(level.Player.Resources.Metal).toBeGreaterThan(0);
+        expect(level.Player.Resources.Metal).to.be.above(0);
     });
 
     it('buildings can be selected and deselected', function () {
         var level = Levels.LevelTest();
         var block = level.getBlock(5, 5);
         var building = block.GetBuilding();
-        expect(building).not.toBeNull();
+        expect(building).to.not.equal(null);
         level.SelectBuildingAt(block);
-        expect(level.Selection).toBe(building);
-        expect(building.IsSelected()).toBe(true);
+        expect(level.Selection).to.equal(building);
+        expect(building.IsSelected()).to.equal(true);
 
         level.Deselect();
-        expect(level.Selection).toBeNull();
-        expect(building.IsSelected()).toBe(false);
+        expect(level.Selection).to.equal(null);
+        expect(building.IsSelected()).to.equal(false);
     });
 
     it('when selected, it\'s menu is available', function () {
         var building = new Buildings.Gun(null, null, {});
-        expect(building.Abilities).toBeDefined();
-        expect(building.Abilities).toBeNull();
+        expect(building.Abilities).to.not.be.undefined;
+        expect(building.Abilities).to.equal(null);
         building.Select();
-        expect(building.Abilities).not.toBeNull();
-        expect(building.Abilities.constructor).toBe(Building.Abilities);
+        expect(building.Abilities).to.not.equal(null);
+        expect(building.Abilities.constructor).to.equal(Building.Abilities);
     });
 });

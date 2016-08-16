@@ -28,14 +28,14 @@ function Weapon(building) {
         if (this.Target == null) return NaN;
         return math.angle(this.Building.x, this.Building.y, this.Target.x, this.Target.y);
     };
-
+    
     // Simple Line graphic for now...
     this.graphics = new PIXI.Graphics();
     this.addChild(this.graphics);
     this.graphics.lineStyle(2, 0x990000, 1);
     this.graphics.moveTo(0, 0);
     this.graphics.lineTo(10, 0);
-
+    
     /** @return {number} **/
     this.getAmmoConsumption = function () {
         return this.Damage;
@@ -44,12 +44,12 @@ function Weapon(building) {
     this.FireRateCount = 10;
     this.ShotsPerShot  = 1;
     this.Accuracy      = .05;
-
+    
     this.Player = this.Building.Player;
-
+    
     var weapon = this;
     var me     = this;
-
+    
     this.NumberOfUpgrades = 0;
     this.Attributes       = {};
     /** @returns Number */
@@ -57,7 +57,7 @@ function Weapon(building) {
         return (10 * weapon.Damage / weapon.FireRate + weapon.Range / 10)
             * (1 + 10 * weapon.Accuracy);
     };
-
+    
     this.CreateAttributeForStat = function (name, upperLimit, limit, upgradeFactor, cost) {
         if (weapon[name] != null) {
             me.Attributes[name] = new Attribute(me,
@@ -90,7 +90,7 @@ function Weapon(building) {
     this.CreateAttributeForStat("FireRate", false, 1, .85, this.AttributeCost);
     this.CreateAttributeForStat("Damage", true, 30, 1.15, this.AttributeCost);
     this.CreateAttributeForStat("Accuracy", false, .01, .5, this.AttributeCost);
-
+    
     this.ResetTarget = function () {
         this.Target = null;
     };
@@ -114,7 +114,7 @@ function Weapon(building) {
             }
         }
     };
-
+    
     this.TryFireAtTarget = function () {
         if (math.Distance(this.Target.x - this.Building.x, this.Target.y - this.Building.y) > this.Range) {
             this.ResetTarget();
@@ -135,13 +135,13 @@ function Weapon(building) {
         } else {
             this.updateRotation();
         }
-
+        
         if (this.FireRateCount < this.FireRate) this.FireRateCount++;
         if (this.Target != null && this.FireRateCount >= this.FireRate) {
             this.TryFireAtTarget();
         }
     };
-
+    
     this.updateRotation          = function () {
         var targetAngle = this.getTargetAngle();
         var direction   = ((this.rotation - targetAngle) * 57.2957795 + 360) % 360 > 180;
@@ -168,19 +168,20 @@ function Weapon(building) {
     }
 }
 
-function Missile(range, fireRate, projectileSpeed, acceleration, damage, accuracy, explosiveSpeed, explosiveTime, explosiveInitialSize) {
+function Missile(options) {
     var func = function (building) {
         PIXI.Container.call(this);
         Weapon.call(this, building);
-        this.ProjectileSpeed      = projectileSpeed;
-        this.ExplosiveSpeed       = explosiveSpeed;
-        this.ExplosiveTime        = explosiveTime;
-        this.ExplosiveInitialSize = explosiveInitialSize;
-        this.Range                = range;
-        this.Damage               = damage;
-        this.FireRate             = this.FireRateCount = fireRate;
-        this.Acceleration      = acceleration;
-        this.ShotSpeedVariance = accuracy;
+        this.ProjectileSpeed      = options.projectileSpeed;
+        this.ExplosiveSpeed       = options.explosiveSpeed;
+        this.ExplosiveTime        = options.explosiveTime;
+        this.ExplosiveInitialSize = options.explosiveInitialSize;
+        this.Range                = options.range;
+        this.Damage               = options.damage;
+        this.FireRate             = options.fireRate;
+        this.FireRateCount        = options.fireRate;
+        this.Acceleration         = options.acceleration;
+        this.ShotSpeedVariance    = options.accuracy;
         /** @return {number} **/
         this.getAmmoConsumption = function () {
             return this.Damage / 1.5;
@@ -196,17 +197,18 @@ function Missile(range, fireRate, projectileSpeed, acceleration, damage, accurac
     return setConstructor(func);
 }
 
-function Gun(range, fireRate, projectileSpeed, damage, accuracy, shotsPerShot) {
+function Gun(options) {
     var func = function (building) {
         PIXI.Container.call(this);
         Weapon.call(this, building);
-        var me        = this;
-        this.Range    = range;
-        this.FireRate = this.FireRateCount = fireRate;
-        this.ProjectileSpeed     = projectileSpeed;
-        this.Damage              = damage;
-        this.Accuracy            = 1 - accuracy;
-        this.ShotsPerShot        = shotsPerShot;
+        var me                   = this;
+        this.Range               = options.range;
+        this.FireRate            = options.fireRate;
+        this.FireRateCount       = options.fireRate;
+        this.ProjectileSpeed     = options.projectileSpeed;
+        this.Damage              = options.damage;
+        this.Accuracy            = 1 - options.accuracy;
+        this.ShotsPerShot        = options.shotsPerShot;
         this.ProjectileClass     = Projectiles.Bullet;
         this.WeaponAttributeCost = this.AttributeCost;
         this.CreateAttributeForStat("ProjectileSpeed", true, 10, 1.25, this.AttributeCost);
@@ -225,15 +227,15 @@ function Gun(range, fireRate, projectileSpeed, damage, accuracy, shotsPerShot) {
     return setConstructor(func);
 }
 
-function Cannon(range, fireRate, projectileSpeed, damage, accuracy, shotsPerShot, explosiveSpeed, explosiveTime, explosiveInitialSize) {
-    var constructor = Gun(range, fireRate, projectileSpeed, damage, accuracy, shotsPerShot);
+function Cannon(options) {
+    var constructor = Gun(options);
     var func        = function (building) {
         var me = this;
         constructor.call(me, building);
         this.ProjectileClass      = Projectiles.Cannon;
-        this.ExplosiveSpeed       = explosiveSpeed;
-        this.ExplosiveTime        = explosiveTime;
-        this.ExplosiveInitialSize = explosiveInitialSize;
+        this.ExplosiveSpeed       = options.explosiveSpeed;
+        this.ExplosiveTime        = options.explosiveTime;
+        this.ExplosiveInitialSize = options.explosiveInitialSize;
         this.GunAttributeCost     = this.AttributeCost;
         /** @return {number} **/
         this.getAmmoConsumption = function () {
@@ -250,16 +252,16 @@ function Cannon(range, fireRate, projectileSpeed, damage, accuracy, shotsPerShot
     return setConstructor(func);
 }
 
-function GrenadeLauncher(range, fireRate, projectileSpeed, projectileSlowFactor, damage, accuracy, shotsPerShot, explosiveSpeed, explosiveTime, explosiveInitialSize) {
-    var constructor = Gun(range, fireRate, projectileSpeed, damage, accuracy, shotsPerShot);
+function GrenadeLauncher(options) {
+    var constructor = Gun(options);
     var func        = function (building) {
         var me = this;
         constructor.call(this, building);
         this.ProjectileClass      = Projectiles.Grenade;
-        this.ProjectileSlowFactor = projectileSlowFactor;
-        this.ExplosiveSpeed       = explosiveSpeed;
-        this.ExplosiveTime        = explosiveTime;
-        this.ExplosiveInitialSize = explosiveInitialSize;
+        this.ProjectileSlowFactor = options.projectileSlowFactor;
+        this.ExplosiveSpeed       = options.explosiveSpeed;
+        this.ExplosiveTime        = options.explosiveTime;
+        this.ExplosiveInitialSize = options.explosiveInitialSize;
         this.GunAttributeCost     = this.AttributeCost;
         /** @return {number} **/
         this.getAmmoConsumption = function () {
@@ -276,16 +278,15 @@ function GrenadeLauncher(range, fireRate, projectileSpeed, projectileSlowFactor,
     return setConstructor(func);
 }
 
-function Laser(range, fireRate, lifeSpan, damage, accuracy) {
+function Laser(options) {
     var func = function (building) {
         PIXI.Container.call(this);
         Weapon.call(this, building);
-        this.Lifespan = lifeSpan;
-        this.Range    = range;
-        /** @return {number} **/
-        this.Damage = damage;
-        this.FireRate = this.FireRateCount = fireRate;
-        this.Accuracy = 1 - accuracy;
+        this.Lifespan = options.lifeSpan;
+        this.Range    = options.range;
+        this.Damage = options.damage;
+        this.FireRate = this.FireRateCount = options.fireRate;
+        this.Accuracy = 1 - options.accuracy;
         /** @return {number} **/
         this.getAmmoConsumption = function () {
             return this.Damage * 3 / this.Lifespan;
@@ -297,15 +298,14 @@ function Laser(range, fireRate, lifeSpan, damage, accuracy) {
     return setConstructor(func);
 }
 
-function Shocker(range, fireRate, lifeSpan, damage) {
+function Shocker(options) {
     var func = function (building) {
         PIXI.Container.call(this);
         Weapon.call(this, building);
-        this.Lifespan = lifeSpan;
-        this.Range    = range;
-        /** @return {number} **/
-        this.Damage = damage;
-        this.FireRate = this.FireRateCount = fireRate;
+        this.Lifespan = options.lifeSpan;
+        this.Range    = options.range;
+        this.Damage = options.damage;
+        this.FireRate = this.FireRateCount = options.fireRate;
         /** @return {number} **/
         this.getAmmoConsumption = function () {
             return this.Damage * 3 / this.Lifespan;
@@ -322,4 +322,3 @@ function setConstructor(Func) {
     Func.prototype.constructor = Func;
     return Func;
 }
-

@@ -1,15 +1,15 @@
-﻿var loader    = require("./building.loader")
-var color     = require("color")
-var Settings  = require("../Settings")
-var Attribute = require("../Attribute")
-var General   = require("../../util/General")
+﻿var loader    = require("./building.loader");
+var color     = require("color");
+var Settings  = require("../Settings");
+var Attribute = require("../Attribute");
+var General   = require("../../util/General");
+var PIXI      = require("pixi.js");
 
 module.exports = Building
 function Building(level, player, templates) {
     PIXI.Container.call(this);
     level.addChild(this);
     var me = this;
-
 
     this.graphics = new PIXI.Graphics();
     this.addChildAt(this.graphics, 0);

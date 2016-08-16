@@ -1,6 +1,6 @@
-var loader   = require("./building.loader")
-var Images   = require("../../img")
-var Weapons  = require("../Weapons")
+var loader  = require("./building.loader")
+var Images  = require("../../img")
+var Weapons = require("../Weapons")
 
 module.exports = loader({
     name:        'MissileLauncher',
@@ -13,6 +13,26 @@ module.exports = loader({
     getSprite:   Images.Buildings.LargePlatform,
     template:    {
         Health:  5,
-        Weapons: [Weapons.Missile(150, 45, 2, .1, 1, .95, .5, 1, 8)]
+        Weapons: [
+            Weapons.Missile({
+                projectileSpeed:      200,
+                explosiveSpeed:       45,
+                explosiveTime:        2,
+                explosiveInitialSize: .1,
+                range:                1,
+                damage:               .95,
+                fireRate:             .5,
+                acceleration:         1,
+                accuracy:             8
+            })
+        ]
     }
 })
+
+
+
+
+
+
+
+

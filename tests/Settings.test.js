@@ -1,16 +1,7 @@
 describe("Settings", function () {
-    var Settings;
-    beforeEach(function () {
-        runs(function () {
-            require(["game/Settings"], function (settings) {
-                Settings = settings;
-            });
-        });
-        waitsFor(function () {
-            return Settings;
-        }, 300);
-    });
+    var Settings = require("../src/game/Settings");
+    var expect = require("chai").expect;
     it("should have the block size", function () {
-        expect(Settings.BlockSize).toBeDefined();
+        expect(Settings.BlockSize).to.not.be.undefined;
     });
 });

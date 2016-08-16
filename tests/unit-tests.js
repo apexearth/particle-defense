@@ -1,22 +1,10 @@
 ﻿describe('Unit Tests', function () {
-    var Levels, Unit, Units, math;
-    beforeEach(function () {
-        runs(function () {
-            require(["game/Levels", "../src/game/units/unit", "../src/game/units!", "util/math!"], function (levels, unit, units, customMath) {
-                Levels = levels;
-                Unit = unit;
-                Units = units;
-                math = customMath;
-            });
-        });
-        waitsFor(function () {
-            return Levels != null
-                && Units != null
-                && Unit != null
-                && math != null;
-        }, 300);
+    var Levels = require("../src/game/Levels");
+    var math = require("../src/util/math");
+    var Units = require("../src/game/units");
+    var Unit = require("../src/game/units/Unit");
+    var expect = require("chai").expect;
 
-    });
     it('should move towards the target move location', function () {
         var level = Levels.LevelTest();
         var unit = new Unit(level);
@@ -27,9 +15,9 @@
         while (i--) {
             var initialDistance = math.Distance(unit.X - unit.Destination.X, unit.Y - unit.Destination.Y);
             level.update();
-            //jasmine.log(unit.Path[0].X + "," + unit.Path[0].Y + "\r\n");
+            console.log(unit.X + "," + unit.Destination.X);
             var distanceAfterUpdate = math.Distance(unit.X - unit.Destination.X, unit.Y - unit.Destination.Y);
-            expect(initialDistance).toBeGreaterThan(distanceAfterUpdate);
+            expect(initialDistance).to.be.above(distanceAfterUpdate);
         }
     });
     it('should be able to take damage', function () {
@@ -40,7 +28,7 @@
 
         var initialHealth = unit.Health;
         unit.damage(1);
-        expect(initialHealth).toBeGreaterThan(unit.Health);
+        expect(initialHealth).to.be.above(unit.Health);
     });
     it('should die when it runs out of health, and be removed from the level', function () {
         var level = Levels.LevelTest();
@@ -49,7 +37,7 @@
         level.Units.push(unit);
         unit.damage(unit.Health);
         level.update();
-        expect(level.Units.indexOf(unit)).toBe(-1);
+        expect(level.Units.indexOf(unit)).to.equal(-1);
     });
     it('should die when it runs out of health, and be removed from the level', function () {
         var level = Levels.LevelTest();
@@ -58,16 +46,16 @@
         level.Units.push(unit);
         level.Buildings = [];
         level.Player.Buildings = [];
-        expect(level.Player.Score).toBe(0);
+        expect(level.Player.Score).to.equal(0);
         unit.damage(unit.Health);
-        expect(level.Player.Score).toBeGreaterThan(0);
+        expect(level.Player.Score).to.be.above(0);
     });
     it('should have a helper function to deliver an array of units', function () {
         var units = Units.Array(function () {
             return new Unit(Levels.LevelTest(), {X: 10, Y: 10});
         }, 10);
-        expect(units.length).toBe(10);
-        expect(units[0].constructor).toBe(Unit);
+        expect(units.length).to.equal(10);
+        expect(units[0].constructor).to.equal(Unit);
     });
     it('should have no velocity when it is not moving', function () {
         var level = Levels.LevelTest();
@@ -78,7 +66,7 @@
         unit.VelocityY = 10;
         unit.update();
 
-        expect(unit.VelocityX).toBe(0);
-        expect(unit.VelocityY).toBe(0);
+        expect(unit.VelocityX).to.equal(0);
+        expect(unit.VelocityY).to.equal(0);
     });
 });

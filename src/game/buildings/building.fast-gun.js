@@ -13,6 +13,15 @@ module.exports = loader({
         getSprite: Images.Buildings.Platform,
         template: {
             Health: 5,
-            Weapons: [Weapons.Gun(75, 25, 5, 1, .96, 1)]
+            Weapons: [
+                Weapons.Gun({
+                    range:           100,
+                    fireRate:        10,
+                    damage:          3,
+                    projectileSpeed: 6,
+                    shotsPerShot:    1,
+                    accuracy:        .94
+                })
+            ]
         }
     })

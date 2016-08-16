@@ -111,11 +111,13 @@ var Keyboard = module.exports = {
         }
     }
 };
-document.onkeydown = function (event) {
-    Keyboard.keysDown[event.keyCode] = true;
-};
-document.onkeyup   = function (event) {
-    Keyboard.keysDown[event.keyCode] = false;
-    var i                            = Keyboard.KeyUpCallbacks.length;
-    while (i--) Keyboard.KeyUpCallbacks[i](event.keyCode);
-};
+if (typeof document !== 'undefined') {
+    document.onkeydown = function (event) {
+        Keyboard.keysDown[event.keyCode] = true;
+    };
+    document.onkeyup   = function (event) {
+        Keyboard.keysDown[event.keyCode] = false;
+        var i                            = Keyboard.KeyUpCallbacks.length;
+        while (i--) Keyboard.KeyUpCallbacks[i](event.keyCode);
+    };
+}

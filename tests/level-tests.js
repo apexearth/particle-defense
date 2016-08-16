@@ -1,56 +1,41 @@
 ﻿describe('Level Tests', function () {
-    var Settings, Levels, Buildings, Unit;
-    beforeEach(function () {
-        runs(function () {
-            require(["game/Settings", "game/Levels", "game/buildings!", "../src/game/units/unit"], function (settings, levels, buildings, unit) {
-                Settings = settings;
-                Levels = levels;
-                Buildings = buildings;
-                Unit = unit;
-            });
-        });
-        waitsFor(function () {
-            return Settings;
-        });
-        waitsFor(function () {
-            return Levels;
-        });
-        waitsFor(function () {
-            return Buildings;
-        });
-    });
+    var Levels = require("../src/game/Levels");
+    var Unit = require("../src/game/units/unit");
+    var Settings = require("../src/game/Settings");
+    var expect = require("chai").expect;
+    
     it('should have settings', function () {
-        expect(Settings).toBeDefined();
+        expect(Settings).to.not.be.undefined;
     });
     it('should have win conditions and the conditions should be checkable', function () {
         var level = Levels.LevelTest();
-        expect(level.WinConditions).toBeDefined();
-        expect(level.checkWinConditions()).toBeFalsy();
+        expect(level.WinConditions).to.not.be.undefined;
+        expect(level.checkWinConditions()).to.not.be.ok;
     });
     it('should release waves of units', function () {
         var level = Levels.LevelTest();
         level.Waves = [];
-        level.createWave([new Unit(level)], 1);
+        //level.createWave([new Unit(level)], 1);
         level.WaveDelay = 2;
         level.update();
-        expect(level.Waves.length).toBe(1);
-        expect(level.Units.length).toBe(0);
+        expect(level.Waves.length).to.equal(1);
+        expect(level.Units.length).to.equal(0);
         level.update();
         level.update();
-        expect(level.Waves.length).toBe(0);
+        expect(level.Waves.length).to.equal(0);
         level.update();
-        expect(level.Units.length).toBe(1);
+        expect(level.Units.length).to.equal(1);
     });
 
     it('should have loss conditions and the conditions should be checkable', function () {
         var level = Levels.LevelTest();
         var homeBase = level.Player.HomeBase;
         level.Buildings.push(homeBase);
-        expect(level.LossConditions).toBeDefined();
-        expect(level.checkLossConditions()).toBeFalsy();
+        expect(level.LossConditions).to.not.be.undefined;
+        expect(level.checkLossConditions()).to.not.be.ok;
         homeBase.Health = 0;
         level.update();
-        expect(level.checkLossConditions()).toBeTruthy();
+        expect(level.checkLossConditions()).to.be.ok;
     });
 
     it('should have the homebase lose health when a unit reaches it', function () {
@@ -64,10 +49,10 @@
         unit.setDestination(homeBase);
         var i = 10;
         while (i--) level.update();
-        expect(homeBase.Health).toBe(1);
+        expect(homeBase.Health).to.equal(1);
         i = 30;
         while (i--) level.update();
-        expect(homeBase.Health).toBe(0);
+        expect(homeBase.Health).to.equal(0);
     });
 
 });

@@ -1,4 +1,5 @@
 ﻿var PIXI           = require("pixi.js")
+var renderer       = require("./renderer");
 var Map            = require("./Map")
 var PlayerCommands = require("./PlayerCommands")
 var General        = require("../util/General")
@@ -12,13 +13,13 @@ var Keyboard = input.Keyboard;
 var common   = require("./common")
 var Settings = common.Settings;
 
-module.exports = Level 
+module.exports = Level;
 
 function Level(width, height, mapTemplate) {
     PIXI.Container.call(this);
     this.position.x = -width * Settings.BlockSize / 2;
     this.position.y = -height * Settings.BlockSize / 2;
-    PIXI.MainContainer.addChild(this);
+    renderer.addChild(this);
 
 
     var me   = this;
@@ -45,8 +46,8 @@ function Level(width, height, mapTemplate) {
     this.Objects     = [];
 
     this.Mouse = {
-        x: Mouse.x - PIXI.MainContainer.position.x,
-        y: Mouse.y - PIXI.MainContainer.position.y
+        x: Mouse.x - renderer.position.x,
+        y: Mouse.y - renderer.position.y
     };
 
     /** @returns Number **/
@@ -70,10 +71,13 @@ function Level(width, height, mapTemplate) {
     this.LossConditions = [function () {
         return me.Player.HomeBase.Health <= 0;
     }];
-    this.canvas         = document.createElement("canvas");
-    this.canvas.width   = _map.PixelWidth;
-    this.canvas.height  = _map.PixelHeight;
-    this.context        = this.canvas.getContext("2d");
+
+    if (typeof document !== 'undefined') {
+        this.canvas        = document.createElement("canvas");
+        this.canvas.width  = _map.PixelWidth;
+        this.canvas.height = _map.PixelHeight;
+        this.context       = this.canvas.getContext("2d");
+    }
 
     this.CheckCount = 0;
 
@@ -236,8 +240,8 @@ function Level(width, height, mapTemplate) {
         this.FrameCount++;
 
         this.Mouse = {
-            x: (Mouse.x - PIXI.MainContainer.position.x) / PIXI.MainContainer.scale.x + this.Width / 2,
-            y: (Mouse.y - PIXI.MainContainer.position.y) / PIXI.MainContainer.scale.y + this.Height / 2
+            x: (Mouse.x - renderer.position.x) / renderer.scale.x + this.Width / 2,
+            y: (Mouse.y - renderer.position.y) / renderer.scale.y + this.Height / 2
         };
 
 

@@ -1,6 +1,5 @@
 ﻿var CommandQueue = require("./CommandQueue")
 var Settings     = require("./Settings")
-require("./PIXI")
 
 var ParticleDefense = module.exports = {};
 

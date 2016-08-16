@@ -34,10 +34,11 @@ function wheelEvent(e) {
     var i     = wheelEvents.length;
     while (i--) wheelEvents[i](delta);
 }
-
-var wheelEventName = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
-if (document.attachEvent)
-    document.attachEvent("on" + wheelEventName, wheelEvent);
-else if (document.addEventListener)
-    document.addEventListener(wheelEventName, wheelEvent, false);
+if(typeof navigator !== 'undefined') {
+    var wheelEventName = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
+    if (document.attachEvent)
+        document.attachEvent("on" + wheelEventName, wheelEvent);
+    else if (document.addEventListener)
+        document.addEventListener(wheelEventName, wheelEvent, false);
+}
 /* -------------- */
