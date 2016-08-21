@@ -1,9 +1,9 @@
-﻿var loader    = require("./building.loader");
-var color     = require("color");
-var Settings  = require("../Settings");
-var Attribute = require("../Attribute");
-var General   = require("../../util/General");
-var PIXI      = require("pixi.js");
+﻿var loader = require('./building.loader');
+var color = require('color');
+var Settings = require('../Settings');
+var Attribute = require('../Attribute');
+var General = require('../../util/General');
+var PIXI = require('pixi.js');
 
 module.exports = Building
 function Building(level, player, templates) {
@@ -19,153 +19,157 @@ function Building(level, player, templates) {
 
     this.overlayGraphics = new PIXI.Graphics();
     this.addChild(this.overlayGraphics);
-
-    this.BlockX             = NaN;
-    this.BlockY             = NaN;
-    this.Block              = null;
-    this.Health             = 1000;
-    this.Width              = Settings.BlockSize;
-    this.Height             = Settings.BlockSize;
-    this.Level              = level;
-    this.Player             = player;
-    this.Abilities          = null;
-    this.ResourceGeneration = {};
-    this.ResourceStorage    = {
-        Energy: 0,
-        Metal:  0,
-        Ammo:   0
+    
+    this.blockX = NaN;
+    this.blockY = NaN;
+    this.block = null;
+    this.health = 1000;
+    this.width = Settings.BlockSize;
+    this.height = Settings.BlockSize;
+    this.level = level;
+    this.player = player;
+    this.abilities = null;
+    this.resourceGeneration = {};
+    this.resourceStorage = {
+        energy: 0,
+        metal: 0,
+        ammo: 0
     };
-    this.Weapons            = [];
-    this.Updates            = [];
-
-    this.NumberOfUpgrades = 0;
+    this.weapons = [];
+    this.updates = [];
+    
+    this.upgradeCount = 0;
     this.Attributes       = {};
-    this.UpdateAttributes = function () {
+    this.updateAttributes = function () {
 
         var createAttributeForStorage    = function (resourceName, energyFactor, metalFactor) {
-            if (me.ResourceStorage[resourceName] > 0) {
+            if (me.resourceStorage[resourceName] > 0) {
                 me.Attributes[resourceName + 'Storage'] = new Attribute(me,
                     function () {
-                        return me.ResourceStorage[resourceName];
+                        return me.resourceStorage[resourceName];
                     },
                     function () {
-                        me.ResourceStorage[resourceName] += 25;
+                        me.resourceStorage[resourceName] += 25;
                     },
                     null,
                     {
                         /** @returns Number **/
-                        Energy: function () {
-                            return me.ResourceStorage[resourceName] * energyFactor;
+                        energy: function () {
+                            return me.resourceStorage[resourceName] * energyFactor;
                         },
                         /** @returns Number **/
-                        Metal:  function () {
-                            return me.ResourceStorage[resourceName] * metalFactor;
+                        metal: function () {
+                            return me.resourceStorage[resourceName] * metalFactor;
                         }
                     }
                 )
             }
         };
         var createAttributeForGeneration = function (resourceName, energyFactor, metalFactor) {
-            if (me.ResourceGeneration[resourceName] > 0) {
+            if (me.resourceGeneration[resourceName] > 0) {
                 me.Attributes[resourceName + 'Generation'] = new Attribute(me,
                     function () {
-                        return me.ResourceGeneration[resourceName];
+                        return me.resourceGeneration[resourceName];
                     },
                     function () {
-                        me.ResourceGeneration[resourceName] *= 1.25;
+                        me.resourceGeneration[resourceName] *= 1.25;
                     },
                     null,
                     {
                         /** @returns Number **/
-                        Energy: function () {
-                            return me.ResourceGeneration[resourceName] * energyFactor;
+                        energy: function () {
+                            return me.resourceGeneration[resourceName] * energyFactor;
                         },
                         /** @returns Number **/
-                        Metal:  function () {
-                            return me.ResourceGeneration[resourceName] * metalFactor;
+                        metal: function () {
+                            return me.resourceGeneration[resourceName] * metalFactor;
                         }
                     }
                 )
             }
         };
+        
+        createAttributeForStorage('ammo', .5, .25);
+        createAttributeForStorage('energy', .5, .25);
+        createAttributeForStorage('metal', 1, .5);
+        
+        createAttributeForGeneration('ammo', 2, 4);
+        createAttributeForGeneration('energy', 8, 3);
+        createAttributeForGeneration('metal', 8, 13);
 
-        createAttributeForStorage("Ammo", .5, .25);
-        createAttributeForStorage("Energy", .5, .25);
-        createAttributeForStorage("Metal", 1, .5);
-
-        createAttributeForGeneration("Ammo", 2, 4);
-        createAttributeForGeneration("Energy", 8, 3);
-        createAttributeForGeneration("Metal", 8, 13);
-
     };
-    var _isSelected       = false;
-    /** @returns bool **/
-    this.IsSelected = function () {
-        return _isSelected;
-    };
-    this.Select   = function () {
-        this.Abilities = new Building.Abilities(this);
-        _isSelected    = true;
-    };
-    this.Deselect = function () {
-        this.Abilities = null;
-        _isSelected    = false;
-    };
+    var selected = false;
+    Object.defineProperties(this, {
+        selected: {
+            get: function () {
+                return selected;
+            }.bind(this),
+            set: function (value) {
+                if (value) {
+                    this.abilities = new Building.abilities(this);
+                    selected = true;
+                } else {
+                    this.abilities = null;
+                    selected = false;
+                }
+            }.bind(this)
+        }
+    })
 
     this.update         = function () {
-        if (this.Health <= 0) {
+        if (this.health <= 0) {
             Building.prototype.removeStorageFromPlayer.call(this);
-            this.Level.Buildings.splice(this.Level.Buildings.indexOf(this), 1);
-            this.Player.Buildings.splice(this.Player.Buildings.indexOf(this), 1);
-            delete this.Block.Building;
+            this.level.buildings.splice(this.level.buildings.indexOf(this), 1);
+            this.player.buildings.splice(this.player.buildings.indexOf(this), 1);
+            delete this.block.building;
             return;
         }
-
-        for (var r in this.ResourceGeneration) {
-            if (this.ResourceGeneration.hasOwnProperty(r)) {
-                this.Player.Resources[r] += this.ResourceGeneration[r] / Settings.Second;
+    
+        for (var r in this.resourceGeneration) {
+            if (this.resourceGeneration.hasOwnProperty(r)) {
+                this.player.resources[r] += this.resourceGeneration[r] / Settings.second;
             }
         }
-
-        var i = this.Updates.length;
-        while (i--) this.Updates[i].call(this);
-        i = this.Weapons.length;
-        while (i--) this.Weapons[i].update();
+    
+        var i = this.updates.length;
+        while (i--) this.updates[i].call(this);
+        i = this.weapons.length;
+        while (i--) this.weapons[i].update();
 
         // Graphics
         this.overlayGraphics.clear();
-        if (this.IsSelected() || level.getPlacementBuilding === this) {
+        if (this.selected || level.getPlacementBuilding === this) {
             this.overlayGraphics.lineStyle(2, 0x7799FF, .2);
-            i                = this.Weapons.length;
+            i = this.weapons.length;
             var weaponRadius = 0;
-            while (i--) weaponRadius = Math.max(weaponRadius, this.Weapons[i].Range);
+            while (i--) weaponRadius = Math.max(weaponRadius, this.weapons[i].range);
             this.overlayGraphics.beginFill(0x7799FF, .1);
             this.overlayGraphics.drawCircle(0, 0, weaponRadius);
             this.overlayGraphics.endFill();
         }
-        if (this.IsSelected()) {
+        if (this.selected) {
             this.overlayGraphics.beginFill(0x77FF77, .25);
             this.overlayGraphics.drawRect(-Settings.BlockSize / 2, -Settings.BlockSize / 2, Settings.BlockSize, Settings.BlockSize);
             this.overlayGraphics.endFill();
         }
     };
     this.updatePosition = function () {
-        this.position.x = this.BlockX * Settings.BlockSize + Settings.BlockSize / 2;
-        this.position.y = this.BlockY * Settings.BlockSize + Settings.BlockSize / 2;
+        this.position.x = this.blockX * Settings.BlockSize + Settings.BlockSize / 2;
+        this.position.y = this.blockY * Settings.BlockSize + Settings.BlockSize / 2;
     };
-    this.initialize     = function () {
+    this.initialize = function () {
         this.updatePosition();
-        if (this.Block != null) {           // Reset Block if Reinitializing.
-            this.Block.RemoveBuilding();
+        if (this.block != null) {           // Reset Block if Reinitializing.
+            this.block.building = null;
         }
-        if (this.Level !== null) this.Block = this.Level.getBlockOrNull(this.BlockX, this.BlockY);
-        if (this.Block !== null) this.Block.SetBuilding(this);
+        if (this.level !== null) this.block = this.level.getBlockOrNull(this.blockX, this.blockY);
+        if (this.block !== null) this.block.building = this;
     };
-    this.loadTemplate   = function (template, ignoreArray) {
+    this.loadTemplate = function (template, ignoreArray) {
         General.NestedCopyTo(template, this, ignoreArray);
-        this.UpdateAttributes();
+        this.updateAttributes();
     };
-    this.loadTemplates  = function () {
+    this.loadTemplates = function () {
         if (templates === undefined)return;
         if (templates instanceof Array)
             for (var template in templates) {
@@ -177,7 +181,7 @@ function Building(level, player, templates) {
     };
 
     if (player) {
-        player.AddBuildingCount(this.Name);
+        player.addBuildingCost(this.Name);
     }
     this.loadTemplates();
     Building.prototype.addStorageToPlayer.call(this);
@@ -187,29 +191,29 @@ Building.prototype             = Object.create(PIXI.Container.prototype);
 Building.prototype.constructor = Building;
 
 Building.prototype.addStorageToPlayer      = function () {
-    if (this.Player === null) return;
-    for (var key in this.ResourceStorage) {
-        if (this.ResourceStorage.hasOwnProperty(key)) {
-            this.Player.ResourceStorage[key] += this.ResourceStorage[key];
+    if (this.player === null) return;
+    for (var key in this.resourceStorage) {
+        if (this.resourceStorage.hasOwnProperty(key)) {
+            this.player.resourceStorage[key] += this.resourceStorage[key];
         }
     }
 };
 Building.prototype.removeStorageFromPlayer = function () {
-    if (this.Player === null) return;
-    for (var key in this.ResourceStorage) {
-        if (this.ResourceStorage.hasOwnProperty(key)) {
-            this.Player.ResourceStorage[key] -= this.ResourceStorage[key];
+    if (this.player === null) return;
+    for (var key in this.resourceStorage) {
+        if (this.resourceStorage.hasOwnProperty(key)) {
+            this.player.resourceStorage[key] -= this.resourceStorage[key];
         }
     }
 };
 
-Building.Abilities = function (building) {
-    this.Building = building;
+Building.abilities = function (building) {
+    this.building = building;
     // Add Weapon Upgrades
-    this.Upgrades = {};
-    var i         = building.Weapons.length;
+    this.upgrades = {};
+    var i = building.weapons.length;
     while (i--) {
-        this.Upgrades['Weapon' + (i === 0 ? "" : i)] = building.Weapons[i].Attributes;
+        this.upgrades['weapon' + (i === 0 ? '' : i)] = building.weapons[i].Attributes;
     }
-    this.Upgrades.Building = this.Building.Attributes;
+    this.upgrades.building = this.building.Attributes;
 };

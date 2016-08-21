@@ -1,6 +1,6 @@
 ﻿describe('Grid Tests', function () {
-    var Grid = require("../src/util/grid");
-    var expect = require("chai").expect;
+    var Grid = require('../src/util/grid');
+    var expect = require('chai').expect;
 
     it('should be able to deliver blocks', function () {
         var grid = new Grid(0, 0, 10, 10);

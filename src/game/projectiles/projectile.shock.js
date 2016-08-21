@@ -1,7 +1,7 @@
-var PIXI       = require("pixi.js")
-var Projectile = require("./projectile")
-var Settings   = require("../Settings")
-var math       = require("../../util/math")
+var PIXI = require('pixi.js')
+var Projectile = require('./projectile')
+var Settings = require('../Settings')
+var math = require('../../util/math')
 
 module.exports = ShockProjectile
 
@@ -12,11 +12,11 @@ function ShockProjectile(weapon) {
     this.addChild(this.graphics);
 
     // Vars
-    this.Lifespan       = Settings.Second / 3;
-    this.Width          = this.Damage * 5 / this.Lifespan;
-    this.Range          = weapon.Range;
-    this.ConnectedUnits = [];
-    this.Connection     = {
+    this.lifespan = Settings.second / 3;
+    this.width = this.damage * 5 / this.lifespan;
+    this.range = weapon.range;
+    this.connectedUnits = [];
+    this.connection = {
         array: [],
         unit:  null,
         x:     this.position.x,
@@ -25,27 +25,27 @@ function ShockProjectile(weapon) {
     };
 
     /** @returns Number */
-    this.EffectiveDamage = function (depth) {
-        return this.Damage / this.Lifespan / this.getDepthDecay(depth);
+    this.effectiveDamage = function (depth) {
+        return this.damage / this.lifespan / this.getDepthDecay(depth);
     };
     this.getDepthDecay = function (depth) {
         return 1 + depth / 3;
     };
     this.unitHitCheck  = function (connection) {
-        if (connection == null) connection = this.Connection;
-        if (connection.unit !== null) connection.unit.damage(this.EffectiveDamage(connection.depth));
+        if (connection == null) connection = this.connection;
+        if (connection.unit !== null) connection.unit.damage(this.effectiveDamage(connection.depth));
         var i = connection.array.length;
         while (i--) this.unitHitCheck(connection.array[i]);
     };
 
     this.updateConnections = function (depth, connection) {
         if (depth == null) depth = 0;
-        if (connection == null) connection = this.Connection;
+        if (connection == null) connection = this.connection;
         if (connection.unit == null) {
             connection.x = this.position.x;
             connection.y = this.position.y;
         } else {
-            if (connection.unit.IsDead) {
+            if (connection.unit.dead) {
                 connection.unit  = null;
                 connection.array = [];
             } else {
@@ -53,13 +53,13 @@ function ShockProjectile(weapon) {
                 connection.y = connection.unit.position.y;
             }
         }
-
-        var i = this.Level.Units.length;
+    
+        var i = this.level.units.length;
         while (i--) {
-            var unit = this.Level.Units[i];
-            if (this.ConnectedUnits.indexOf(unit) === -1) {
-                var distance = math.Distance(connection.x - unit.position.x, connection.y - unit.position.y);
-                var range    = this.Range / this.getDepthDecay(depth);
+            var unit = this.level.units[i];
+            if (this.connectedUnits.indexOf(unit) === -1) {
+                var distance = math.distance(connection.x - unit.position.x, connection.y - unit.position.y);
+                var range = this.range / this.getDepthDecay(depth);
                 if (distance < range) {
                     connection.array.push({
                         array: [],
@@ -68,7 +68,7 @@ function ShockProjectile(weapon) {
                         y:     unit.position.y,
                         depth: depth
                     });
-                    this.ConnectedUnits.push(unit);
+                    this.connectedUnits.push(unit);
                 }
             }
         }
@@ -84,9 +84,9 @@ function ShockProjectile(weapon) {
 
         this.graphics.clear();
         this.graphics.lineStyle(this.Width, 0x8888BB, .35);
-        this.drawConnection(this.Connection, null);
+        this.drawConnection(this.connection, null);
         this.graphics.lineStyle(this.Width * 2, 0xAAAAFF, .15);
-        this.drawConnection(this.Connection, null);
+        this.drawConnection(this.connection, null);
     };
 
     this.drawConnection = function (connection, parentConnection) {
@@ -98,7 +98,7 @@ function ShockProjectile(weapon) {
                 py               = parentConnection.y,
                 x                = parentConnection.x,
                 y                = parentConnection.y,
-                distance         = math.Distance(connection.x - parentConnection.x, connection.y - parentConnection.y),
+                distance = math.distance(connection.x - parentConnection.x, connection.y - parentConnection.y),
                 iteration        = 0,
                 iterationLimit   = Math.ceil(distance / 15),
                 distPerIteration = 1 / iterationLimit;

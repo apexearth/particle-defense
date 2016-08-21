@@ -1,3 +1,3 @@
 module.exports = {
-    Buildings: require("./buildings")
+    buildings: require('./buildings')
 };

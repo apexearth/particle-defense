@@ -1,67 +1,67 @@
 ﻿describe('Building Tests', function () {
-    var Levels = require("../src/game/Levels");
-    var Buildings = require("../src/game/buildings/");
-    var Building = require("../src/game/buildings/building");
-    var Unit = require("../src/game/units/unit");
-    var PlayerCommands = require("../src/game/PlayerCommands");
-    var expect = require("chai").expect;
+    var Levels = require('../src/game/Levels');
+    var Buildings = require('../src/game/buildings/');
+    var Building = require('../src/game/buildings/building');
+    var Unit = require('../src/game/units/unit');
+    var PlayerCommands = require('../src/game/PlayerCommands');
+    var expect = require('chai').expect;
     var Gun = Buildings.Gun;
 
     it('should attack units in range of any of it\'s weapons', function () {
         var level = Levels.LevelTest();
-        level.Player.Resources.Ammo = 10;
+        level.player.resources.ammo = 10;
         var unit = new Unit(level, {X: level.Width / 2, Y: level.Height / 2});
-        level.Units.push(unit);
-        var turret = new Gun(level, level.Player, {BlockX: unit.BlockX, BlockY: unit.BlockY + 2});
-        turret.Weapons[0].Range = 1000;
-
-        level.Buildings.push(turret);
-        level.Player.Buildings.push(turret);
-        var health = unit.Health;
+        level.units.push(unit);
+        var turret = new Gun(level, level.player, {BlockX: unit.blockX, BlockY: unit.blockY + 2});
+        turret.weapons[0].range = 1000;
+    
+        level.buildings.push(turret);
+        level.player.buildings.push(turret);
+        var health = unit.health;
 
         level.update();
-        expect(turret.Weapons[0].Target).not.to.equal(null);
-        expect(level.Projectiles.length).to.be.above(0);
+        expect(turret.weapons[0].target).not.to.equal(null);
+        expect(level.projectiles.length).to.be.above(0);
 
         var i = 50;
         while (i--)
             level.update();
-        expect(health).to.be.above(unit.Health);
+        expect(health).to.be.above(unit.health);
     });
 
     it('should not attack units out of range', function () {
         var level = Levels.LevelTest();
-        var unit = new Unit(level, {X: level.Player.HomeBase.X - 50, Y: level.Player.HomeBase.Y - 50});
-        unit.setDestination(level.Player.HomeBase);
-        level.Units.push(unit);
-        var turret = new Gun(level, level.Player, 5, 9);
-        turret.Weapons[0].Range = 10;
-        level.Buildings.push(turret);
-
-        var health = unit.Health;
+        var unit = new Unit(level, {X: level.player.homeBase.X - 50, Y: level.player.homeBase.Y - 50});
+        unit.setDestination(level.player.homeBase);
+        level.units.push(unit);
+        var turret = new Gun(level, level.player, 5, 9);
+        turret.weapons[0].range = 10;
+        level.buildings.push(turret);
+    
+        var health = unit.health;
         level.update();
-        expect(health).to.equal(unit.Health);
+        expect(health).to.equal(unit.health);
     });
 
     it('can provide energy and metal', function () {
         var level = Levels.LevelTest();
-        var energy = level.Player.Resources.Energy = 0;
-        var metal = level.Player.Resources.Metal = 0;
+        var energy = level.player.resources.energy = 0;
+        var metal = level.player.resources.metal = 0;
         level.update();
         level.update();
         level.update();
         level.update();
-        expect(energy).to.be.below(level.Player.Resources.Energy);
-        expect(metal).to.be.below(level.Player.Resources.Metal);
+        expect(energy).to.be.below(level.player.resources.energy);
+        expect(metal).to.be.below(level.player.resources.metal);
     });
 
     it('can be sold', function () {
         var level = Levels.LevelTest();
-        level.Player.Resources.Energy = Gun.Cost.Energy;
-        level.Player.Resources.Metal = Gun.Cost.Metal;
-        var building = PlayerCommands.CreateBuilding(level.Player, Gun, 1, 1);
+        level.player.resources.energy = Gun.Cost.energy;
+        level.player.resources.metal = Gun.Cost.metal;
+        var building = PlayerCommands.CreateBuilding(level.player, Gun, 1, 1);
         PlayerCommands.SellBuilding(building);
-        expect(level.Player.Resources.Metal).to.be.above(0);
+        expect(level.player.resources.metal).to.be.above(0);
     });
 
     it('buildings can be selected and deselected', function () {
@@ -69,21 +69,21 @@
         var block = level.getBlock(5, 5);
         var building = block.GetBuilding();
         expect(building).to.not.equal(null);
-        level.SelectBuildingAt(block);
-        expect(level.Selection).to.equal(building);
-        expect(building.IsSelected()).to.equal(true);
-
-        level.Deselect();
-        expect(level.Selection).to.equal(null);
-        expect(building.IsSelected()).to.equal(false);
+        level.selectBuildingAt(block);
+        expect(level.selection).to.equal(building);
+        expect(building.selected()).to.equal(true);
+    
+        level.deselect();
+        expect(level.selection).to.equal(null);
+        expect(building.selected()).to.equal(false);
     });
 
     it('when selected, it\'s menu is available', function () {
         var building = new Buildings.Gun(null, null, {});
-        expect(building.Abilities).to.not.be.undefined;
-        expect(building.Abilities).to.equal(null);
-        building.Select();
-        expect(building.Abilities).to.not.equal(null);
-        expect(building.Abilities.constructor).to.equal(Building.Abilities);
+        expect(building.abilities).to.not.be.undefined;
+        expect(building.abilities).to.equal(null);
+        building.selected();
+        expect(building.abilities).to.not.equal(null);
+        expect(building.abilities.constructor).to.equal(Building.abilities);
     });
 });

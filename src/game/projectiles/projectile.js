@@ -1,33 +1,33 @@
-var PIXI     = require("pixi.js")
-var Settings = require("../Settings")
+var PIXI = require('pixi.js')
+var Settings = require('../Settings')
 
 module.exports = Projectile
 
 function Projectile(weapon) {
     PIXI.Container.call(this);
-    weapon.Level.addChild(this);
-    this.Level      = weapon.Building.Level;
-    this.Building   = weapon.Building;
-    this.Weapon     = weapon;
-    this.position.x = weapon.Building.position.x;
-    this.position.y = weapon.Building.position.y;
-    this.Damage     = weapon.Damage;
+    weapon.level.addChild(this);
+    this.level = weapon.building.level;
+    this.building = weapon.building;
+    this.weapon = weapon;
+    this.position.x = weapon.building.position.x;
+    this.position.y = weapon.building.position.y;
+    this.damage = weapon.damage;
     /** @returns Number **/
-    this.EffectiveDamage = function (unit) {
-        return this.Damage;
+    this.effectiveDamage = function (unit) {
+        return this.damage;
     };
-    this.Width         = 1;
-    this.Radius        = this.Width;
-    this.Lifespan      = Settings.Second * 5;
-    this.LifespanCount = 0;
-    this.IsDead        = false;
+    this.width = 1;
+    this.radius = this.width;
+    this.lifespan = Settings.second * 5;
+    this.lifespanCount = 0;
+    this.dead = false;
 
     this.die = function () {
-        if (this.IsDead) return;
-        this.IsDead = true;
-        var result  = this.Level.removeChild(this);
+        if (this.dead) return;
+        this.dead = true;
+        var result = this.level.removeChild(this);
         if (result == null) return;
-        this.Level.Projectiles.splice(this.Level.Projectiles.indexOf(this), 1);
+        this.level.projectiles.splice(this.level.projectiles.indexOf(this), 1);
     };
 
     this.onHit = function () {
@@ -35,8 +35,8 @@ function Projectile(weapon) {
     };
 
     this.update       = function () {
-        if (this.LifespanCount++ > this.Lifespan) this.die();
-        if (!this.Level.hitTest(this)) // Die if outside of level.
+        if (this.lifespanCount++ > this.lifespan) this.die();
+        if (!this.level.hitTest(this)) // Die if outside of level.
         {
             this.onHit();
         } else {
@@ -47,11 +47,11 @@ function Projectile(weapon) {
         return unit.hitTest(this);
     };
     this.unitHitCheck = function () {
-        var u = this.Level.Units.length;
+        var u = this.level.units.length;
         while (u--) {
-            var unit = this.Level.Units[u];
+            var unit = this.level.units[u];
             if (this.hitTest(unit)) {
-                unit.damage(this.EffectiveDamage(unit));
+                unit.damage(this.effectiveDamage(unit));
                 this.onHit();
             }
         }

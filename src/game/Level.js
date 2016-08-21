@@ -1,16 +1,16 @@
-﻿var PIXI           = require("pixi.js")
-var renderer       = require("./renderer");
-var Map            = require("./Map")
-var PlayerCommands = require("./PlayerCommands")
-var General        = require("../util/General")
-var CommandQueue   = require("./CommandQueue")
-var BlockStatus    = require("../util/grid/block-status")
+﻿var PIXI = require('pixi.js')
+var renderer = require('./renderer');
+var Map = require('./Map')
+var PlayerCommands = require('./PlayerCommands')
+var General = require('../util/General')
+var CommandQueue = require('./CommandQueue')
+var BlockStatus = require('../util/grid/block-status')
 
-var input    = require("../util/input")
+var input = require('../util/input')
 var Mouse    = input.Mouse;
 var Keyboard = input.Keyboard;
 
-var common   = require("./common")
+var common = require('./common')
 var Settings = common.Settings;
 
 module.exports = Level;
@@ -24,74 +24,74 @@ function Level(width, height, mapTemplate) {
 
     var me   = this;
     var _map = new Map(this, width, height, mapTemplate);
-
-    this.SpawnPoints = [];
-
-    this.FrameCount = 0;
-    this.Width      = _map.PixelWidth;
-    this.Height     = _map.PixelHeight;
-    this.Bounds     = {
-        Left:   0,
-        Top:    0,
-        Right:  this.Width,
-        Bottom: this.Height
+    
+    this.spawnPoints = [];
+    
+    this.frameCount = 0;
+    this.width = _map.pixelWidth;
+    this.height = _map.pixelHeight;
+    this.bounds = {
+        left: 0,
+        top: 0,
+        right: this.width,
+        bottom: this.height
     };
-
-    this.Player  = null;
-    this.Players = [];
-
-    this.Units       = [];
-    this.Projectiles = [];
-    this.Buildings   = [];
-    this.Objects     = [];
-
-    this.Mouse = {
+    
+    this.player = null;
+    this.players = [];
+    
+    this.units = [];
+    this.projectiles = [];
+    this.buildings = [];
+    this.objects = [];
+    
+    this.mouse = {
         x: Mouse.x - renderer.position.x,
         y: Mouse.y - renderer.position.y
     };
 
     /** @returns Number **/
-    this.TotalWaves = function () {
-        var i         = me.SpawnPoints.length;
+    this.totalWaves = function () {
+        var i = me.spawnPoints.length;
         var waveCount = 0;
         while (i--) {
-            waveCount = Math.max(me.SpawnPoints[i].Waves.length, waveCount);
-            if (me.SpawnPoints[i].CurrentWave !== null) waveCount++;
+            waveCount = Math.max(me.spawnPoints[i].waves.length, waveCount);
+            if (me.spawnPoints[i].currentWave !== null) waveCount++;
         }
         return waveCount;
     };
-    this.WinConditions  = [function () {
-        if (me.Units.length > 0) return false;
-        var i = me.SpawnPoints.length;
+    this.winConditions = [function () {
+        if (me.units.length > 0) return false;
+        var i = me.spawnPoints.length;
         while (i--) {
-            if (me.SpawnPoints[i].HasWaves() === true) return false;
+            if (me.spawnPoints[i].hasWaves() === true) return false;
         }
         return true;
     }];
-    this.LossConditions = [function () {
-        return me.Player.HomeBase.Health <= 0;
+    this.lossConditions = [function () {
+        return me.player.homeBase.health <= 0;
     }];
 
     if (typeof document !== 'undefined') {
-        this.canvas        = document.createElement("canvas");
-        this.canvas.width  = _map.PixelWidth;
-        this.canvas.height = _map.PixelHeight;
-        this.context       = this.canvas.getContext("2d");
+        this.canvas = document.createElement('canvas');
+        this.canvas.width = _map.pixelWidth;
+        this.canvas.height = _map.pixelHeight;
+        this.context = this.canvas.getContext('2d');
     }
-
-    this.CheckCount = 0;
+    
+    this.checkCount = 0;
 
     this.addBuilding = function (building) {
-        this.Buildings.push(building);
-        building.Player.Buildings.push(building);
+        this.buildings.push(building);
+        building.player.buildings.push(building);
         return building;
     };
     this.addPlayer   = function (player) {
-        this.Players.push(player);
+        this.players.push(player);
         return player;
     };
     this.hitTest     = function (vector) {
-        return vector.x >= this.Bounds.Left && vector.x <= this.Bounds.Right && vector.y >= this.Bounds.Top && vector.y <= this.Bounds.Bottom;
+        return vector.x >= this.bounds.left && vector.x <= this.bounds.right && vector.y >= this.bounds.top && vector.y <= this.bounds.bottom;
     };
 
     this.beginBuildingPlacement    = function (building) {
@@ -100,11 +100,11 @@ function Level(width, height, mapTemplate) {
     };
     this.finalizeBuildingPlacement = function (block) {
         if (block != null) {
-            var buildResult = PlayerCommands.CreateBuilding(this.Player, this.getPlacementBuilding.constructor, block.x, block.y);
+            var buildResult = PlayerCommands.CreateBuilding(this.player, this.getPlacementBuilding.constructor, block.x, block.y);
             if (buildResult != null) {
                 this.resetBuildableBlocks();
-                var i = this.Units.length;
-                while (i--) this.Units[i].findPath();
+                var i = this.units.length;
+                while (i--) this.units[i].findPath();
                 if (!Keyboard.CheckKey(Keyboard.Keys.shift)) {
                     this.endBuildingPlacement();
                 }
@@ -125,31 +125,31 @@ function Level(width, height, mapTemplate) {
     /** @summary The idea behind this is to check if a block is buildable when placing a building. **/
     /** @returns bool **/
     this.isBlockBuilding = function (block) {
-        if (block.Status() >= BlockStatus.OnlyPassable) return false;       // It's blocked
-        if (block.Objects.length > 0) return false;                         // The block has an object in it.
+        if (block.status >= BlockStatus.OnlyPassable) return false;       // It's blocked
+        if (block.objects.length > 0) return false;                         // The block has an object in it.
         if (_buildableBlocks.indexOf(block) >= 0) return true;              // Is within list of buildable blocks.
         if (_notBuildableBlocks.indexOf(block) >= 0) return false;          // Is within list of not buildable blocks.
-        return this.CheckIfBuildingWillBlockPath(block);                    // Since last two didn't show, we find out.
+        return this.willBuildingBlockPath(block);                    // Since last two didn't show, we find out.
     };
 
     /** @returns bool **/
-    this.CheckIfBuildingWillBlockPath = function (block) {
-        var prevStatus = block.Status();
-        block.SetStatus(BlockStatus.NotPassable);
-        var i = this.SpawnPoints.length;
+    this.willBuildingBlockPath = function (block) {
+        var prevStatus = block.status;
+        block.status = BlockStatus.NotPassable;
+        var i = this.spawnPoints.length;
         while (i--) {
-            var spawnPoint      = this.SpawnPoints[i];
-            var spawnPointBlock = this.getBlock(spawnPoint.BlockX, spawnPoint.BlockY);
-            var path            = this.getPath(spawnPointBlock, this.Player.HomeBase.Block);
+            var spawnPoint = this.spawnPoints[i];
+            var spawnPointBlock = this.getBlock(spawnPoint.blockX, spawnPoint.blockY);
+            var path = this.getPath(spawnPointBlock, this.player.homeBase.Block);
             if (path.length > 0) {
                 _buildableBlocks.push(block);
             } else {
                 _notBuildableBlocks.push(block);
-                block.SetStatus(prevStatus);
+                block.status = prevStatus;
                 return false;
             }
         }
-        block.SetStatus(prevStatus);
+        block.status = prevStatus;
         return true;
     };
     /** @summary Should be called whenever block BlockStatus changes. **/
@@ -157,25 +157,25 @@ function Level(width, height, mapTemplate) {
         _buildableBlocks    = [];
         _notBuildableBlocks = [];
     };
-
-    this.Selection        = null;
-    this.SelectBuildingAt = function (block) {
-        this.Deselect();
-        this.Selection = block.GetBuilding();
-        this.Selection.Select();
-        return this.Selection;
+    
+    this.selection = null;
+    this.selectBuildingAt = function (block) {
+        this.deselect();
+        this.selection = block.building;
+        this.selection.selected = true;
+        return this.selection;
     };
-    this.Deselect         = function () {
-        if (this.Selection !== null) {
-            this.Selection.Deselect();
-            this.Selection = null;
+    this.deselect = function () {
+        if (this.selection !== null) {
+            this.selection.selected = false;
+            this.selection = null;
         }
     };
 
     this.getPathForUnit = function (unit) {
         return this.getPath(
             _map.getBlockFromCoords(unit.position.x, unit.position.y),
-            _map.getBlockFromVector(unit.Destination)
+            _map.getBlockFromVector(unit.destination)
         );
     };
     this.getPath        = function (blockStart, blockTarget) {
@@ -183,13 +183,13 @@ function Level(width, height, mapTemplate) {
     };
 
     this.checkWinConditions  = function () {
-        var i = this.WinConditions.length;
-        while (i--) if (!this.WinConditions[i]()) return false;
+        var i = this.winConditions.length;
+        while (i--) if (!this.winConditions[i]()) return false;
         return true;
     };
     this.checkLossConditions = function () {
-        var i = this.LossConditions.length;
-        while (i--) if (!this.LossConditions[i]()) return false;
+        var i = this.lossConditions.length;
+        while (i--) if (!this.lossConditions[i]()) return false;
         return true;
     };
 
@@ -205,14 +205,14 @@ function Level(width, height, mapTemplate) {
     this.getBlockOrNullFromCoords = function (x, y) {
         return _map.getBlockOrNullFromCoords(x, y);
     };
-    this.ProcessKeyboardInput     = function () {
+    this.processKeyboardInput = function () {
         if (Keyboard.CheckKey(Keyboard.Keys.escape)) {
             if (this.getPlacementBuilding != null) {
                 this.endBuildingPlacement();
             }
         }
     };
-    this.ProcessMouseInput        = function () {
+    this.processMouseInput = function () {
         if (Mouse.LeftButton) {
             Mouse.LeftButton = false;
             var clickedBlock = this.getBlockOrNullFromCoords(this.Mouse.x, this.Mouse.y);
@@ -220,11 +220,11 @@ function Level(width, height, mapTemplate) {
                 this.finalizeBuildingPlacement(clickedBlock);
                 return;
             }
-
-            if (clickedBlock != null && clickedBlock.GetBuilding() != null) {
-                this.SelectBuildingAt(clickedBlock);
+    
+            if (clickedBlock != null && clickedBlock.building != null) {
+                this.selectBuildingAt(clickedBlock);
             } else {
-                this.Deselect();
+                this.deselect();
             }
         }
 
@@ -237,29 +237,29 @@ function Level(width, height, mapTemplate) {
         }
     };
     this.update                   = function () {
-        this.FrameCount++;
-
-        this.Mouse = {
-            x: (Mouse.x - renderer.position.x) / renderer.scale.x + this.Width / 2,
-            y: (Mouse.y - renderer.position.y) / renderer.scale.y + this.Height / 2
+        this.frameCount++;
+    
+        this.mouse = {
+            x: (Mouse.x - renderer.position.x) / renderer.scale.x + this.width / 2,
+            y: (Mouse.y - renderer.position.y) / renderer.scale.y + this.height / 2
         };
-
-
-        var i = this.SpawnPoints.length;
+    
+    
+        var i = this.spawnPoints.length;
         while (i--) {
-            var spawnPoint = this.SpawnPoints[i];
+            var spawnPoint = this.spawnPoints[i];
             spawnPoint.update(this);
         }
-
-        i = this.Units.length;
+    
+        i = this.units.length;
         while (i-- > 0) {
-            var unit = this.Units[i];
+            var unit = this.units[i];
             unit.update();
         }
-
-        i = this.Buildings.length;
+    
+        i = this.buildings.length;
         while (i-- > 0) {
-            var building = this.Buildings[i];
+            var building = this.buildings[i];
             building.update();
         }
 
@@ -268,30 +268,30 @@ function Level(width, height, mapTemplate) {
             var projectile = this.Projectiles[i];
             projectile.update();
         }
-
-        i = this.Objects.length;
+    
+        i = this.objects.length;
         while (i-- > 0) {
-            var object = this.Objects[i];
+            var object = this.objects[i];
             if (object.update) object.update();
         }
-
-        i = this.Players.length;
+    
+        i = this.players.length;
         while (i-- > 0) {
-            var player = this.Players[i];
+            var player = this.players[i];
             player.update();
         }
 
 
         if (this.getPlacementBuilding != null) {
-            this.getPlacementBuilding.position.x = this.Mouse.x - (this.Mouse.x % Settings.BlockSize) + Settings.BlockSize / 2;
-            this.getPlacementBuilding.position.y = this.Mouse.y - (this.Mouse.y % Settings.BlockSize) + Settings.BlockSize / 2;
+            this.getPlacementBuilding.position.x = this.mouse.x - (this.mouse.x % Settings.BlockSize) + Settings.BlockSize / 2;
+            this.getPlacementBuilding.position.y = this.mouse.y - (this.mouse.y % Settings.BlockSize) + Settings.BlockSize / 2;
         }
-
-
-        this.ProcessMouseInput();
-        this.ProcessKeyboardInput();
-
-        if (this.CheckCount++ > Settings.Second) {
+    
+    
+        this.processMouseInput();
+        this.processKeyboardInput();
+    
+        if (this.checkCount++ > Settings.second) {
             var win  = this.checkWinConditions();
             var loss = this.checkLossConditions();
             if (win || loss) {
@@ -308,6 +308,6 @@ function Level(width, height, mapTemplate) {
         General.NestedCopyTo(template, this);
     };
 };
-Level.prototype             = Object.create(PIXI.Container.prototype);
-Level.prototype.constructor = Level;
+level.prototype = Object.create(PIXI.Container.prototype);
+level.prototype.constructor = level;
 

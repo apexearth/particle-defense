@@ -1,6 +1,6 @@
-var Vector     = require("./Vector")
-var atan2quick = require("./atan2-quick")
-var angles     = require("./angles")
+var Vector = require('./Vector')
+var atan2quick = require('./atan2-quick')
+var angles = require('./angles')
 
 module.exports = {
     Vector:          Vector,

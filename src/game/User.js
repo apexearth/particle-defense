@@ -1,9 +1,9 @@
 function User() {
-    this.LifetimeScore = 0;
+    this.lifetimeScore = 0;
 }
-var localStorage = typeof localStorage !== "undefined" ? localStorage : {}
-if (localStorage.User == null)
-    localStorage.User = new User();
+var localStorage = typeof localStorage !== 'undefined' ? localStorage : {}
+if (localStorage.user == null)
+    localStorage.user = new User();
 
-module.exports = localStorage.User
+module.exports = localStorage.user
 

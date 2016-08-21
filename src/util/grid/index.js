@@ -1,6 +1,6 @@
-﻿var BlockStatus = require("./block-status")
-var Block       = require("./block")
-var Pathfind    = require("./Pathfind")
+﻿var BlockStatus = require('./block-status')
+var Block = require('./block')
+var Pathfind = require('./Pathfind')
 
 module.exports = Grid
 
@@ -34,10 +34,10 @@ function Grid(minX, minY, maxX, maxY) {
 }
 
 Grid.prototype.SetBlockStatus = function (x, y, status) {
-    this.getBlock(x, y).SetStatus(status);
+    this.getBlock(x, y).status = status;
 };
 Grid.prototype.BlockStatus    = function (x, y) {
-    return this.getBlock(x, y).Status();
+    return this.getBlock(x, y).status;
 };
 
 Grid.prototype.getBlockFromVector = function (vector) {

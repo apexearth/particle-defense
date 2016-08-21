@@ -1,6 +1,6 @@
-var PIXI       = require("pixi.js")
-var Projectile = require("./projectile")
-var math       = require("../../util/math")
+var PIXI = require('pixi.js')
+var Projectile = require('./projectile')
+var math = require('../../util/math')
 
 module.exports = ThrownProjectile
 
@@ -11,38 +11,38 @@ function ThrownProjectile(weapon) {
     this.addChild(this.graphics);
 
     this.lastPosition         = this.position;
-    this.Target               = weapon.getTargetLeadingVector();
-    this.InitialDistance      = math.Distance(this.position.x - this.Target.x, this.position.y - this.Target.y);
-    this.Direction            = math.angle(this.position.x, this.position.y, this.Target.x, this.Target.y);
-    this.InitialVelocity      = weapon.ProjectileSpeed;
-    this.CurrentVelocity      = weapon.ProjectileSpeed;
-    this.ProjectileSlowFactor = weapon.ProjectileSlowFactor;
+    this.target = weapon.getTargetLeadingVector();
+    this.initialDistance = math.distance(this.position.x - this.target.x, this.position.y - this.target.y);
+    this.direction = math.angle(this.position.x, this.position.y, this.target.x, this.target.y);
+    this.initialVelocity = weapon.projectileSpeed;
+    this.currentVelocity = weapon.projectileSpeed;
+    this.projectileSlowFactor = weapon.projectileSlowFactor;
     this.projectileUpdate     = this.update;
     this.update               = function () {
         this.projectileUpdate();
         this.lastPosition = this.position.clone();
-        if (this.Distance == null || this.Distance > this.Width) {
-            this.Distance        = math.Distance(this.position.x - this.Target.x, this.position.y - this.Target.y);
-            this.CurrentVelocity = this.InitialVelocity * (Math.pow(this.Distance + 25, this.ProjectileSlowFactor) * 2 / Math.pow(this.InitialDistance, this.ProjectileSlowFactor));
-            this.VelocityX       = Math.cos(this.Direction) * this.CurrentVelocity;
-            this.VelocityY       = Math.sin(this.Direction) * this.CurrentVelocity;
-            this.position.x += this.VelocityX;
-            this.position.y += this.VelocityY;
+        if (this.distance == null || this.distance > this.width) {
+            this.distance = math.Distance(this.position.x - this.target.x, this.position.y - this.target.y);
+            this.currentVelocity = this.initialVelocity * (Math.pow(this.distance + 25, this.projectileSlowFactor) * 2 / Math.pow(this.initialDistance, this.projectileSlowFactor));
+            this.velocity.x = Math.cos(this.direction) * this.currentVelocity;
+            this.velocity.y = Math.sin(this.direction) * this.currentVelocity;
+            this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
         }
         this.graphics.clear();
-        this.graphics.lineStyle(this.Width, 0xFFFFFF, .5);
+        this.graphics.lineStyle(this.width, 0xFFFFFF, .5);
         this.graphics.moveTo(0, 0);
         this.graphics.lineTo(this.lastPosition.x - this.position.x, this.lastPosition.y - this.position.y);
         this.graphics.lineStyle(0, 0xFFFFFF, 0);
         this.graphics.beginFill(0xFFFFFF, 1);
-        this.graphics.drawRect(0, 0, this.Width, this.Width);
+        this.graphics.drawRect(0, 0, this.width, this.width);
         this.graphics.endFill();
     };
     this.hitTest              = function (unit) {
         if (this.position.x - this.lastPosition.x > 1 && this.position.y - this.lastPosition.y > 1) {
-            return unit.hitTestLine(this.position, this.lastPosition, this.Width);
+            return unit.hitTestLine(this.position, this.lastPosition, this.width);
         } else {
-            return unit.hitTest(this, this.Width);
+            return unit.hitTest(this, this.width);
         }
     };
 }

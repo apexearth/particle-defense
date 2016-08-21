@@ -1,22 +1,22 @@
 module.exports = function (owner, valueF, upgradeF, canUpgradeF, cost) {
     var attribute     = valueF;
-    attribute.Upgrade = function () {
-        if (!attribute.CanUpgrade()) return;
-        owner.Player.TryApplyCost(attribute.Cost);
+    attribute.upgrade = function () {
+        if (!attribute.canUpgrade()) return;
+        owner.player.tryApplyCost(attribute.cost);
         upgradeF();
-        owner.NumberOfUpgrades++;
+        owner.upgradeCount++;
     };
     /** @return {boolean} **/
-    attribute.CanUpgrade = function () {
+    attribute.canUpgrade = function () {
         if (canUpgradeF !== null && !canUpgradeF()) return false;
-        return owner.Player.TestApplyCost(attribute.Cost);
+        return owner.player.testApplyCost(attribute.cost);
     };
-    attribute.Cost = {};
+    attribute.cost = {};
     for (var c in cost) {
         if (cost.hasOwnProperty(c)) {
-            attribute.Cost[c] = (function (cost) {
+            attribute.cost[c] = (function (cost) {
                 return function () {
-                    return Math.pow(cost(), 1 + owner.NumberOfUpgrades / 20);
+                    return Math.pow(cost(), 1 + owner.upgradeCount / 20);
                 }
             })(cost[c]);
         }

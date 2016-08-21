@@ -1,7 +1,7 @@
-var PIXI  = require("pixi.js")
-var input = require("../util/input")
-var math  = require("../util/math")
-var raf   = require("raf")
+var PIXI = require('pixi.js')
+var input = require('../util/input')
+var math = require('../util/math')
+var raf = require('raf')
 
 PIXI.Point   = math.Vector;
 var Mouse    = input.Mouse;

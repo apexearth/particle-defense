@@ -1,18 +1,18 @@
-var loader  = require("./building.loader")
-var Images  = require("../../img")
-var Weapons = require("../Weapons")
+var loader = require('./building.loader')
+var Images = require('../../img')
+var Weapons = require('../Weapons')
 
 module.exports = loader({
     name:        'Gun',
     constructor: {
-        Cost: {
-            Energy: 20,
-            Metal:  10
+        cost: {
+            energy: 20,
+            metal: 10
         }
     },
-    getSprite:   Images.Buildings.SmallPlatform,
+    getSprite: Images.buildings.SmallPlatform,
     template:    {
-        Health:  5,
+        health: 5,
         Weapons: [
             Weapons.Gun({
                 range:           150,

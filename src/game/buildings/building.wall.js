@@ -1,16 +1,16 @@
-var loader   = require("./building.loader")
-var Images   = require("../../img")
+var loader = require('./building.loader')
+var Images = require('../../img')
 
 module.exports = loader({
     name:        'Wall',
     constructor: {
-        Cost: {
-            Energy: 4,
-            Metal:  2
+        cost: {
+            energy: 4,
+            metal: 2
         }
     },
-    getSprite:   Images.Buildings.SmallPlatform,
+    getSprite: Images.buildings.SmallPlatform,
     template:    {
-        Health: 20
+        health: 20
     }
 })

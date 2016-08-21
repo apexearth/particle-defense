@@ -1,3 +1,3 @@
-var angular = require("angular")
-var app     = require("./app")
-angular.bootstrap(document, ['app'])
+var angular = require('angular');
+require('./app');
+angular.bootstrap(document, ['app']);

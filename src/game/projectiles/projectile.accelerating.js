@@ -1,16 +1,16 @@
-var PIXI               = require("pixi.js")
-var VelocityProjectile = require("./projectile.velocity")
+var PIXI = require('pixi.js')
+var VelocityProjectile = require('./projectile.velocity')
 
 module.exports = AcceleratingProjectile
 
 function AcceleratingProjectile(weapon) {
     VelocityProjectile.call(this, weapon);
-    this.Acceleration             = weapon.Acceleration;
+    this.acceleration = weapon.acceleration;
     this.velocityProjectileUpdate = this.update;
     this.update                   = function () {
         this.velocityProjectileUpdate();
-        this.VelocityX += Math.cos(this.Direction) * this.Acceleration;
-        this.VelocityY += Math.sin(this.Direction) * this.Acceleration;
+        this.velocity.x += Math.cos(this.direction) * this.acceleration;
+        this.velocity.y += Math.sin(this.direction) * this.acceleration;
     };
 }
 

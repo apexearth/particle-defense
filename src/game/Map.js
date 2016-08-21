@@ -1,9 +1,9 @@
-﻿var PIXI        = require("pixi.js")
-var General     = require("../util/General")
-var Grid        = require("../util/grid")
-var Settings    = require("./Settings")
-var Pathfind    = require("../util/grid/Pathfind")
-var BlockStatus = require("../util/grid/block-status")
+﻿var PIXI = require('pixi.js')
+var General = require('../util/General')
+var Grid = require('../util/grid')
+var Settings = require('./Settings')
+var Pathfind = require('../util/grid/Pathfind')
+var BlockStatus = require('../util/grid/block-status')
 
 module.exports = function (level, width, height, template) {
     var map = new PIXI.Container();
@@ -19,22 +19,14 @@ module.exports = function (level, width, height, template) {
 };
 
 function Map(level, width, height, template) {
-    this.Level         = level;
-    this.BlockSize     = Settings.BlockSize;
-    this.Width         = width;
-    this.Height        = height;
-    var _grid          = new Grid(0, 0, this.Width, this.Height);
-    this.PixelWidth    = this.Width * this.BlockSize;
-    this.PixelHeight   = this.Height * this.BlockSize;
+    this.level = level;
+    this.BlockSize = Settings.BlockSize;
+    this.width = width;
+    this.height = height;
+    var _grid = new Grid(0, 0, this.width, this.height);
+    this.pixelWidth = this.width * this.BlockSize;
+    this.pixelHeight = this.height * this.BlockSize;
 
-    if(typeof document !== 'undefined') {
-        this.canvas        = document.createElement('canvas');
-        this.context      = this.canvas.getContext("2d");
-        this.canvas.width  = this.PixelWidth;
-        this.canvas.height = this.PixelHeight;
-    }
-
-    this.RequiresDraw = true;
 
     this.BlockStatus        = function (x, y) {
         return _grid.BlockStatus(x, y);
@@ -70,39 +62,6 @@ function Map(level, width, height, template) {
         return path;
     };
 
-    this.draw = function () {
-        if (!this.RequiresDraw) return;
-        this.RequiresDraw = false;
-
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        var x = this.Width;
-        while (x--) {
-            var y = this.Height;
-            while (y--) {
-                var blockStatus = _grid.BlockStatus(x, y);
-                if (blockStatus === BlockStatus.IsNothing) {
-                    // Do nothing!
-                } else if (blockStatus === BlockStatus.IsEmpty) {
-                    this.context.fillStyle = 'rgba(12,12,12,1)';
-                    this.context.fillRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
-                } else if (blockStatus === BlockStatus.OnlyPassable) {
-                    this.context.fillStyle = 'rgba(20,20,20,1)';
-                    this.context.fillRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
-                }
-                else {
-                    this.context.fillStyle = 'rgba(7,7,7,1)';
-                    this.context.fillRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
-                }
-                if (blockStatus === BlockStatus.NotPassable
-                    || blockStatus === BlockStatus.IsEmpty) {
-                    this.context.strokeStyle = 'rgba(50,50,50,1)';
-                    this.context.lineWidth   = 1;
-                    this.context.strokeRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
-                }
-            }
-        }
-    };
-
     if (template) {
         if (template.BuildableBlocks) {
             var yCount = template.BuildableBlocks.length;
@@ -115,6 +74,49 @@ function Map(level, width, height, template) {
             }
         }
     }
+    
+    // Add drawing related functionality.
+    if (typeof document !== 'undefined') {
+        this.canvas = document.createElement('canvas');
+        this.context = this.canvas.getContext('2d');
+        this.canvas.width = this.pixelWidth;
+        this.canvas.height = this.pixelHeight;
+        this.requiresDraw = true;
+        this.draw = function () {
+            if (!this.requiresDraw) return;
+            this.requiresDraw = false;
+            
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            var x = this.width;
+            while (x--) {
+                var y = this.height;
+                while (y--) {
+                    var blockStatus = _grid.BlockStatus(x, y);
+                    if (blockStatus === BlockStatus.IsNothing) {
+                        // Do nothing!
+                    } else if (blockStatus === BlockStatus.IsEmpty) {
+                        this.context.fillStyle = 'rgba(12,12,12,1)';
+                        this.context.fillRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
+                    } else if (blockStatus === BlockStatus.OnlyPassable) {
+                        this.context.fillStyle = 'rgba(20,20,20,1)';
+                        this.context.fillRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
+                    }
+                    else {
+                        this.context.fillStyle = 'rgba(7,7,7,1)';
+                        this.context.fillRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
+                    }
+                    if (blockStatus === BlockStatus.NotPassable
+                        || blockStatus === BlockStatus.IsEmpty) {
+                        this.context.strokeStyle = 'rgba(50,50,50,1)';
+                        this.context.lineWidth = 1;
+                        this.context.strokeRect(x * this.BlockSize, y * this.BlockSize, this.BlockSize, this.BlockSize);
+                    }
+                }
+            }
+        };
+        this.draw();
+    }
 
-    this.draw();
+
+
 }

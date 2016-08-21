@@ -1,18 +1,18 @@
-var loader  = require("./building.loader")
-var Images  = require("../../img")
-var Weapons = require("../Weapons")
+var loader = require('./building.loader')
+var Images = require('../../img')
+var Weapons = require('../Weapons')
 
 module.exports = loader({
     name:        'Behemoth',
     constructor: {
-        Cost: {
-            Energy: 50,
-            Metal:  40
+        cost: {
+            energy: 50,
+            metal: 40
         }
     },
-    getSprite:   Images.Buildings.LargePlatform,
+    getSprite: Images.buildings.LargePlatform,
     template:    {
-        Health:  5,
+        health: 5,
         Weapons: [
             Weapons.Gun({
                 range:           300,

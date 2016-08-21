@@ -1,4 +1,4 @@
-﻿var BlockStatus = require("./block-status")
+﻿var BlockStatus = require('./block-status')
 var Pathfind    = module.exports = {}
 
 Pathfind.Settings                         = function () {
@@ -21,7 +21,7 @@ Pathfind.getPathByBlock  = function (grid, blockStart, blockTarget) {
     var open   = [];
 
     var start = blockStart;
-    if (start.Status() >= BlockStatus.NotPassable) return [];
+    if (start.status >= BlockStatus.NotPassable) return [];
     var current = start;
     var target  = blockTarget;
     //if (target.IsBlocked) return [];
@@ -42,7 +42,7 @@ Pathfind.getPathByBlock  = function (grid, blockStart, blockTarget) {
         current = target;
         //TODO: I don't think I should have to check if the parent is blocked here, but I do when the destination is surrounded by blocking tiles.
         while (current.Pathfind.Parent != null) {
-            if (current.Pathfind.Parent.Status() >= BlockStatus.NotPassable) target.Pathfind.Parent = null;
+            if (current.Pathfind.Parent.status >= BlockStatus.NotPassable) target.Pathfind.Parent = null;
             current = current.Pathfind.Parent;
         }
 
@@ -86,7 +86,7 @@ Pathfind.processBestScorer = function (grid, current, start, target, open, close
         var adjacentBlock = adjacentBlocks[i];
         var blockIsGood   =
                 adjacentBlock != null
-                && (adjacentBlock.Status() < BlockStatus.NotPassable || adjacentBlock == target)
+                && (adjacentBlock.status < BlockStatus.NotPassable || adjacentBlock == target)
                 && closed.indexOf(adjacentBlock) == -1
                 && Pathfind.diagonalScreen(current, adjacentBlock);
 
@@ -107,7 +107,7 @@ Pathfind.getBestScorer     = function (current, open) {
     var i = open.length, best = null;
     while (i--) {
         var block = open[i];
-        if (best == null || best.Pathfind.Score > block.Pathfind.Score) {
+        if (best == null || best.Pathfind.score > block.Pathfind.score) {
             best = block;
         }
     }
@@ -116,10 +116,10 @@ Pathfind.getBestScorer     = function (current, open) {
 
 Pathfind.diagonalScreen = function (current, adjacent) {
     return Pathfind.Settings.BlockedDiagonalMovement || adjacent.x == current.x || adjacent.y == current.y
-        || adjacent.x < current.x && (adjacent.y < current.y && (adjacent.BottomBlock == null || adjacent.BottomBlock.Status() < BlockStatus.NotPassable) && (adjacent.RightBlock == null || adjacent.RightBlock.Status() < BlockStatus.NotPassable)
-        || current.y < adjacent.y && (adjacent.TopBlock == null || adjacent.TopBlock.Status() < BlockStatus.NotPassable) && (adjacent.RightBlock == null || adjacent.RightBlock.Status() < BlockStatus.NotPassable))
-        || adjacent.x > current.x && (adjacent.y < current.y && (adjacent.BottomBlock == null || adjacent.BottomBlock.Status() < BlockStatus.NotPassable) && (adjacent.LeftBlock == null || adjacent.LeftBlock.Status() < BlockStatus.NotPassable)
-        || current.y < adjacent.y && (adjacent.TopBlock == null || adjacent.TopBlock.Status() < BlockStatus.NotPassable) && (adjacent.LeftBlock == null || adjacent.LeftBlock.Status() < BlockStatus.NotPassable));
+        || adjacent.x < current.x && (adjacent.y < current.y && (adjacent.BottomBlock == null || adjacent.BottomBlock.status < BlockStatus.NotPassable) && (adjacent.RightBlock == null || adjacent.RightBlock.status < BlockStatus.NotPassable)
+        || current.y < adjacent.y && (adjacent.TopBlock == null || adjacent.TopBlock.status < BlockStatus.NotPassable) && (adjacent.RightBlock == null || adjacent.RightBlock.status < BlockStatus.NotPassable))
+        || adjacent.x > current.x && (adjacent.y < current.y && (adjacent.BottomBlock == null || adjacent.BottomBlock.status < BlockStatus.NotPassable) && (adjacent.LeftBlock == null || adjacent.LeftBlock.status < BlockStatus.NotPassable)
+        || current.y < adjacent.y && (adjacent.TopBlock == null || adjacent.TopBlock.status < BlockStatus.NotPassable) && (adjacent.LeftBlock == null || adjacent.LeftBlock.status < BlockStatus.NotPassable));
 };
 Pathfind.calculateScore = function (currentX, currentY, targetX, targetY) {
     var x        = Math.abs(targetX - currentX);
@@ -136,7 +136,7 @@ Pathfind.calculate = function (block, parent, start, target) {
     else
         block.Pathfind.ScoreStart = Pathfind.calculateScore(block.x, block.y, parent.x, parent.y) + parent.Pathfind.ScoreStart;
     block.Pathfind.ScoreTarget = Pathfind.calculateScore(block.x, block.y, target.x, target.y);
-    block.Pathfind.Score       = block.Pathfind.ScoreStart + block.Pathfind.ScoreTarget;
+    block.Pathfind.score = block.Pathfind.ScoreStart + block.Pathfind.ScoreTarget;
     block.Pathfind.Parent      = parent;
 };
 

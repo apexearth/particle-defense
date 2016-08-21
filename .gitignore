@@ -1,4 +1,4 @@
-.hg/
-.hgignore
 node_modules/
 .idea/
+npm-debug.log
+build/

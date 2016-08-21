@@ -1,18 +1,26 @@
-var loader   = require("./building.loader")
-var Images   = require("../../img")
-var Weapons = require("../Weapons")
+var loader = require('./building.loader')
+var Images = require('../../img')
+var Weapons = require('../Weapons')
 
 module.exports = loader({
-        name: 'Laser',
-        constructor: {
-            Cost: {
-                Energy: 50,
-                Metal: 25
-            }
-        },
-        getSprite: Images.Buildings.Platform,
-        template: {
-            Health: 5,
-            Weapons: [Weapons.Laser(100, 60, 45, 4, .95)]
+    name: 'Laser',
+    constructor: {
+        cost: {
+            energy: 50,
+            metal: 25
         }
-    })
+    },
+    getSprite: Images.buildings.Platform,
+    template: {
+        health: 5,
+        Weapons: [
+            Weapons.Laser({
+                range: 100,
+                lifeSpan: 60,
+                damage: 4,
+                fireRate: 45,
+                accuracy: .95
+            })
+        ]
+    }
+})

@@ -1,5 +1,5 @@
-var keyboard = require("./keyboard")
-var mouse    = require("./mouse")
+var keyboard = require('./keyboard')
+var mouse = require('./mouse')
 
 module.exports = {
     Keyboard: keyboard,

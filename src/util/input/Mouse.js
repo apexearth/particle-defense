@@ -35,9 +35,9 @@ function wheelEvent(e) {
     while (i--) wheelEvents[i](delta);
 }
 if(typeof navigator !== 'undefined') {
-    var wheelEventName = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
+    var wheelEventName = (/Firefox/i.test(navigator.userAgent)) ? 'DOMMouseScroll' : 'mousewheel';
     if (document.attachEvent)
-        document.attachEvent("on" + wheelEventName, wheelEvent);
+        document.attachEvent('on' + wheelEventName, wheelEvent);
     else if (document.addEventListener)
         document.addEventListener(wheelEventName, wheelEvent, false);
 }

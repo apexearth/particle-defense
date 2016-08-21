@@ -1,4 +1,4 @@
 module.exports = {
     BlockSize: 40,
-    Second:    1000 / 60
+    second: 1000 / 60
 };

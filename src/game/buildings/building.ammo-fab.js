@@ -1,27 +1,27 @@
-var loader   = require("./building.loader")
-var Images   = require("../../img")
-var Building = require("./building")
+var loader = require('./building.loader')
+var Images = require('../../img')
+var Building = require('./building')
 
 module.exports = loader({
     name:        'AmmoFab',
     constructor: {
-        Cost:                {
-            Energy: 100,
-            Metal:  50
+        cost: {
+            energy: 100,
+            metal: 50
         },
-        ExtendedConstructor: function () {
+        extendedConstructor: function () {
             Building.prototype.addStorageToPlayer.call(this);
         }
     },
-    getSprite:   Images.Buildings.AmmoFab,
+    getSprite: Images.buildings.AmmoFab,
     template:    {
-        Health:             20,
-        ResourceStorage:    {
-            Ammo: 50
+        health: 20,
+        resourceStorage: {
+            ammo: 50
         },
-        ResourceGeneration: {
-            Ammo: 6
+        resourceGeneration: {
+            ammo: 6
         },
-        Updates:            []
+        updates: []
     }
 });

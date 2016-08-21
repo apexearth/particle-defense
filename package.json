@@ -7,7 +7,9 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha ./tests/*.js"
+    "test": "mocha ./tests/*.js",
+    "lint": "eslint ./**/*.js",
+    "build": "grunt default"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,7 @@
     "angular-mocks": "^1.5.8",
     "chai": "^3.5.0",
     "color": "^0.11.3",
+    "eslint": "^3.3.1",
     "grunt": "^1.0.1",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-uglify": "^2.0.0",

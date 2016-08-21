@@ -1,33 +1,33 @@
-﻿var Level       = require("./Level")
-var Settings   = require("./Settings")
-var Player      = require("./Player")
-var Buildings   = require("./buildings")
-var Units       = require("./units")
-var Unit        = require("./units/Unit")
-var SpawnPoint  = require("./SpawnPoint")
-var BlockStatus = require("../util/grid/block-status")
+﻿var Level = require('./Level')
+var Settings = require('./Settings')
+var Player = require('./Player')
+var Buildings = require('./buildings')
+var Units = require('./units')
+var Unit = require('./units/Unit')
+var SpawnPoint = require('./SpawnPoint')
+var BlockStatus = require('../util/grid/block-status')
 
 var Levels = module.exports = {};
 
 function CreateLevel(json) {
     var height = json.MapTemplate.BuildableBlocks.length;
     var width  = json.MapTemplate.BuildableBlocks[0].length;
-
-    var level = new Level(width, height, json.MapTemplate);
+    
+    var level = new level(width, height, json.MapTemplate);
 
     var player = new Player(level);
     level.addPlayer(player);
-    level.Player = player;
-
-    for (var _b in json.Buildings) {
-        var b        = json.Buildings[_b];
+    level.player = player;
+    
+    for (var _b in json.buildings) {
+        var b = json.buildings[_b];
         var building = new Buildings[b.constructor](level, player, b.Template);
         level.addBuilding(building);
     }
-
-    for (var _s in json.SpawnPoints) {
-        var s = json.SpawnPoints[_s];
-        level.SpawnPoints.push(new SpawnPoint(level, s));
+    
+    for (var _s in json.spawnPoints) {
+        var s = json.spawnPoints[_s];
+        level.spawnPoints.push(new SpawnPoint(level, s));
     }
 
     level.initialize(json.Initialize);
@@ -47,16 +47,16 @@ function CreateRandomLevel(json) {
             template[i][k] = 1 + Math.floor(Math.random() * 1.2);
         }
     }
-
-    var level = new Level(width, height, {BuildableBlocks: template});
+    
+    var level = new level(width, height, {BuildableBlocks: template});
 
     var player = new Player(level);
     level.addPlayer(player);
-    level.Player = player;
+    level.player = player;
 
     var randomX  = Math.floor(Math.random() * width);
     var randomY  = Math.floor(Math.random() * height);
-    var building = new Buildings.HomeBase(level, player, {BlockX: randomX, BlockY: randomY});
+    var building = new Buildings.homeBase(level, player, {BlockX: randomX, BlockY: randomY});
     level.addBuilding(building);
 
     // Add Spawn Points
@@ -76,11 +76,11 @@ function CreateRandomLevel(json) {
         }
         k = 1 + Math.floor(Math.random() * 3);
         while (k--) {
-            spawnTemplate.Waves.push({
-                UnitType:      "UnitCircle",
+            spawnTemplate.waves.push({
+                UnitType: 'UnitCircle',
                 Count:         1 + Math.floor(Math.random() * 50),
-                WaveDelay:     Settings.Second * 5,
-                SpawnInterval: Settings.Second,
+                WaveDelay: Settings.second * 5,
+                SpawnInterval: Settings.second,
                 Customization: {
                     Health:    Math.random() * k * 5 + k,
                     Radius:    Math.random() * 6,
@@ -89,7 +89,7 @@ function CreateRandomLevel(json) {
                 }
             });
         }
-        level.SpawnPoints.push(
+        level.spawnPoints.push(
             new SpawnPoint(level, spawnTemplate)
         )
     }
@@ -99,16 +99,16 @@ function CreateRandomLevel(json) {
 }
 
 Levels.LevelEmpty      = function () {
-    var level = new Level(11, 11);
+    var level = new level(11, 11);
 
     var player = new Player(level);
     level.addPlayer(player);
-    level.Player = player;
-    level.addBuilding(new Buildings.HomeBase(level, player, 5, 5));
+    level.player = player;
+    level.addBuilding(new Buildings.homeBase(level, player, 5, 5));
 
     return level;
 };
-Levels.LevelEmpty.Name = "Level Empty";
+Levels.LevelEmpty.Name = 'Level Empty';
 
 Levels.LevelTest      = function () {
     return CreateLevel({
@@ -116,26 +116,26 @@ Levels.LevelTest      = function () {
             Player: {Resources: {Ammo: 0, Energy: 200, Metal: 100}}
         },
         Buildings:   [
-            {constructor: "HomeBase", Template: {BlockX: 5, BlockY: 5}},
-            {constructor: "Gun", Template: {BlockX: 4, BlockY: 5}}
+            {constructor: 'HomeBase', Template: {BlockX: 5, BlockY: 5}},
+            {constructor: 'Gun', Template: {BlockX: 4, BlockY: 5}}
         ],
-        SpawnPoints: [
+        spawnPoints: [
             {
                 x:     3,
                 y:     5,
-                Waves: [
+                waves: [
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         10,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second,
                         Customization: {Health: 10, Radius: 3, MoveSpeed: 1}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         10,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second,
                         Customization: {Health: 12, Radius: 3.5, MoveSpeed: 1}
                     }
                 ]
@@ -159,83 +159,83 @@ Levels.LevelTest      = function () {
         }
     });
 };
-Levels.LevelTest.Name = "Level Test";
+Levels.LevelTest.Name = 'Level Test';
 
 Levels.LevelOne      = function () {
     return CreateLevel({
         Initialize:  {
             Player: {Resources: {Ammo: 0, Energy: 200, Metal: 100}},
         },
-        WaveDelay:   Settings.Second * 10,
+        WaveDelay: Settings.second * 10,
         Buildings:   [
-            {constructor: "HomeBase", Template: {BlockX: 10, BlockY: 10}}
+            {constructor: 'HomeBase', Template: {BlockX: 10, BlockY: 10}}
         ],
-        SpawnPoints: [
+        spawnPoints: [
             {
                 x:     10,
                 y:     0,
-                Waves: [
+                waves: [
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         10,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second,
                         Customization: {Health: 8, Radius: 3, MoveSpeed: 1}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         20,
-                        WaveDelay:     Settings.Second,
-                        SpawnInterval: Settings.Second * 3,
+                        WaveDelay: Settings.second,
+                        SpawnInterval: Settings.second * 3,
                         Customization: {Health: 24, Radius: 5, MoveSpeed: .6, FillColor: '#afa'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         40,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second * .75,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second * .75,
                         Customization: {Health: 18, Radius: 4, MoveSpeed: 1.15, FillColor: '#4f4'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         50,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second * 1.5,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second * 1.5,
                         Customization: {Health: 22, Radius: 4, MoveSpeed: .8, FillColor: '#44f'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         60,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second * .75,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second * .75,
                         Customization: {Health: 15, Radius: 4, MoveSpeed: 2, FillColor: '#f44'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         30,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second * .5,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second * .5,
                         Customization: {Health: 30, Radius: 8, MoveSpeed: .65, FillColor: '#444'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         100,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second * .3,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second * .3,
                         Customization: {Health: 10, Radius: 3, MoveSpeed: 1}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         10,
-                        WaveDelay:     Settings.Second,
-                        SpawnInterval: Settings.Second,
+                        WaveDelay: Settings.second,
+                        SpawnInterval: Settings.second,
                         Customization: {Health: 20, Radius: 2, MoveSpeed: 2}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         10,
-                        WaveDelay:     Settings.Second * 10,
-                        SpawnInterval: Settings.Second,
+                        WaveDelay: Settings.second * 10,
+                        SpawnInterval: Settings.second,
                         Customization: {Health: 100, Radius: 10, MoveSpeed: .5}
                     },
                 ]
@@ -268,62 +268,62 @@ Levels.LevelOne      = function () {
         }
     });
 };
-Levels.LevelOne.Name = "Level One";
+Levels.LevelOne.Name = 'Level One';
 
 Levels.LevelTwo      = function () {
     return CreateLevel({
         Initialize:  {
             Player:    {Resources: {Ammo: 0, Energy: 200, Metal: 100}},
-            WaveDelay: Settings.Second * 7,
+            WaveDelay: Settings.second * 7,
         },
         Buildings:   [
-            {constructor: "HomeBase", Template: {BlockX: 3, BlockY: 20}}
+            {constructor: 'HomeBase', Template: {BlockX: 3, BlockY: 20}}
         ],
-        SpawnPoints: [
+        spawnPoints: [
             {
                 x:     2,
                 y:     0,
-                Waves: [
+                waves: [
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         20,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second,
                         Customization: {Health: 5, Radius: 3, MoveSpeed: 1, FillColor: '#afa'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         20,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second,
                         Customization: {Health: 10, Radius: 3.5, MoveSpeed: 1, FillColor: '#0fa'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         20,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second * 2,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second * 2,
                         Customization: {Health: 20, Radius: 4, MoveSpeed: 1, FillColor: '#af0'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         20,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second * 2,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second * 2,
                         Customization: {Health: 20, Radius: 2.5, MoveSpeed: 1.5, FillColor: '#a0a'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         40,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second,
                         Customization: {Health: 25, Radius: 3, MoveSpeed: 1, FillColor: '#00a'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         80,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second * .5,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second * .5,
                         Customization: {Health: 35, Radius: 4, MoveSpeed: 1, FillColor: '#00a'}
                     },
                 ]
@@ -356,62 +356,62 @@ Levels.LevelTwo      = function () {
         }
     });
 };
-Levels.LevelTwo.Name = "Level Two";
+Levels.LevelTwo.Name = 'Level Two';
 
 Levels.LevelThree      = function () {
     return CreateLevel({
         Initialize:  {
             Player:    {Resources: {Ammo: 0, Energy: 200, Metal: 100}},
-            WaveDelay: Settings.Second * 7,
+            WaveDelay: Settings.second * 7,
         },
         Buildings:   [
-            {constructor: "HomeBase", Template: {BlockX: 10, BlockY: 15}}
+            {constructor: 'HomeBase', Template: {BlockX: 10, BlockY: 15}}
         ],
-        SpawnPoints: [
+        spawnPoints: [
             {
                 x:     1,
                 y:     0,
-                Waves: [
+                waves: [
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         20,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second,
                         Customization: {Health: 5, Radius: 3, MoveSpeed: 2, FillColor: '#afa'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         20,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second,
                         Customization: {Health: 10, Radius: 3.5, MoveSpeed: 2, FillColor: '#0fa'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         20,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second * 2,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second * 2,
                         Customization: {Health: 30, Radius: 5, MoveSpeed: 1, FillColor: '#af0'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         20,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second * 2,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second * 2,
                         Customization: {Health: 20, Radius: 2.5, MoveSpeed: 2.5, FillColor: '#a0a'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         40,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second,
                         Customization: {Health: 25, Radius: 3, MoveSpeed: 2, FillColor: '#00a'}
                     },
                     {
-                        UnitType:      "UnitCircle",
+                        UnitType: 'UnitCircle',
                         Count:         80,
-                        WaveDelay:     Settings.Second * 5,
-                        SpawnInterval: Settings.Second * .5,
+                        WaveDelay: Settings.second * 5,
+                        SpawnInterval: Settings.second * .5,
                         Customization: {Health: 35, Radius: 4, MoveSpeed: 2, FillColor: '#00a'}
                     },
                 ]
@@ -444,10 +444,10 @@ Levels.LevelThree      = function () {
         }
     });
 };
-Levels.LevelThree.Name = "Level Three";
+Levels.LevelThree.Name = 'Level Three';
 
 Levels.Random      = function () {
     return CreateRandomLevel({});
 };
-Levels.Random.Name = "Random";
+Levels.Random.Name = 'Random';
 

@@ -1,72 +1,72 @@
 ﻿describe('Player Tests', function () {
-    var Levels = require("../src/game/Levels");
-    var Buildings = require("../src/game/buildings/");
-    var PlayerCommands = require("../src/game/PlayerCommands");
-    var Player = require("../src/game/Player");
-    var expect = require("chai").expect;
+    var Levels = require('../src/game/Levels');
+    var Buildings = require('../src/game/buildings/');
+    var PlayerCommands = require('../src/game/PlayerCommands');
+    var Player = require('../src/game/Player');
+    var expect = require('chai').expect;
     var Gun = Buildings.Gun;
 
     it('should have commands to buy/create buildings', function () {
         var level = Levels.LevelTest();
-        var buildingCount = level.Buildings.length;
-        var playerBuildingCount = level.Player.Buildings.length;
-
-        level.Player.Resources.Energy = Gun.Cost.Energy;
-        level.Player.Resources.Metal = Gun.Cost.Metal;
-        PlayerCommands.CreateBuilding(level.Player, Gun, 2, 2);
-
-        expect(level.Buildings.length).to.equal(buildingCount + 1);
-        expect(level.Player.Buildings.length).to.equal(playerBuildingCount + 1);
-
-        expect(level.Player.Resources.Metal).to.equal(0);
-        expect(level.Player.Resources.Energy).to.equal(0);
+        var buildingCount = level.buildings.length;
+        var playerBuildingCount = level.player.buildings.length;
+    
+        level.player.resources.energy = Gun.Cost.energy;
+        level.player.resources.metal = Gun.Cost.metal;
+        PlayerCommands.CreateBuilding(level.player, Gun, 2, 2);
+    
+        expect(level.buildings.length).to.equal(buildingCount + 1);
+        expect(level.player.buildings.length).to.equal(playerBuildingCount + 1);
+    
+        expect(level.player.resources.metal).to.equal(0);
+        expect(level.player.resources.energy).to.equal(0);
     });
     it('should not be able to purchase a building if cost is too high', function () {
         var level = Levels.LevelTest();
-        var buildingCount = level.Buildings.length;
-        var playerBuildingCount = level.Player.Buildings.length;
-
-        level.Player.Resources.Energy = Gun.Cost.Energy - 1;
-        level.Player.Resources.Metal = Gun.Cost.Metal - 1;
-        PlayerCommands.CreateBuilding(level.Player, Gun, 2, 2);
-        expect(level.Buildings.length).to.equal(buildingCount);
-        expect(level.Player.Buildings.length).to.equal(playerBuildingCount);
+        var buildingCount = level.buildings.length;
+        var playerBuildingCount = level.player.buildings.length;
+    
+        level.player.resources.energy = Gun.Cost.energy - 1;
+        level.player.resources.metal = Gun.Cost.metal - 1;
+        PlayerCommands.CreateBuilding(level.player, Gun, 2, 2);
+        expect(level.buildings.length).to.equal(buildingCount);
+        expect(level.player.buildings.length).to.equal(playerBuildingCount);
     });
     it('should be able to sell buildings for a portion of their cost', function () {
         var level = Levels.LevelTest();
-        level.Player.Resources.Energy = Gun.Cost.Energy;
-        level.Player.Resources.Metal = Gun.Cost.Metal;
-        var building = PlayerCommands.CreateBuilding(level.Player, Gun, 2, 2);
+        level.player.resources.energy = Gun.Cost.energy;
+        level.player.resources.metal = Gun.Cost.metal;
+        var building = PlayerCommands.CreateBuilding(level.player, Gun, 2, 2);
         PlayerCommands.SellBuilding(building);
-        expect(level.Player.Resources.Metal).to.be.above(0);
+        expect(level.player.resources.metal).to.be.above(0);
     });
     it('should have a score and a method to add to it', function () {
         var level = Levels.LevelTest();
-        expect(level.Player.Score).to.not.be.undefined;
-        level.Player.AddScore(10);
-        expect(level.Player.Score).to.equal(10);
+        expect(level.player.score).to.not.be.undefined;
+        level.player.addScore(10);
+        expect(level.player.score).to.equal(10);
     });
 
     describe('cost handling', function () {
         it('can process requests to apply costs', function () {
             var player = new Player();
-            player.Resources.Energy = 100;
-            player.Resources.Metal = 100;
-            var result = player.TryApplyCost({
-                Energy: 101,
-                Metal: 50
+            player.resources.energy = 100;
+            player.resources.metal = 100;
+            var result = player.tryApplyCost({
+                energy: 101,
+                metal: 50
             });
             expect(result).to.equal(false);
-            expect(player.Resources.Energy).to.equal(100);
-            expect(player.Resources.Metal).to.equal(100);
-
-            result = player.TryApplyCost({
-                Energy: 1,
-                Metal: 2
+            expect(player.resources.energy).to.equal(100);
+            expect(player.resources.metal).to.equal(100);
+    
+            result = player.tryApplyCost({
+                energy: 1,
+                metal: 2
             });
             expect(result).to.equal(true);
-            expect(player.Resources.Energy).to.equal(99);
-            expect(player.Resources.Metal).to.equal(98);
+            expect(player.resources.energy).to.equal(99);
+            expect(player.resources.metal).to.equal(98);
         });
     });
 });

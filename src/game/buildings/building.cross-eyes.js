@@ -1,18 +1,18 @@
-var loader  = require("./building.loader")
-var Images  = require("../../img")
-var Weapons = require("../Weapons")
+var loader = require('./building.loader')
+var Images = require('../../img')
+var Weapons = require('../Weapons')
 
 module.exports = loader({
     name:        'CrossEyes',
     constructor: {
-        Cost: {
-            Energy: 35,
-            Metal:  20
+        cost: {
+            energy: 35,
+            metal: 20
         }
     },
-    getSprite:   Images.Buildings.Platform,
+    getSprite: Images.buildings.Platform,
     template:    {
-        Health:  5,
+        health: 5,
         Weapons: [
             Weapons.Gun({
                 range:           150,

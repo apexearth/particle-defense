@@ -1,6 +1,6 @@
-var PIXI             = require("pixi.js")
-var ThrownProjectile = require("./projectile.thrown")
-var Explosion        = require("./explosion")
+var PIXI = require('pixi.js')
+var ThrownProjectile = require('./projectile.thrown')
+var Explosion = require('./explosion')
 
 module.exports = GrenadeProjectile
 

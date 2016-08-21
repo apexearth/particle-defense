@@ -1,9 +1,9 @@
-﻿var math        = require("../util/math")
+﻿var math = require('../util/math')
 var Vector      = math.Vector;
-var Display     = require("../util/Display")
-var Grid        = require("../util/grid")
+var Display = require('../util/Display')
+var Grid = require('../util/grid')
 var Pathfind    = Grid.Pathfind;
-var BlockStatus = require("../util/grid/block-status")
+var BlockStatus = require('../util/grid/block-status')
 
 
 module.exports = PathfindExample
@@ -71,7 +71,7 @@ PathfindExample.drawCanvas = function () {
     while (x--) {
         var y = PathfindExample.instance.grid.Block[x].length;
         while (y--) {
-            if (PathfindExample.instance.grid.Block[x][y].Status() >= BlockStatus.NotPassable) {
+            if (PathfindExample.instance.grid.Block[x][y].status >= BlockStatus.NotPassable) {
                 Display.setFill('rgba(255,75,75,.5)');
             } else {
                 Display.setFill('rgba(75,75,75,.4)');
@@ -84,9 +84,9 @@ PathfindExample.drawCanvas = function () {
     Display.setFont(40, 'sans-serif');
     Display.setFill('rgb(255,255,255)');
     if (PathfindExample.instance.grid.BlockStatus(PathfindExample.instance.start.X, PathfindExample.instance.start.Y) >= BlockStatus.NotPassable)
-        Display.fillText("The start point is blocked.", 10, 50);
+        Display.fillText('The start point is blocked.', 10, 50);
     if (PathfindExample.instance.grid.BlockStatus(PathfindExample.instance.stop.X, PathfindExample.instance.stop.Y) >= BlockStatus.NotPassable)
-        Display.fillText("The target is blocked.", 10, 100);
+        Display.fillText('The target is blocked.', 10, 100);
     Display.Settings.DisableTranslation = false;
 };
 
@@ -94,7 +94,7 @@ PathfindExample.update = function () {
     Display.setDrawCanvas('Main');
     Display.clear();
     Display.Settings.InverseQuality();
-    Display.drawImage(Display.canvasList['Path'], 0, 0);
+    Display.drawImage(Display.canvasList['path'], 0, 0);
     Display.Settings.InverseQuality();
     setTimeout(function () {
         PathfindExample.update();

@@ -1,18 +1,18 @@
-var loader   = require("./building.loader")
-var Images   = require("../../img")
-var Weapons  = require("../Weapons")
+var loader = require('./building.loader')
+var Images = require('../../img')
+var Weapons = require('../Weapons')
 
 module.exports = loader({
     name:        'SharpShooter',
     constructor: {
-        Cost: {
-            Energy: 40,
-            Metal:  20
+        cost: {
+            energy: 40,
+            metal: 20
         }
     },
-    getSprite:   Images.Buildings.LargePlatform,
+    getSprite: Images.buildings.LargePlatform,
     template:    {
-        Health:  5,
+        health: 5,
         Weapons: [
             Weapons.Gun({
                 range:           200,

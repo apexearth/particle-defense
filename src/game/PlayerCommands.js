@@ -1,16 +1,16 @@
 ﻿module.exports = {
     CreateBuilding: function (player, buildingConstructor, blockX, blockY) {
-        if (player.Level.isBlockCoordBuildable(blockX, blockY) === true
-            && player.TryApplyCost(buildingConstructor.Cost)) {
-            var building = new buildingConstructor(player.Level, player, {BlockX: blockX, BlockY: blockY});
-            player.Buildings.push(building);
-            player.Level.Buildings.push(building);
+        if (player.level.isBlockCoordBuildable(blockX, blockY) === true
+            && player.tryApplyCost(buildingConstructor.Cost)) {
+            var building = new buildingConstructor(player.level, player, {BlockX: blockX, BlockY: blockY});
+            player.buildings.push(building);
+            player.level.buildings.push(building);
             return building;
         }
     },
     SellBuilding:   function (building) {
-        building.Player.Resources.Metal += building.constructor.Cost.Metal * 4 / 3;
-        building.Player.Buildings.splice(building.Player.Buildings.indexOf(building), 1);
-        building.Player.Level.Buildings.splice(building.Player.Level.Buildings.indexOf(building), 1);
+        building.player.resources.metal += building.constructor.Cost.metal * 4 / 3;
+        building.player.buildings.splice(building.player.buildings.indexOf(building), 1);
+        building.player.level.buildings.splice(building.player.level.buildings.indexOf(building), 1);
     }
 }
