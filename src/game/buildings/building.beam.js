@@ -1,6 +1,6 @@
-var loader = require('./building.loader')
-var Images = require('../../img')
-var Weapons = require('../Weapons')
+var loader = require('./building.loader');
+var Images = require('../../img');
+var Weapons = require('../Weapons');
 
 module.exports = loader({
     name:        'Beam',
@@ -23,4 +23,4 @@ module.exports = loader({
             })
         ]
     }
-})
+});

@@ -1,8 +1,7 @@
-var PIXI = require('pixi.js')
-var Projectiles = require('./projectiles')
-var math = require('../util/math')
-var Settings = require('./Settings')
-var Attribute = require('./Attribute')
+var PIXI = require('pixi.js');
+var Projectiles = require('./projectiles');
+var math = require('../util/math');
+var Attribute = require('./Attribute');
 
 var pi2    = Math.PI * 2,
     degree = pi2 / 360;
@@ -15,7 +14,7 @@ module.exports = {
     GrenadeLauncher: GrenadeLauncher,
     Laser:           Laser,
     Shocker:         Shocker
-}
+};
 
 function Weapon(building) {
     this.level = building.level;
@@ -165,7 +164,7 @@ function Weapon(building) {
     this.getAccuracyModification = function () {
         if (this.accuracy == null) return 0;
         return Math.PI * (Math.random() * this.accuracy - (this.accuracy / 2));
-    }
+    };
 }
 
 function Missile(options) {

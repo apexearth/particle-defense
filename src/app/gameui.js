@@ -1,7 +1,7 @@
-﻿var app = require('./app')
-var ParticleDefense = require('../game/ParticleDefense')
-var Buildings = require('../game/buildings')
-var input = require('../util/input')
+﻿var app = require('./app');
+var ParticleDefense = require('../game/ParticleDefense');
+var Buildings = require('../game/buildings');
+var input = require('../util/input');
 
 var Mouse = input.Mouse;
 return app.controller('GameUi', ['$scope', GameUi]);

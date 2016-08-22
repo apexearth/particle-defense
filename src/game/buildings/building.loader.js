@@ -1,5 +1,5 @@
-var Building = require('./Building')
-var General = require('../../util/General')
+var Building = require('./Building');
+var General = require('../../util/General');
 
 module.exports = function Create(obj) {
     var constructor  = function (level, player, templates) {
@@ -33,11 +33,11 @@ module.exports = function Create(obj) {
                 constructor.Cost[c] = (function (cost) {
                     return function (player) {
                         return Math.pow(cost, 1 + player.getBuildingCount(obj.name) / 20);
-                    }
+                    };
                 })(costs[c]);
             }
         }
     }
     General.NestedCopyTo(obj.constructor, constructor, [obj.constructor.Cost]);
     return constructor;
-}
+};

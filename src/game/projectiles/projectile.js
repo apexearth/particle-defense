@@ -1,7 +1,7 @@
-var PIXI = require('pixi.js')
-var Settings = require('../Settings')
+var PIXI = require('pixi.js');
+var Settings = require('../Settings');
 
-module.exports = Projectile
+module.exports = Projectile;
 
 function Projectile(weapon) {
     PIXI.Container.call(this);
@@ -13,7 +13,7 @@ function Projectile(weapon) {
     this.position.y = weapon.building.position.y;
     this.damage = weapon.damage;
     /** @returns Number **/
-    this.effectiveDamage = function (unit) {
+    this.effectiveDamage = function (/*unit*/) {
         return this.damage;
     };
     this.width = 1;

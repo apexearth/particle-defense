@@ -1,8 +1,6 @@
-var loader = require('./building.loader')
-var color = require('color')
-var Images = require('../../img')
-var Settings = require('../Settings')
-var Weapons = require('../Weapons')
+var loader = require('./building.loader');
+var Images = require('../../img');
+var Weapons = require('../Weapons');
 
 module.exports = loader({
     name: 'MachineGun',
@@ -26,4 +24,4 @@ module.exports = loader({
             })
         ]
     }
-})
+});

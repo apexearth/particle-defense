@@ -5,4 +5,4 @@
     Grenade: require('./projectile.grenade'),
     Missile: require('./projectile.missile'),
     Shock: require('./projectile.shock')
-}
+};

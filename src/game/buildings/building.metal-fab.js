@@ -1,6 +1,6 @@
-var loader = require('./building.loader')
-var Images = require('../../img')
-var Building = require('./Building')
+var loader = require('./building.loader');
+var Images = require('../../img');
+var Building = require('./Building');
 
 module.exports = loader({
     name:        'MetalFab',
@@ -24,4 +24,4 @@ module.exports = loader({
         },
         updates: []
     }
-})
+});

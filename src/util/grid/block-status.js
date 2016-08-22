@@ -4,4 +4,4 @@ module.exports = {
     NotPassable:  3,
     NotBuildable: 4,
     IsNothing:    5
-}
+};

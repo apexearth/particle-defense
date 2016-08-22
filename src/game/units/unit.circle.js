@@ -1,6 +1,6 @@
-var Unit = require('./Unit')
+var Unit = require('./Unit');
 
-module.exports = CircleUnit
+module.exports = CircleUnit;
 
 function CircleUnit(level, templates) {
     Unit.call(this, level, templates);

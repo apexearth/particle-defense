@@ -34,4 +34,4 @@ module.exports = {
         var aimTargetY = t * y2v + y2;
         return {x: aimTargetX, y: aimTargetY};
     }
-}
+};

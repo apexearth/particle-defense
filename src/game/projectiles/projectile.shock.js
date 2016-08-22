@@ -1,9 +1,9 @@
-var PIXI = require('pixi.js')
-var Projectile = require('./projectile')
-var Settings = require('../Settings')
-var math = require('../../util/math')
+var PIXI = require('pixi.js');
+var Projectile = require('./projectile');
+var Settings = require('../Settings');
+var math = require('../../util/math');
 
-module.exports = ShockProjectile
+module.exports = ShockProjectile;
 
 function ShockProjectile(weapon) {
     Projectile.call(this, weapon);
@@ -125,7 +125,7 @@ function ShockProjectile(weapon) {
                 py = y;
             }
         }
-    }
+    };
 }
 
 ShockProjectile.prototype             = Object.create(PIXI.Container.prototype);

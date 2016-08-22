@@ -1,9 +1,8 @@
-﻿var PIXI = require('pixi.js')
-var General = require('../util/General')
-var Grid = require('../util/grid')
-var Settings = require('./Settings')
-var Pathfind = require('../util/grid/Pathfind')
-var BlockStatus = require('../util/grid/block-status')
+﻿var PIXI = require('pixi.js');
+var Grid = require('../util/grid');
+var Settings = require('./Settings');
+var Pathfind = require('../util/grid/Pathfind');
+var BlockStatus = require('../util/grid/block-status');
 
 module.exports = function (level, width, height, template) {
     var map = new PIXI.Container();

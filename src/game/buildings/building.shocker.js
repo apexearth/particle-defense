@@ -1,6 +1,6 @@
-var loader = require('./building.loader')
-var Images = require('../../img')
-var Weapons = require('../Weapons')
+var loader = require('./building.loader');
+var Images = require('../../img');
+var Weapons = require('../Weapons');
 
 module.exports = loader({
     name: 'Shocker',
@@ -13,9 +13,9 @@ module.exports = loader({
     getSprite: Images.buildings.LargePlatform,
     template: {
         health: 5,
-        Canvas: function (canvas) {
+        Canvas: function (/*canvas*/) {
             // nothing yet
         },
         Weapons: [Weapons.Shocker(100, 30, 10, 1)]
     }
-})
+});

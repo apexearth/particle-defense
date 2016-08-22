@@ -2,7 +2,7 @@
     var Levels = require('../src/game/Levels');
     var Projectiles = require('../src/game/projectiles');
     var math = require('../src/util/math');
-    var Unit = require('../src/game/units/Unit')
+    var Unit = require('../src/game/units/Unit');
     var expect = require('chai').expect;
 
     it('should move', function () {

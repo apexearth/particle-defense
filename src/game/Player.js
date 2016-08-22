@@ -1,4 +1,4 @@
-﻿module.exports = Player
+﻿module.exports = Player;
 
 function Player(level) {
     this.level = level;
@@ -73,5 +73,5 @@ function Player(level) {
     };
     this.update                    = function () {
         this.checkResourceStorageLimit();
-    }
+    };
 }

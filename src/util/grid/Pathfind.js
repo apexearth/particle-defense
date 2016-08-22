@@ -1,5 +1,5 @@
-﻿var BlockStatus = require('./block-status')
-var Pathfind    = module.exports = {}
+﻿var BlockStatus = require('./block-status');
+var Pathfind = module.exports = {};
 
 Pathfind.Settings                         = function () {
 };

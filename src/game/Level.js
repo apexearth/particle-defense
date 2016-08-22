@@ -1,16 +1,16 @@
-﻿var PIXI = require('pixi.js')
+﻿var PIXI = require('pixi.js');
 var renderer = require('./renderer');
-var Map = require('./Map')
-var PlayerCommands = require('./PlayerCommands')
-var General = require('../util/General')
-var CommandQueue = require('./CommandQueue')
-var BlockStatus = require('../util/grid/block-status')
+var Map = require('./Map');
+var PlayerCommands = require('./PlayerCommands');
+var General = require('../util/General');
+var CommandQueue = require('./CommandQueue');
+var BlockStatus = require('../util/grid/block-status');
 
-var input = require('../util/input')
+var input = require('../util/input');
 var Mouse    = input.Mouse;
 var Keyboard = input.Keyboard;
 
-var common = require('./common')
+var common = require('./common');
 var Settings = common.Settings;
 
 module.exports = Level;
@@ -179,7 +179,7 @@ function Level(width, height, mapTemplate) {
         );
     };
     this.getPath        = function (blockStart, blockTarget) {
-        return _map.getPathByBlock(blockStart, blockTarget)
+        return _map.getPathByBlock(blockStart, blockTarget);
     };
 
     this.checkWinConditions  = function () {
@@ -232,7 +232,6 @@ function Level(width, height, mapTemplate) {
             if (this.getPlacementBuilding != null) {
                 Mouse.RightButton = false;
                 this.endBuildingPlacement();
-                return;
             }
         }
     };
@@ -307,7 +306,7 @@ function Level(width, height, mapTemplate) {
     this.initialize = function (template) {
         General.NestedCopyTo(template, this);
     };
-};
-level.prototype = Object.create(PIXI.Container.prototype);
-level.prototype.constructor = level;
+}
+Level.prototype = Object.create(PIXI.Container.prototype);
+Level.prototype.constructor = Level;
 

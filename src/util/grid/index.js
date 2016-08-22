@@ -1,8 +1,8 @@
-﻿var BlockStatus = require('./block-status')
-var Block = require('./block')
-var Pathfind = require('./Pathfind')
+﻿var BlockStatus = require('./block-status');
+var Block = require('./block');
+var Pathfind = require('./Pathfind');
 
-module.exports = Grid
+module.exports = Grid;
 
 function Grid(minX, minY, maxX, maxY) {
     this.Block       = [];
@@ -78,4 +78,4 @@ Grid.prototype.getAdjacentBlocks  = function (blockX, blockY, diagonal) {
 };
 
 Grid.Pathfind    = Pathfind;
-Grid.BlockStatus = BlockStatus
+Grid.BlockStatus = BlockStatus;

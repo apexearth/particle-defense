@@ -1,5 +1,5 @@
-﻿var CommandQueue = require('./CommandQueue')
-var Settings = require('./Settings')
+﻿var CommandQueue = require('./CommandQueue');
+var Settings = require('./Settings');
 
 var ParticleDefense = module.exports = {};
 
@@ -28,7 +28,7 @@ ParticleDefense.update          = function () {
 ParticleDefense.updateUi        = function () {
     if (ParticleDefense.view != ParticleDefense.Views.GameUi) return;
     setTimeout(function () {
-        ParticleDefense.updateUi()
+        ParticleDefense.updateUi();
     }, 100);
     ParticleDefense.uiScope.$apply();
 };

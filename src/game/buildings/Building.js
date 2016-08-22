@@ -1,11 +1,9 @@
-﻿var loader = require('./building.loader');
-var color = require('color');
-var Settings = require('../Settings');
+﻿var Settings = require('../Settings');
 var Attribute = require('../Attribute');
 var General = require('../../util/General');
 var PIXI = require('pixi.js');
 
-module.exports = Building
+module.exports = Building;
 function Building(level, player, templates) {
     PIXI.Container.call(this);
     level.addChild(this);
@@ -62,7 +60,7 @@ function Building(level, player, templates) {
                             return me.resourceStorage[resourceName] * metalFactor;
                         }
                     }
-                )
+                );
             }
         };
         var createAttributeForGeneration = function (resourceName, energyFactor, metalFactor) {
@@ -85,7 +83,7 @@ function Building(level, player, templates) {
                             return me.resourceGeneration[resourceName] * metalFactor;
                         }
                     }
-                )
+                );
             }
         };
         
@@ -114,7 +112,7 @@ function Building(level, player, templates) {
                 }
             }.bind(this)
         }
-    })
+    });
 
     this.update         = function () {
         if (this.health <= 0) {

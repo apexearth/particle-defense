@@ -15,7 +15,6 @@
         while (i--) {
             var initialDistance = math.distance(unit.X - unit.destination.X, unit.Y - unit.destination.Y);
             level.update();
-            console.log(unit.X + ',' + unit.destination.X);
             var distanceAfterUpdate = math.distance(unit.X - unit.destination.X, unit.Y - unit.destination.Y);
             expect(initialDistance).to.be.above(distanceAfterUpdate);
         }

@@ -1,4 +1,4 @@
-﻿var General = module.exports = {}
+﻿var General = module.exports = {};
 
 if (typeof navigator !== 'undefined') {
     General.is_chrome   = navigator.userAgent.indexOf('Chrome') > -1;

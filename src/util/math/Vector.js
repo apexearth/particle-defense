@@ -42,7 +42,7 @@ Vector.prototype.sub = function (v) {
     return this;
 };
 
-Vector.prototype.invert = function (v) {
+Vector.prototype.invert = function (/*v*/) {
     this.x *= -1;
     this.y *= -1;
     return this;
@@ -70,7 +70,7 @@ Vector.prototype.dot = function (v) {
     return this.x * v.x + this.y * v.y;
 };
 
-Vector.prototype.length = function (v) {
+Vector.prototype.length = function (/*v*/) {
     return Math.sqrt(this.x * this.x + this.y * this.y);
 };
 
@@ -115,7 +115,7 @@ Vector.prototype.setLength = function (l) {
     return this;
 };
 
-Vector.prototype.invert = function (v) {
+Vector.prototype.invert = function (/*v*/) {
     this.x *= -1;
     this.y *= -1;
     return this;

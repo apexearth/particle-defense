@@ -1,8 +1,8 @@
-var PIXI = require('pixi.js')
-var Projectile = require('./projectile')
-var math = require('../../util/math')
+var PIXI = require('pixi.js');
+var Projectile = require('./projectile');
+var math = require('../../util/math');
 
-module.exports = BeamProjectile
+module.exports = BeamProjectile;
 
 function BeamProjectile(weapon) {
     Projectile.call(this, weapon);

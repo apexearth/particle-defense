@@ -1,19 +1,17 @@
-﻿var Level = require('./Level')
-var Settings = require('./Settings')
-var Player = require('./Player')
-var Buildings = require('./buildings')
-var Units = require('./units')
-var Unit = require('./units/Unit')
-var SpawnPoint = require('./SpawnPoint')
-var BlockStatus = require('../util/grid/block-status')
+﻿var Level = require('./Level');
+var Settings = require('./Settings');
+var Player = require('./Player');
+var Buildings = require('./buildings');
+var SpawnPoint = require('./SpawnPoint');
+var BlockStatus = require('../util/grid/block-status');
 
 var Levels = module.exports = {};
 
 function CreateLevel(json) {
     var height = json.MapTemplate.BuildableBlocks.length;
     var width  = json.MapTemplate.BuildableBlocks[0].length;
-    
-    var level = new level(width, height, json.MapTemplate);
+
+    var level = new Level(width, height, json.MapTemplate);
 
     var player = new Player(level);
     level.addPlayer(player);
@@ -91,7 +89,7 @@ function CreateRandomLevel(json) {
         }
         level.spawnPoints.push(
             new SpawnPoint(level, spawnTemplate)
-        )
+        );
     }
 
     level.initialize(json);
@@ -99,12 +97,12 @@ function CreateRandomLevel(json) {
 }
 
 Levels.LevelEmpty      = function () {
-    var level = new level(11, 11);
+    var level = new Level(11, 11);
 
     var player = new Player(level);
     level.addPlayer(player);
     level.player = player;
-    level.addBuilding(new Buildings.homeBase(level, player, 5, 5));
+    level.addBuilding(new Buildings.HomeBase(level, player, 5, 5));
 
     return level;
 };

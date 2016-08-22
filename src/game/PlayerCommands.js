@@ -13,4 +13,4 @@
         building.player.buildings.splice(building.player.buildings.indexOf(building), 1);
         building.player.level.buildings.splice(building.player.level.buildings.indexOf(building), 1);
     }
-}
+};

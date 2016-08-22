@@ -17,9 +17,9 @@ module.exports = function (owner, valueF, upgradeF, canUpgradeF, cost) {
             attribute.cost[c] = (function (cost) {
                 return function () {
                     return Math.pow(cost(), 1 + owner.upgradeCount / 20);
-                }
+                };
             })(cost[c]);
         }
     }
     return attribute;
-}
+};

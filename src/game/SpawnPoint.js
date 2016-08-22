@@ -1,13 +1,13 @@
-var PIXI = require('pixi.js')
-var Units = require('./units')
-var Settings = require('./Settings')
+var PIXI = require('pixi.js');
+var Units = require('./units');
+var Settings = require('./Settings');
 
 module.exports = function (level, template) {
     var spawnPoint = new PIXI.Container();
     level.addChild(spawnPoint);
     SpawnPoint.call(spawnPoint, level, template);
     return spawnPoint;
-}
+};
 
 function SpawnPoint(level, template) {
     PIXI.Container.call(this);

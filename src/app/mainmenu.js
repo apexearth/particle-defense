@@ -1,6 +1,6 @@
-﻿var app = require('./app')
-var ParticleDefense = require('../game/ParticleDefense')
-var Levels = require('../game/Levels')
+﻿var app = require('./app');
+var ParticleDefense = require('../game/ParticleDefense');
+var Levels = require('../game/Levels');
 
 app.controller('MainMenu', ['$scope', MainMenu]);
 module.exports = MainMenu;

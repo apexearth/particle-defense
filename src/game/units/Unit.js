@@ -1,9 +1,9 @@
-﻿var PIXI = require('pixi.js')
-var math = require('../../util/math')
-var Settings = require('../Settings')
-var General = require('../../util/General')
+﻿var PIXI = require('pixi.js');
+var math = require('../../util/math');
+var Settings = require('../Settings');
+var General = require('../../util/General');
 
-module.exports = Unit
+module.exports = Unit;
 
 function Unit(level, templates) {
     PIXI.Container.call(this);

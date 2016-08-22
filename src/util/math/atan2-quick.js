@@ -1,4 +1,4 @@
-﻿module.exports = new Atan2()
+﻿module.exports = new Atan2();
 
 function Atan2() {
     this.ATAN2_BITS = 6; // 4096 total angles

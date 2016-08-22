@@ -1,6 +1,6 @@
-var loader = require('./building.loader')
-var Images = require('../../img')
-var Building = require('./building')
+var loader = require('./building.loader');
+var Images = require('../../img');
+var Building = require('./building');
 
 module.exports = loader({
     name: 'EnergyFab',
@@ -24,4 +24,4 @@ module.exports = loader({
         },
         updates: []
     }
-})
+});

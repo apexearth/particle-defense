@@ -1,7 +1,7 @@
-var PIXI = require('pixi.js')
-var Settings = require('../Settings')
+var PIXI = require('pixi.js');
+var Settings = require('../Settings');
 
-module.exports = Explosion
+module.exports = Explosion;
 
 function Explosion(particle) {
     PIXI.Container.call(this);
@@ -42,7 +42,7 @@ function Explosion(particle) {
         this.graphics.beginFill(0xFF8800, ((this.explosiveTime - this.explosiveTimeCount) / this.explosiveTime / 1.2));
         this.graphics.drawCircle(0, 0, this.radius);
         this.graphics.endFill();
-    }
+    };
 }
 
 Explosion.prototype             = Object.create(PIXI.Container.prototype);

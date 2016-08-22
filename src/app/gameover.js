@@ -1,5 +1,5 @@
-﻿var app = require('./app.js')
-var ParticleDefense = require('../game/ParticleDefense')
+﻿var app = require('./app.js');
+var ParticleDefense = require('../game/ParticleDefense');
 
 module.exports = app.controller('GameOver', ['$scope', GameOver]);
 

@@ -1,5 +1,5 @@
-var loader = require('./building.loader')
-var Images = require('../../img')
+var loader = require('./building.loader');
+var Images = require('../../img');
 
 module.exports = loader({
     name:        'Wall',
@@ -13,4 +13,4 @@ module.exports = loader({
     template:    {
         health: 20
     }
-})
+});

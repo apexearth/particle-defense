@@ -1,12 +1,12 @@
-﻿var math = require('../util/math')
+﻿var math = require('../util/math');
 var Vector      = math.Vector;
-var Display = require('../util/Display')
-var Grid = require('../util/grid')
+var Display = require('../util/Display');
+var Grid = require('../util/grid');
 var Pathfind    = Grid.Pathfind;
-var BlockStatus = require('../util/grid/block-status')
+var BlockStatus = require('../util/grid/block-status');
 
 
-module.exports = PathfindExample
+module.exports = PathfindExample;
 
 PathfindExample.instance = new PathfindExample();
 function PathfindExample() {
@@ -35,11 +35,11 @@ PathfindExample.drawCanvas = function () {
     Display.Settings.DisableTranslation = true;
     var blockSize                       = 100;
     Display.createDrawCanvas('Path', PathfindExample.instance.grid.MaxX * blockSize + blockSize, PathfindExample.instance.grid.MaxY * blockSize + blockSize);
-    if (pathfind.LastPath.open) {
+    if (Pathfind.LastPath.open) {
         Display.setFill('rgb(175,175,175)');
-        var c = pathfind.LastPath.closed.length;
+        var c = Pathfind.LastPath.closed.length;
         while (c--) {
-            var closedBlock = pathfind.LastPath.closed[c];
+            var closedBlock = Pathfind.LastPath.closed[c];
             Display.fillRect(closedBlock.X * blockSize, closedBlock.Y * blockSize, blockSize, blockSize);
         }
     }
@@ -56,12 +56,12 @@ PathfindExample.drawCanvas = function () {
     Display.fillRect(PathfindExample.instance.stop.X * blockSize + 25, PathfindExample.instance.stop.Y * blockSize + 25, blockSize - 50, blockSize - 50);
 
 
-    if (pathfind.LastPath.open) {
+    if (Pathfind.LastPath.open) {
         Display.setFill('rgb(55,55,55)');
         Display.setFont(20, 'sans-serif');
-        c = pathfind.LastPath.closed.length;
+        c = Pathfind.LastPath.closed.length;
         while (c--) {
-            closedBlock = pathfind.LastPath.closed[c];
+            closedBlock = Pathfind.LastPath.closed[c];
             Display.fillText('c' + c.toFixed(0), closedBlock.X * blockSize + 5, closedBlock.Y * blockSize + 21);
         }
     }

@@ -1,4 +1,4 @@
-var PIXI = require('pixi.js')
+var PIXI = require('pixi.js');
 
 module.exports = {
     AmmoFab:       function () {
@@ -43,4 +43,4 @@ module.exports = {
         sprite.anchor.x = sprite.anchor.y = .5;
         return sprite;
     }
-}
+};
