@@ -116,10 +116,10 @@ Pathfind.getBestScorer     = function (current, open) {
 
 Pathfind.diagonalScreen = function (current, adjacent) {
     return Pathfind.Settings.BlockedDiagonalMovement || adjacent.x == current.x || adjacent.y == current.y
-        || adjacent.x < current.x && (adjacent.y < current.y && (adjacent.BottomBlock == null || adjacent.BottomBlock.status < BlockStatus.NotPassable) && (adjacent.RightBlock == null || adjacent.RightBlock.status < BlockStatus.NotPassable)
-        || current.y < adjacent.y && (adjacent.TopBlock == null || adjacent.TopBlock.status < BlockStatus.NotPassable) && (adjacent.RightBlock == null || adjacent.RightBlock.status < BlockStatus.NotPassable))
-        || adjacent.x > current.x && (adjacent.y < current.y && (adjacent.BottomBlock == null || adjacent.BottomBlock.status < BlockStatus.NotPassable) && (adjacent.LeftBlock == null || adjacent.LeftBlock.status < BlockStatus.NotPassable)
-        || current.y < adjacent.y && (adjacent.TopBlock == null || adjacent.TopBlock.status < BlockStatus.NotPassable) && (adjacent.LeftBlock == null || adjacent.LeftBlock.status < BlockStatus.NotPassable));
+        || adjacent.x < current.x && (adjacent.y < current.y && (adjacent.bottomBlock == null || adjacent.bottomBlock.status < BlockStatus.NotPassable) && (adjacent.rightBlock == null || adjacent.rightBlock.status < BlockStatus.NotPassable)
+        || current.y < adjacent.y && (adjacent.topBlock == null || adjacent.topBlock.status < BlockStatus.NotPassable) && (adjacent.rightBlock == null || adjacent.rightBlock.status < BlockStatus.NotPassable))
+        || adjacent.x > current.x && (adjacent.y < current.y && (adjacent.bottomBlock == null || adjacent.bottomBlock.status < BlockStatus.NotPassable) && (adjacent.leftBlock == null || adjacent.leftBlock.status < BlockStatus.NotPassable)
+        || current.y < adjacent.y && (adjacent.topBlock == null || adjacent.topBlock.status < BlockStatus.NotPassable) && (adjacent.leftBlock == null || adjacent.leftBlock.status < BlockStatus.NotPassable));
 };
 Pathfind.calculateScore = function (currentX, currentY, targetX, targetY) {
     var x        = Math.abs(targetX - currentX);

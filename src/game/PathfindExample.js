@@ -11,15 +11,15 @@ module.exports = PathfindExample;
 PathfindExample.instance = new PathfindExample();
 function PathfindExample() {
     this.grid = new Grid(0, 0, 10 + Math.floor(Math.random() * 10), 10 + Math.floor(Math.random() * 10));
-    var i     = Math.floor(this.grid.MaxX * this.grid.MaxY * .25);
+    var i = Math.floor(this.grid.maxX * this.grid.maxY * .25);
     while (i--)
-        this.grid.SetBlockStatus(Math.round(this.grid.MaxX * Math.random()), Math.round(this.grid.MaxY * Math.random()), BlockStatus.NotPassable);
-    this.start = Vector.create(Math.floor(Math.random() * this.grid.MaxX), Math.floor(Math.random() * this.grid.MaxY));
-    this.stop  = Vector.create(Math.floor(Math.random() * this.grid.MaxX), Math.floor(Math.random() * this.grid.MaxY));
+        this.grid.setBlockStatus(Math.round(this.grid.maxX * Math.random()), Math.round(this.grid.maxY * Math.random()), BlockStatus.NotPassable);
+    this.start = Vector.create(Math.floor(Math.random() * this.grid.maxX), Math.floor(Math.random() * this.grid.maxY));
+    this.stop = Vector.create(Math.floor(Math.random() * this.grid.maxX), Math.floor(Math.random() * this.grid.maxY));
     this.path  = Pathfind.getPathByVector(this.grid, this.start, this.stop);
 
-    Display.drawOffsetXT = Display.drawOffsetX = -this.grid.MaxX / 2 * 100 - 50;
-    Display.drawOffsetYT = Display.drawOffsetY = -this.grid.MaxY / 2 * 100 - 50;
+    Display.drawOffsetXT = Display.drawOffsetX = -this.grid.maxX / 2 * 100 - 50;
+    Display.drawOffsetYT = Display.drawOffsetY = -this.grid.maxY / 2 * 100 - 50;
 
 }
 
@@ -34,7 +34,7 @@ PathfindExample.initialize = function (canvas) {
 PathfindExample.drawCanvas = function () {
     Display.Settings.DisableTranslation = true;
     var blockSize                       = 100;
-    Display.createDrawCanvas('Path', PathfindExample.instance.grid.MaxX * blockSize + blockSize, PathfindExample.instance.grid.MaxY * blockSize + blockSize);
+    Display.createDrawCanvas('Path', PathfindExample.instance.grid.maxX * blockSize + blockSize, PathfindExample.instance.grid.maxY * blockSize + blockSize);
     if (Pathfind.LastPath.open) {
         Display.setFill('rgb(175,175,175)');
         var c = Pathfind.LastPath.closed.length;
@@ -83,9 +83,9 @@ PathfindExample.drawCanvas = function () {
 
     Display.setFont(40, 'sans-serif');
     Display.setFill('rgb(255,255,255)');
-    if (PathfindExample.instance.grid.BlockStatus(PathfindExample.instance.start.X, PathfindExample.instance.start.Y) >= BlockStatus.NotPassable)
+    if (PathfindExample.instance.grid.blockStatus(PathfindExample.instance.start.X, PathfindExample.instance.start.Y) >= BlockStatus.NotPassable)
         Display.fillText('The start point is blocked.', 10, 50);
-    if (PathfindExample.instance.grid.BlockStatus(PathfindExample.instance.stop.X, PathfindExample.instance.stop.Y) >= BlockStatus.NotPassable)
+    if (PathfindExample.instance.grid.blockStatus(PathfindExample.instance.stop.X, PathfindExample.instance.stop.Y) >= BlockStatus.NotPassable)
         Display.fillText('The target is blocked.', 10, 100);
     Display.Settings.DisableTranslation = false;
 };

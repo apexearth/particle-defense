@@ -13,6 +13,9 @@ function Block(x, y) {
         status: {
             get: function () {
                 return _status;
+            },
+            set: function (value) {
+                _status = value;
             }
         },
         building: {

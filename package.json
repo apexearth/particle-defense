@@ -8,8 +8,9 @@
   },
   "scripts": {
     "test": "mocha ./tests/*.js",
-    "lint": "eslint src/**/*.js tests/**/*.js Gruntfile.js",
-    "build": "grunt default"
+    "eslint": "eslint src/**/*.js tests/**/*.js Gruntfile.js",
+    "browserify": "browserify src/index.js build/particle-defense.js",
+    "dev": "npm-run-all eslint test browserify"
   },
   "repository": {
     "type": "git",
@@ -24,13 +25,10 @@
   "devDependencies": {
     "angular": "^1.5.8",
     "angular-mocks": "^1.5.8",
+    "browserify": "^13.1.0",
     "chai": "^3.5.0",
     "color": "^0.11.3",
     "eslint": "^3.3.1",
-    "grunt": "^1.0.1",
-    "grunt-browserify": "^5.0.0",
-    "grunt-contrib-uglify": "^2.0.0",
-    "grunt-contrib-watch": "^1.0.0",
     "ng-grid": "^2.0.1",
     "pixi.js": "git+https://github.com/apexearth/pixi.js.git",
     "raf": "^3.2.0"
