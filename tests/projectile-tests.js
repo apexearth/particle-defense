@@ -14,19 +14,19 @@
             2);
         level.projectiles.push(projectile);
         level.update();
-        expect(projectile.X).to.be.above(0);
-        expect(projectile.Y).to.be.above(0);
+        expect(projectile.x).to.be.above(0);
+        expect(projectile.y).to.be.above(0);
     });
 
     it('should die on impact, by default', function () {
         var level = Levels.LevelTest();
         var building = level.buildings[1];
-        var unit = new Unit(level, {X: building.X - 50, Y: building.Y});
+        var unit = new Unit(level, {x: building.x - 50, y: building.y});
         level.units.push(unit);
 
         var projectile = new Projectiles.Bullet(
             building.weapons[0],
-            math.angle(building.X, building.Y, unit.X, unit.Y),
+            math.angle(building.x, building.y, unit.x, unit.y),
             3);
         level.projectiles.push(projectile);
 

@@ -6,7 +6,6 @@ var PIXI = require('pixi.js');
 module.exports = Building;
 function Building(level, player, templates) {
     PIXI.Container.call(this);
-    level.addChild(this);
     var me = this;
 
     this.graphics = new PIXI.Graphics();
@@ -189,7 +188,7 @@ Building.prototype             = Object.create(PIXI.Container.prototype);
 Building.prototype.constructor = Building;
 
 Building.prototype.addStorageToPlayer      = function () {
-    if (this.player === null) return;
+    if (!this.player) return;
     for (var key in this.resourceStorage) {
         if (this.resourceStorage.hasOwnProperty(key)) {
             this.player.resourceStorage[key] += this.resourceStorage[key];
@@ -197,7 +196,7 @@ Building.prototype.addStorageToPlayer      = function () {
     }
 };
 Building.prototype.removeStorageFromPlayer = function () {
-    if (this.player === null) return;
+    if (!this.player) return;
     for (var key in this.resourceStorage) {
         if (this.resourceStorage.hasOwnProperty(key)) {
             this.player.resourceStorage[key] -= this.resourceStorage[key];

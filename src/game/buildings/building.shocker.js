@@ -16,6 +16,6 @@ module.exports = loader({
         Canvas: function (/*canvas*/) {
             // nothing yet
         },
-        Weapons: [Weapons.Shocker(100, 30, 10, 1)]
+        weapons: [Weapons.Shocker(100, 30, 10, 1)]
     }
 });

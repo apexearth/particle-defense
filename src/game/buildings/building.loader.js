@@ -4,6 +4,7 @@ var General = require('../../util/General');
 module.exports = function Create(obj) {
     var constructor  = function (level, player, templates) {
         var building  = new Building(level, player, templates);
+        level.addChild(building);
         building.Name = obj.name;
         if (obj.getSprite != null) {
             building.addChildAt(obj.getSprite(), 0);

@@ -4,33 +4,23 @@ var Settings = require('./Settings');
 var Pathfind = require('../util/grid/Pathfind');
 var BlockStatus = require('../util/grid/block-status');
 
-module.exports = function (level, width, height, template) {
-    var map = new PIXI.Container();
-    level.addChild(map);
-    Map.call(map, level, width, height, template);
-
-    if(typeof document !== 'undefined') {
-        var mapSprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(map.canvas));
-        map.addChild(mapSprite);
-    }
-
-    return map;
-};
+module.exports = Map;
 
 function Map(level, width, height, template) {
     this.level = level;
+    this.container = new PIXI.Container();
     this.blockSize = Settings.BlockSize;
+    var _grid = new Grid(0, 0, width, height);
     this.width = width;
     this.height = height;
-    var _grid = new Grid(0, 0, this.width, this.height);
-    this.pixelWidth = this.width * this.blockSize;
-    this.pixelHeight = this.height * this.blockSize;
+    this.pixelWidth = width * this.blockSize;
+    this.pixelHeight = height * this.blockSize;
 
 
     this.blockStatus = function (x, y) {
         return _grid.blockStatus(x, y);
     };
-    this.getBlock           = function (x, y) {
+    this.getBlock = function (x, y) {
         return _grid.getBlock(x, y);
     };
     this.getBlockFromVector = function (vector) {
@@ -46,13 +36,13 @@ function Map(level, width, height, template) {
     this.getBlockOrNullFromVector = function (vector) {
         return this.getBlockOrNull(vector.x, vector.y);
     };
-    this.getBlockOrNull           = function (x, y) {
+    this.getBlockOrNull = function (x, y) {
         return _grid.getBlockOrNull(x, y);
     };
 
     this.getPathByBlock = function (blockStart, blockTarget) {
         var path = Pathfind.getPathByBlock(_grid, blockStart, blockTarget);
-        var p    = path.length;
+        var p = path.length;
         while (p--) {
             var coordinate = path[p];
             coordinate.x = coordinate.x * this.blockSize + this.blockSize / 2;
@@ -62,10 +52,10 @@ function Map(level, width, height, template) {
     };
 
     if (template) {
-        if (template.BuildableBlocks) {
-            var yCount = template.BuildableBlocks.length;
+        if (template.buildableBlocks) {
+            var yCount = template.buildableBlocks.length;
             while (yCount--) {
-                var row    = template.BuildableBlocks[yCount];
+                var row = template.buildableBlocks[yCount];
                 var xCount = row.length;
                 while (xCount--) {
                     _grid.setBlockStatus(xCount, yCount, row[xCount]);
@@ -73,7 +63,7 @@ function Map(level, width, height, template) {
             }
         }
     }
-    
+
     // Add drawing related functionality.
     if (typeof document !== 'undefined') {
         this.canvas = document.createElement('canvas');
@@ -84,7 +74,7 @@ function Map(level, width, height, template) {
         this.draw = function () {
             if (!this.requiresDraw) return;
             this.requiresDraw = false;
-            
+
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             var x = this.width;
             while (x--) {
@@ -114,8 +104,6 @@ function Map(level, width, height, template) {
             }
         };
         this.draw();
+        this.container.addChild(new PIXI.Sprite(PIXI.Texture.fromCanvas(this.canvas)));
     }
-
-
-
 }

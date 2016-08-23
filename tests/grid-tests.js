@@ -5,8 +5,8 @@
     it('should be able to deliver blocks', function () {
         var grid = new Grid(0, 0, 10, 10);
         var block = grid.getBlock(1, 1);
-        expect(block.X).to.equal(1);
-        expect(block.Y).to.equal(1);
+        expect(block.x).to.equal(1);
+        expect(block.y).to.equal(1);
     });
     it('should throw if you attempt to get a block out of the range of blocks', function () {
         var grid = new Grid(0, 0, 10, 10);

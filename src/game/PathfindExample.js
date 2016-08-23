@@ -40,7 +40,7 @@ PathfindExample.drawCanvas = function () {
         var c = Pathfind.LastPath.closed.length;
         while (c--) {
             var closedBlock = Pathfind.LastPath.closed[c];
-            Display.fillRect(closedBlock.X * blockSize, closedBlock.Y * blockSize, blockSize, blockSize);
+            Display.fillRect(closedBlock.x * blockSize, closedBlock.y * blockSize, blockSize, blockSize);
         }
     }
 
@@ -48,12 +48,12 @@ PathfindExample.drawCanvas = function () {
     var i = PathfindExample.instance.path.length;
     while (i--) {
         var block = PathfindExample.instance.path[i];
-        Display.fillRect(block.X * blockSize, block.Y * blockSize, blockSize, blockSize);
+        Display.fillRect(block.x * blockSize, block.y * blockSize, blockSize, blockSize);
     }
     Display.setFill('rgb(50,185,50)');
-    Display.fillRect(PathfindExample.instance.start.X * blockSize + 25, PathfindExample.instance.start.Y * blockSize + 25, blockSize - 50, blockSize - 50);
+    Display.fillRect(PathfindExample.instance.start.x * blockSize + 25, PathfindExample.instance.start.y * blockSize + 25, blockSize - 50, blockSize - 50);
     Display.setFill('rgb(50,50,255)');
-    Display.fillRect(PathfindExample.instance.stop.X * blockSize + 25, PathfindExample.instance.stop.Y * blockSize + 25, blockSize - 50, blockSize - 50);
+    Display.fillRect(PathfindExample.instance.stop.x * blockSize + 25, PathfindExample.instance.stop.y * blockSize + 25, blockSize - 50, blockSize - 50);
 
 
     if (Pathfind.LastPath.open) {
@@ -62,7 +62,7 @@ PathfindExample.drawCanvas = function () {
         c = Pathfind.LastPath.closed.length;
         while (c--) {
             closedBlock = Pathfind.LastPath.closed[c];
-            Display.fillText('c' + c.toFixed(0), closedBlock.X * blockSize + 5, closedBlock.Y * blockSize + 21);
+            Display.fillText('c' + c.toFixed(0), closedBlock.x * blockSize + 5, closedBlock.y * blockSize + 21);
         }
     }
 
@@ -83,9 +83,9 @@ PathfindExample.drawCanvas = function () {
 
     Display.setFont(40, 'sans-serif');
     Display.setFill('rgb(255,255,255)');
-    if (PathfindExample.instance.grid.blockStatus(PathfindExample.instance.start.X, PathfindExample.instance.start.Y) >= BlockStatus.NotPassable)
+    if (PathfindExample.instance.grid.blockStatus(PathfindExample.instance.start.x, PathfindExample.instance.start.y) >= BlockStatus.NotPassable)
         Display.fillText('The start point is blocked.', 10, 50);
-    if (PathfindExample.instance.grid.blockStatus(PathfindExample.instance.stop.X, PathfindExample.instance.stop.Y) >= BlockStatus.NotPassable)
+    if (PathfindExample.instance.grid.blockStatus(PathfindExample.instance.stop.x, PathfindExample.instance.stop.y) >= BlockStatus.NotPassable)
         Display.fillText('The target is blocked.', 10, 100);
     Display.Settings.DisableTranslation = false;
 };

@@ -13,6 +13,6 @@ module.exports = loader({
     getSprite: Images.buildings.LargePlatform,
     template:    {
         health: 5,
-        Weapons: [Weapons.Cannon(85, 30, 1.75, 1.75, .95, 1, .15, 4, 7)]
+        weapons: [Weapons.Cannon(85, 30, 1.75, 1.75, .95, 1, .15, 4, 7)]
     }
 });

@@ -16,15 +16,15 @@ var Settings = common.Settings;
 module.exports = Level;
 
 function Level(width, height, mapTemplate) {
-    PIXI.Container.call(this);
+    this.container = new PIXI.Container();
+    renderer.addChild(this.container);
+    this.position = this.container.position;
     this.position.x = -width * Settings.BlockSize / 2;
     this.position.y = -height * Settings.BlockSize / 2;
-    renderer.addChild(this);
 
 
-    var me   = this;
     var _map = new Map(this, width, height, mapTemplate);
-    
+    this.container.addChild(_map.container);
     this.spawnPoints = [];
     
     this.frameCount = 0;
@@ -52,25 +52,25 @@ function Level(width, height, mapTemplate) {
 
     /** @returns Number **/
     this.totalWaves = function () {
-        var i = me.spawnPoints.length;
+        var i = this.spawnPoints.length;
         var waveCount = 0;
         while (i--) {
-            waveCount = Math.max(me.spawnPoints[i].waves.length, waveCount);
-            if (me.spawnPoints[i].currentWave !== null) waveCount++;
+            waveCount = Math.max(this.spawnPoints[i].waves.length, waveCount);
+            if (this.spawnPoints[i].currentWave !== null) waveCount++;
         }
         return waveCount;
     };
     this.winConditions = [function () {
-        if (me.units.length > 0) return false;
-        var i = me.spawnPoints.length;
+        if (this.units.length > 0) return false;
+        var i = this.spawnPoints.length;
         while (i--) {
-            if (me.spawnPoints[i].hasWaves() === true) return false;
+            if (this.spawnPoints[i].hasWaves() === true) return false;
         }
         return true;
-    }];
+    }.bind(this)];
     this.lossConditions = [function () {
-        return me.player.homeBase.health <= 0;
-    }];
+        return this.player.homeBase.health <= 0;
+    }.bind(this)];
 
     if (typeof document !== 'undefined') {
         this.canvas = document.createElement('canvas');
@@ -78,12 +78,13 @@ function Level(width, height, mapTemplate) {
         this.canvas.height = _map.pixelHeight;
         this.context = this.canvas.getContext('2d');
     }
-    
-    this.checkCount = 0;
 
     this.addBuilding = function (building) {
+        this.container.addChild(building);
         this.buildings.push(building);
-        building.player.buildings.push(building);
+        if (building.player) {
+            building.player.buildings.push(building);
+        }
         return building;
     };
     this.addPlayer   = function (player) {
@@ -235,6 +236,7 @@ function Level(width, height, mapTemplate) {
             }
         }
     };
+    this.checkCount = 0;
     this.update                   = function () {
         this.frameCount++;
     
@@ -307,6 +309,3 @@ function Level(width, height, mapTemplate) {
         General.NestedCopyTo(template, this);
     };
 }
-Level.prototype = Object.create(PIXI.Container.prototype);
-Level.prototype.constructor = Level;
-

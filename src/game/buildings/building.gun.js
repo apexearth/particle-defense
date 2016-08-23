@@ -13,7 +13,7 @@ module.exports = loader({
     getSprite: Images.buildings.SmallPlatform,
     template:    {
         health: 5,
-        Weapons: [
+        weapons: [
             Weapons.Gun({
                 range:           150,
                 fireRate:        20,

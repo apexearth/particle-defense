@@ -10,9 +10,9 @@
     it('should attack units in range of any of it\'s weapons', function () {
         var level = Levels.LevelTest();
         level.player.resources.ammo = 10;
-        var unit = new Unit(level, {X: level.Width / 2, Y: level.Height / 2});
+        var unit = new Unit(level, {x: level.Width / 2, y: level.Height / 2});
         level.units.push(unit);
-        var turret = new Gun(level, level.player, {BlockX: unit.blockX, BlockY: unit.blockY + 2});
+        var turret = new Gun(level, level.player, {blockX: unit.blockX, blockY: unit.blockY + 2});
         turret.weapons[0].range = 1000;
     
         level.buildings.push(turret);
@@ -31,7 +31,7 @@
 
     it('should not attack units out of range', function () {
         var level = Levels.LevelTest();
-        var unit = new Unit(level, {X: level.player.homeBase.X - 50, Y: level.player.homeBase.Y - 50});
+        var unit = new Unit(level, {x: level.player.homeBase.x - 50, y: level.player.homeBase.y - 50});
         unit.setDestination(level.player.homeBase);
         level.units.push(unit);
         var turret = new Gun(level, level.player, 5, 9);

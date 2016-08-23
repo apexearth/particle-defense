@@ -2,7 +2,7 @@
     CreateBuilding: function (player, buildingConstructor, blockX, blockY) {
         if (player.level.isBlockCoordBuildable(blockX, blockY) === true
             && player.tryApplyCost(buildingConstructor.Cost)) {
-            var building = new buildingConstructor(player.level, player, {BlockX: blockX, BlockY: blockY});
+            var building = new buildingConstructor(player.level, player, {blockX: blockX, blockY: blockY});
             player.buildings.push(building);
             player.level.buildings.push(building);
             return building;

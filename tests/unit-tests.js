@@ -13,9 +13,9 @@
 
         var i = 5;
         while (i--) {
-            var initialDistance = math.distance(unit.X - unit.destination.X, unit.Y - unit.destination.Y);
+            var initialDistance = math.distance(unit.x - unit.destination.x, unit.y - unit.destination.y);
             level.update();
-            var distanceAfterUpdate = math.distance(unit.X - unit.destination.X, unit.Y - unit.destination.Y);
+            var distanceAfterUpdate = math.distance(unit.x - unit.destination.x, unit.y - unit.destination.y);
             expect(initialDistance).to.be.above(distanceAfterUpdate);
         }
     });
@@ -51,7 +51,7 @@
     });
     it('should have a helper function to deliver an array of units', function () {
         var units = Units.Array(function () {
-            return new Unit(Levels.LevelTest(), {X: 10, Y: 10});
+            return new Unit(Levels.LevelTest(), {x: 10, y: 10});
         }, 10);
         expect(units.length).to.equal(10);
         expect(units[0].constructor).to.equal(Unit);

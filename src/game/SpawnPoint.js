@@ -29,10 +29,10 @@ function SpawnPoint(level, template) {
     this.createWave = function (waveDelay, spawnInterval, units) {
         this.waves.unshift({
             units: units,
-            SpawnInterval:      spawnInterval,
-            SpawnIntervalCount: 0,
-            WaveDelay:          waveDelay,
-            WaveDelayCount:     0
+            spawnInterval: spawnInterval,
+            spawnIntervalCount: 0,
+            waveDelay: waveDelay,
+            waveDelayCount: 0
         });
     };
     /** @returns bool **/
@@ -69,8 +69,8 @@ function SpawnPoint(level, template) {
     for (var _w in template.waves) {
         var w = template.waves[_w];
         var wave = Units.Array(function () {
-            if (w.UnitType !== undefined) {
-                var unit     = new Units[w.UnitType](level);
+            if (w.unitType !== undefined) {
+                var unit = new Units[w.unitType](level);
                 unit.visible = false;
                 if (w.Template !== undefined) unit.loadTemplate(w.Template);
                 if (w.Customization !== undefined) unit.loadTemplate(w.Customization);
