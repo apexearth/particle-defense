@@ -41,7 +41,7 @@ function BeamProjectile(weapon) {
         return unit.hitTestLine({x: this.position.x, y: this.position.y}, {
             x: this.endX,
             y: this.endY
-        }, this.Width);
+        }, this.width);
     };
 
 }

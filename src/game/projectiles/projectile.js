@@ -5,7 +5,7 @@ module.exports = Projectile;
 
 function Projectile(weapon) {
     PIXI.Container.call(this);
-    weapon.level.addChild(this);
+    weapon.level.addProjectile(this);
     this.level = weapon.building.level;
     this.building = weapon.building;
     this.weapon = weapon;
@@ -25,9 +25,7 @@ function Projectile(weapon) {
     this.die = function () {
         if (this.dead) return;
         this.dead = true;
-        var result = this.level.removeChild(this);
-        if (result == null) return;
-        this.level.projectiles.splice(this.level.projectiles.indexOf(this), 1);
+        this.level.removeProjectile(this);
     };
 
     this.onHit = function () {

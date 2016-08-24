@@ -8,7 +8,7 @@
         expect(level.checkWinConditions()).to.not.be.ok;
 
         var i = 3000;
-        while (i-- || level.waves.length !== 0 && level.units.length !== 0) level.update();
+        while (i-- || level.totalWaves() !== 0 && level.units.length !== 0) level.update();
 
         expect(level.checkLossConditions()).to.not.be.ok;
         expect(level.checkWinConditions()).to.be.ok;

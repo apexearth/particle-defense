@@ -61,11 +61,11 @@
         level.buildings = [];
         level.player.buildings = [];
         var unit = new Unit(level);
-        unit.VelocityX = 10;
-        unit.VelocityY = 10;
+        unit.velocity.x = 10;
+        unit.velocity.y = 10;
         unit.update();
 
-        expect(unit.VelocityX).to.equal(0);
-        expect(unit.VelocityY).to.equal(0);
+        expect(unit.velocity.x).to.equal(0);
+        expect(unit.velocity.y).to.equal(0);
     });
 });

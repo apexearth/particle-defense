@@ -10,13 +10,13 @@ function GameUi($scope) {
     $scope.level = ParticleDefense.level;
     $scope.player = ParticleDefense.level.player;
     $scope.buildings = Buildings;
-    $scope.Cost      = null;
+    $scope.cost = null;
     $scope.setCost   = function (cost) {
-        $scope.Cost = cost;
+        $scope.cost = cost;
     };
     $scope.hideCost  = function () {
-        $scope.Cost = $scope.getPlacementBuilding() != null
-            ? $scope.getPlacementBuilding().Cost
+        $scope.cost = $scope.getPlacementBuilding() != null
+            ? $scope.getPlacementBuilding().cost
             : null;
     };
     /** @returns String, Number */
@@ -35,7 +35,7 @@ function GameUi($scope) {
 
     $scope.CreateBuilding = function (building) {
         $scope.level.beginBuildingPlacement(building);
-        $scope.Cost = building.Cost;
+        $scope.cost = building.cost;
     };
 
     $scope.ToTitle = function (s) {

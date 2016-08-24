@@ -155,11 +155,11 @@ function Weapon(building) {
             + this.getAccuracyModification();
     };
     this.getTargetLeadingAngle   = function () {
-        return math.leadingAngle(this.building.x, this.building.y, this.projectileSpeed, this.target.x, this.target.y, this.target.VelocityX, this.target.VelocityY)
+        return math.leadingAngle(this.building.x, this.building.y, this.projectileSpeed, this.target.x, this.target.y, this.target.velocity.x, this.target.velocity.y)
             + this.getAccuracyModification();
     };
     this.getTargetLeadingVector  = function () {
-        return math.leadingVector(this.building.x, this.building.y, this.projectileSpeed, this.target.x, this.target.y, this.target.VelocityX, this.target.VelocityY);
+        return math.leadingVector(this.building.x, this.building.y, this.projectileSpeed, this.target.x, this.target.y, this.target.velocity.x, this.target.velocity.y);
     };
     this.getAccuracyModification = function () {
         if (this.accuracy == null) return 0;

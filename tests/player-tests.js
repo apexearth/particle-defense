@@ -10,9 +10,9 @@
         var level = Levels.LevelTest();
         var buildingCount = level.buildings.length;
         var playerBuildingCount = level.player.buildings.length;
-    
-        level.player.resources.energy = Gun.Cost.energy;
-        level.player.resources.metal = Gun.Cost.metal;
+
+        level.player.resources.energy = Gun.cost.energy;
+        level.player.resources.metal = Gun.cost.metal;
         PlayerCommands.CreateBuilding(level.player, Gun, 2, 2);
     
         expect(level.buildings.length).to.equal(buildingCount + 1);
@@ -25,17 +25,17 @@
         var level = Levels.LevelTest();
         var buildingCount = level.buildings.length;
         var playerBuildingCount = level.player.buildings.length;
-    
-        level.player.resources.energy = Gun.Cost.energy - 1;
-        level.player.resources.metal = Gun.Cost.metal - 1;
+
+        level.player.resources.energy = Gun.cost.energy - 1;
+        level.player.resources.metal = Gun.cost.metal - 1;
         PlayerCommands.CreateBuilding(level.player, Gun, 2, 2);
         expect(level.buildings.length).to.equal(buildingCount);
         expect(level.player.buildings.length).to.equal(playerBuildingCount);
     });
     it('should be able to sell buildings for a portion of their cost', function () {
         var level = Levels.LevelTest();
-        level.player.resources.energy = Gun.Cost.energy;
-        level.player.resources.metal = Gun.Cost.metal;
+        level.player.resources.energy = Gun.cost.energy;
+        level.player.resources.metal = Gun.cost.metal;
         var building = PlayerCommands.CreateBuilding(level.player, Gun, 2, 2);
         PlayerCommands.SellBuilding(building);
         expect(level.player.resources.metal).to.be.above(0);

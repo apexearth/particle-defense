@@ -21,10 +21,10 @@ module.exports = {
         if (isNaN(diry)) diry = 0;
         return {x: dirx, y: diry};
     },
-    Distance:        function (x, y) {
+    distance: function (x, y) {
         return Math.sqrt(Math.abs((x * x) + (y * y)));
     },
-    DistanceSq:      function (x, y) {
+    distanceSq: function (x, y) {
         return Math.abs((x * x) + (y * y));
     },
     isNumber:        function (n) {

@@ -9,14 +9,16 @@ function VelocityProjectile(weapon) {
     this.graphics = new PIXI.Graphics();
     this.addChild(this.graphics);
 
-    this.lastPosition     = this.position;
+    this.lastPosition = this.position;
     this.direction = weapon.getTargetLeadingAngle();
     this.initialVelocity = weapon.projectileSpeed;
-    this.velocity.x = Math.cos(this.direction) * this.initialVelocity;
-    this.velocity.y = Math.sin(this.direction) * this.initialVelocity;
+    this.velocity = {
+        x: Math.cos(this.direction) * this.initialVelocity,
+        y: Math.sin(this.direction) * this.initialVelocity
+    };
     this.width = Math.sqrt(this.damage) * 2 / this.initialVelocity * 3;
     this.projectileUpdate = this.update;
-    this.update           = function () {
+    this.update = function () {
         this.projectileUpdate();
         this.lastPosition = this.position.clone();
         this.position.x += this.velocity.x;
@@ -27,10 +29,10 @@ function VelocityProjectile(weapon) {
         this.graphics.moveTo(this.lastPosition.x - this.position.x, this.lastPosition.y - this.position.y);
         this.graphics.lineTo(0, 0);
     };
-    this.hitTest          = function (unit) {
+    this.hitTest = function (unit) {
         return unit.hitTestLine(this.position, this.lastPosition, this.width);
     };
 }
 
-VelocityProjectile.prototype             = Object.create(PIXI.Container.prototype);
+VelocityProjectile.prototype = Object.create(PIXI.Container.prototype);
 VelocityProjectile.prototype.constructor = VelocityProjectile;

@@ -41,13 +41,25 @@
         expect(level.lossConditions.length).to.equal(1);
     });
 
-    it('addBuilding', function () {
+    it('addBuilding', addBuilding);
+    function addBuilding() {
         expect(level.buildings.length).to.equal(0);
         expect(level.container.children.length).to.equal(1);
 
         var building = new Building(level);
-        level.addBuilding(building);
+        var addedBuilding = level.addBuilding(building);
+        expect(addedBuilding).to.equal(building);
         expect(level.buildings.length).to.equal(1);
         expect(level.container.children.length).to.equal(2);
+        return level;
+    }
+
+    it('removeBuilding', function () {
+        var level = addBuilding();
+        var building = level.buildings[0];
+        var removedBuilding = level.removeBuilding(level.buildings[0]);
+        expect(removedBuilding).to.equal(building);
+        expect(level.buildings.length).to.equal(0);
+        expect(level.container.children.length).to.equal(1);
     });
 });

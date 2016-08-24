@@ -33,8 +33,8 @@ function CreateLevel(json) {
 }
 
 function CreateRandomLevel(json) {
-    var width  = 15 + Math.floor(Math.random() * (json.Width || 30));
-    var height = 15 + Math.floor(Math.random() * (json.Height || 30));
+    var width = 15 + Math.floor(Math.random() * (json.width || 30));
+    var height = 15 + Math.floor(Math.random() * (json.height || 30));
 
     var template = [];
     var k, i     = height;

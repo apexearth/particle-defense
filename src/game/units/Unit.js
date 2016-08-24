@@ -7,7 +7,7 @@ module.exports = Unit;
 
 function Unit(level, templates) {
     PIXI.Container.call(this);
-    level.addChild(this);
+    level.addUnit(this);
     this.position.x  = 0;
     this.position.y  = 0;
     this.velocity = {
@@ -106,7 +106,7 @@ function Unit(level, templates) {
         var i = this.level.units.indexOf(this);
         if (i !== -1) this.level.units.splice(i, 1);
         level.getBlock(this.blockX, this.blockY).Remove(this);
-        level.removeChild(this);
+        level.removeUnit(this);
         this.level.player.score += this.score;
     };
     this.draw           = function (context) {

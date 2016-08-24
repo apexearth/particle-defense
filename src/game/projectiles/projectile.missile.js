@@ -11,7 +11,7 @@ function MissileProjectile(weapon) {
     this.target = weapon.target;
     this.damage = weapon.damage;
     this.width = Math.sqrt(this.damage);
-    this.explodeRange = this.Width * 3;
+    this.explodeRange = this.width * 3;
     this.hitTest                          = function (unit) {
         return unit.hitTestLine(this.position, this.lastPosition, this.explodeRange);
     };
@@ -21,7 +21,7 @@ function MissileProjectile(weapon) {
             if (this.target.dead) this.target = null;
             if (this.target !== null) {
                 var expectedAverageVelocity = this.acceleration * math.distance(this.position.x - this.target.x, this.position.y - this.target.y) / 2 + this.currentVelocity;
-                this.direction = math.leadingAngle(this.position.x, this.position.y, expectedAverageVelocity, this.target.x, this.target.y, this.target.VelocityX, this.target.VelocityY);
+                this.direction = math.leadingAngle(this.position.x, this.position.y, expectedAverageVelocity, this.target.x, this.target.y, this.target.velocity.x, this.target.velocity.y);
             }
         }
         this.inheritedUpdateMissileProjectile();

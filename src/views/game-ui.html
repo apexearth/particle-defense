@@ -126,14 +126,14 @@
         <li class="title">Buildings</li>
         <li class="button right smaller {{value == PlacementBuilding() && 'button-active' || ''}}"
             ng-repeat="(key, value) in buildings" ng-click="CreateBuilding(value)"
-            ng-mouseover="setCost(value.Cost)" ng-mouseleave="hideCost()">
+            ng-mouseover="setCost(value.cost)" ng-mouseleave="hideCost()">
             {{ToTitle(key)}}
         </li>
     </ul>
     <ul class="stat-bar" ng-show="level.selection != null">
         <li ng-show="level.selection != null" ng-repeat="(key, value) in level.selection.abilities.upgrades.weapon"
             ng-click="value.upgrade()"
-            ng-mouseover="setCost(value.Cost)"
+            ng-mouseover="setCost(value.cost)"
             ng-mouseleave="hideCost()"
             class="{{value.canUpgrade() == false && 'disabled' || 'enabled'}}">
             <div>{{ToTitle(key)}}</div>
@@ -141,7 +141,7 @@
         </li>
         <li ng-repeat="(key, value) in level.selection.abilities.upgrades.building"
             ng-click="value.upgrade()"
-            ng-mouseover="setCost(value.Cost)"
+            ng-mouseover="setCost(value.cost)"
             ng-mouseleave="hideCost()"
             class="{{value.canUpgrade() == false && 'disabled' || 'enabled'}}">
             <div>{{ToTitle(key)}}</div>

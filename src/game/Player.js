@@ -1,7 +1,6 @@
 ﻿module.exports = Player;
 
-function Player(level) {
-    this.level = level;
+function Player() {
     this.homeBase = null;
     this.buildings = [];
     this.color = 0x88FF88;

@@ -83,9 +83,9 @@ function ShockProjectile(weapon) {
         this.updateConnections();
 
         this.graphics.clear();
-        this.graphics.lineStyle(this.Width, 0x8888BB, .35);
+        this.graphics.lineStyle(this.width, 0x8888BB, .35);
         this.drawConnection(this.connection, null);
-        this.graphics.lineStyle(this.Width * 2, 0xAAAAFF, .15);
+        this.graphics.lineStyle(this.width * 2, 0xAAAAFF, .15);
         this.drawConnection(this.connection, null);
     };
 

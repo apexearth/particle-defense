@@ -3,7 +3,7 @@ var BlockStatus = require('./block-status');
 module.exports = Block;
 
 function Block(x, y) {
-    var _status = BlockStatus.IsNothing;
+    var _status = BlockStatus.IsEmpty;
     var _building = null;
     this.x = x;
     this.y = y;
