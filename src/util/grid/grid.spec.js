@@ -3,38 +3,49 @@ var Grid = require('./');
 
 describe('grid', function () {
     it('can properly initialize', function () {
-        var grid = new Grid(0, 0, 10, 10);
-        expect(grid.minX).to.equal(0);
-        expect(grid.minX).to.equal(0);
-        expect(grid.maxX).to.equal(10);
-        expect(grid.maxY).to.equal(10);
+        var options = {
+            bounds: {
+                left: 0,
+                top: 0,
+                right: 10,
+                bottom: 10
+            },
+            blockSize: 10
+        };
+        var grid = new Grid(options);
+        expect(grid.bounds).to.not.equal(options.bounds);
+        expect(grid.bounds.left).to.equal(0);
+        expect(grid.bounds.top).to.equal(0);
+        expect(grid.bounds.right).to.equal(10);
+        expect(grid.bounds.bottom).to.equal(10);
+        expect(grid.blockSize).to.equal(options.blockSize);
         expect(grid.getBlock.bind(grid, -1, -1)).to.throw();
         expect(grid.getBlock.bind(grid, 0, -1)).to.throw();
         expect(grid.getBlock.bind(grid, -1, 0)).to.throw();
-        expect(grid.getBlock.bind(grid, 10, 10)).to.throw();
-        expect(grid.getBlock.bind(grid, 10, 9)).to.throw();
-        expect(grid.getBlock.bind(grid, 9, 10)).to.throw();
-        expect(grid.getBlock(9, 9)).to.exist;
+        expect(grid.getBlock.bind(grid, 11, 11)).to.throw();
+        expect(grid.getBlock.bind(grid, 11, 10)).to.throw();
+        expect(grid.getBlock.bind(grid, 10, 11)).to.throw();
+        expect(grid.getBlock(10, 10)).to.exist;
 
         expect(grid.getBlockFromVector.bind(grid, {x: 0, y: 0})).to.exist;
 
         expect(grid.getBlockOrNull(-1, -1)).to.not.exist;
         expect(grid.getBlockOrNull(0, -1)).to.not.exist;
         expect(grid.getBlockOrNull(-1, 0)).to.not.exist;
-        expect(grid.getBlockOrNull(10, 10)).to.not.exist;
-        expect(grid.getBlockOrNull(10, 9)).to.not.exist;
-        expect(grid.getBlockOrNull(9, 10)).to.not.exist;
+        expect(grid.getBlockOrNull(11, 11)).to.not.exist;
+        expect(grid.getBlockOrNull(11, 10)).to.not.exist;
+        expect(grid.getBlockOrNull(10, 11)).to.not.exist;
 
         expect(grid.getAdjacentBlocks(0, 0, false).length).to.equal(2);
         expect(grid.getAdjacentBlocks(0, 0, true).length).to.equal(3);
         expect(grid.getAdjacentBlocks(1, 0, false).length).to.equal(3);
         expect(grid.getAdjacentBlocks(1, 0, true).length).to.equal(5);
-        expect(grid.getAdjacentBlocks(9, 9, false).length).to.equal(2);
-        expect(grid.getAdjacentBlocks(9, 9, true).length).to.equal(3);
-        expect(grid.getAdjacentBlocks(8, 9, false).length).to.equal(3);
-        expect(grid.getAdjacentBlocks(8, 9, true).length).to.equal(5);
+        expect(grid.getAdjacentBlocks(10, 10, false).length).to.equal(2);
+        expect(grid.getAdjacentBlocks(10, 10, true).length).to.equal(3);
+        expect(grid.getAdjacentBlocks(9, 10, false).length).to.equal(3);
+        expect(grid.getAdjacentBlocks(9, 10, true).length).to.equal(5);
 
-        expect(grid.blockStatus(0, 0)).to.equal(Grid.BlockStatus.IsNothing);
+        expect(grid.blockStatus(0, 0)).to.equal(Grid.BlockStatus.IsEmpty);
         grid.setBlockStatus(0, 0, 'test');
         expect(grid.blockStatus(0, 0)).to.equal('test');
     });

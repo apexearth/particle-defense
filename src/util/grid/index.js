@@ -4,18 +4,29 @@ var Pathfind = require('./Pathfind');
 
 module.exports = Grid;
 
-function Grid(minX, minY, maxX, maxY) {
+function Grid(options) {
     var blocks = [];
-    this.minX = minX;
-    this.minY = minY;
-    this.maxX = maxX;
-    this.maxY = maxY;
-    var x            = maxX - minX;
-    while (x--) {
+
+    var bounds = Object.assign({}, options.bounds);
+    var blockSize = options.blockSize;
+
+    Object.defineProperties(this, {
+        bounds: {
+            get: function () {
+                return bounds;
+            }
+        },
+        blockSize: {
+            get: function () {
+                return blockSize;
+            }
+        }
+    })
+    ;
+    for (var x = bounds.left; x <= bounds.right; x++) {
         blocks[x] = [];
-        var y         = maxY - minY;
-        while (y--) {
-            var block        = new Block(x, y);
+        for (var y = bounds.top; y <= bounds.bottom; y++) {
+            var block = new Block(x, y);
             blocks[x][y] = block;
             if (x + 1 < blocks.length && blocks[x + 1].indexOf(y)) {
                 block.rightBlock = blocks[x + 1][y];
@@ -35,20 +46,21 @@ function Grid(minX, minY, maxX, maxY) {
         return this.getBlock(x, y).status;
     };
 
+    this.getBlockAtPosition = function (position) {
+        var blockX = (position.x / blockSize) ^ 0;
+        var blockY = (position.y / blockSize) ^ 0;
+        return this.getBlock(blockX, blockY);
+    };
     this.getBlockFromVector = function (vector) {
         return this.getBlock(vector.x, vector.y);
     };
     this.getBlock = function (x, y) {
-        x -= this.minX;
-        y -= this.minY;
         var block = blocks[x][y];
         if (block === undefined)
             throw new Error();
         return block;
     };
     this.getBlockOrNull = function (x, y) {
-        x -= this.minX;
-        y -= this.minY;
         if (x >= 0 && y >= 0 && x < blocks.length) {
             var sub = blocks[x];
             if (y < sub.length)
@@ -62,8 +74,8 @@ function Grid(minX, minY, maxX, maxY) {
             for (var y = blockY - 1; y <= blockY + 1; y++) {
                 if ((x != blockX || y != blockY)
                     && (diagonal || (x == blockX || y == blockY))
-                    && x >= this.minX && x <= this.maxX
-                    && y >= this.minY && y <= this.maxY) {
+                    && x >= bounds.left && x <= bounds.right
+                    && y >= bounds.top && y <= bounds.bottom) {
                     var block = this.getBlockOrNull(x, y);
                     if (block !== null) adjacentBlocks.push(block);
                 }
@@ -73,5 +85,5 @@ function Grid(minX, minY, maxX, maxY) {
     };
 }
 
-Grid.Pathfind    = Pathfind;
+Grid.Pathfind = Pathfind;
 Grid.BlockStatus = BlockStatus;

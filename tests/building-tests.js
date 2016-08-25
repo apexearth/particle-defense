@@ -3,7 +3,6 @@
     var Level = require('../src/game/Level');
     var Levels = require('../src/game/Levels');
     var Buildings = require('../src/game/buildings/');
-    var Building = require('../src/game/buildings/building');
     var Unit = require('../src/game/units/unit');
     var PlayerCommands = require('../src/game/PlayerCommands');
     var expect = require('chai').expect;
@@ -12,9 +11,9 @@
     it('should attack units in range of any of it\'s weapons', function () {
         var level = Levels.LevelTest();
         level.player.resources.ammo = 10;
-        var unit = new Unit(level, {x: level.width / 2, y: level.height / 2});
-        level.units.push(unit);
-        var turret = new Gun(level, level.player, {blockX: unit.blockX, blockY: unit.blockY + 2});
+        var unit = new Unit({x: level.width / 2, y: level.height / 2});
+        level.addUnit(unit);
+        var turret = new Gun(level, level.player, {blockX: unit.block.x, blockY: unit.block.y + 2});
         turret.weapons[0].range = 1000;
 
         level.buildings.push(turret);
@@ -33,7 +32,7 @@
 
     it('should not attack units out of range', function () {
         var level = Levels.LevelTest();
-        var unit = new Unit(level, {x: level.player.homeBase.x - 50, y: level.player.homeBase.y - 50});
+        var unit = new Unit({x: level.player.homeBase.x - 50, y: level.player.homeBase.y - 50});
         unit.setDestination(level.player.homeBase);
         level.units.push(unit);
         var turret = new Gun(level, level.player, 5, 9);

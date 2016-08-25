@@ -3,22 +3,20 @@ var Projectiles = require('./projectiles');
 var math = require('../util/math');
 var Attribute = require('./Attribute');
 
-var pi2    = Math.PI * 2,
+var pi2 = Math.PI * 2,
     degree = pi2 / 360;
 
-
 module.exports = {
-    Missile:         Missile,
-    Gun:             Gun,
-    Cannon:          Cannon,
+    Missile: Missile,
+    Gun: Gun,
+    Cannon: Cannon,
     GrenadeLauncher: GrenadeLauncher,
-    Laser:           Laser,
-    Shocker:         Shocker
+    Laser: Laser,
+    Shocker: Shocker
 };
 
-function Weapon(building) {
-    this.level = building.level;
-    this.building = building;
+function Weapon() {
+    PIXI.Container.call(this);
     this.range = 200;
     this.damage = 1;
     this.firingCode = degree * 15;
@@ -27,14 +25,14 @@ function Weapon(building) {
         if (this.target == null) return NaN;
         return math.angle(this.building.x, this.building.y, this.target.x, this.target.y);
     };
-    
+
     // Simple Line graphic for now...
     this.graphics = new PIXI.Graphics();
     this.addChild(this.graphics);
     this.graphics.lineStyle(2, 0x990000, 1);
     this.graphics.moveTo(0, 0);
     this.graphics.lineTo(10, 0);
-    
+
     /** @return {number} **/
     this.getAmmoConsumption = function () {
         return this.damage;
@@ -43,12 +41,12 @@ function Weapon(building) {
     this.fireRateCount = 10;
     this.shotsPerShot = 1;
     this.accuracy = .05;
-    
+
     this.player = this.building.player;
-    
+
     var weapon = this;
-    var me     = this;
-    
+    var me = this;
+
     this.upgradeCount = 0;
     this.attributes = {};
     /** @returns Number */
@@ -56,7 +54,7 @@ function Weapon(building) {
         return (10 * weapon.damage / weapon.fireRate + weapon.range / 10)
             * (1 + 10 * weapon.accuracy);
     };
-    
+
     this.createAttributeForStat = function (name, upperLimit, limit, upgradeFactor, cost) {
         if (weapon[name] != null) {
             me.Attributes[name] = new Attribute(me,
@@ -72,12 +70,12 @@ function Weapon(building) {
                 },
                 {
                     /** @returns Number **/
-                    Energy: function () {
+                    energy: function () {
                         if (typeof cost == 'function') return cost();
                         return cost;
                     },
                     /** @returns Number **/
-                    Metal:  function () {
+                    metal: function () {
                         if (typeof cost == 'function') return cost();
                         return cost;
                     }
@@ -89,7 +87,7 @@ function Weapon(building) {
     this.createAttributeForStat('FireRate', false, 1, .85, this.attributeCost);
     this.createAttributeForStat('Damage', true, 30, 1.15, this.attributeCost);
     this.createAttributeForStat('Accuracy', false, .01, .5, this.attributeCost);
-    
+
     this.resetTarget = function () {
         this.target = null;
     };
@@ -113,7 +111,7 @@ function Weapon(building) {
             }
         }
     };
-    
+
     this.tryFireAtTarget = function () {
         if (math.distance(this.target.x - this.building.x, this.target.y - this.building.y) > this.range) {
             this.resetTarget();
@@ -125,7 +123,7 @@ function Weapon(building) {
             }
         }
     };
-    this.update          = function () {
+    this.update = function () {
         if (this.target != null && this.target.dead) {
             this.resetTarget();
         }
@@ -134,31 +132,31 @@ function Weapon(building) {
         } else {
             this.updateRotation();
         }
-    
+
         if (this.fireRateCount < this.fireRate) this.fireRateCount++;
         if (this.target != null && this.fireRateCount >= this.fireRate) {
             this.tryFireAtTarget();
         }
     };
-    
-    this.updateRotation          = function () {
+
+    this.updateRotation = function () {
         var targetAngle = this.getTargetAngle();
-        var direction   = ((this.rotation - targetAngle) * 57.2957795 + 360) % 360 > 180;
+        var direction = ((this.rotation - targetAngle) * 57.2957795 + 360) % 360 > 180;
         if (direction) {
             this.rotation = Math.min(targetAngle, this.rotation + this.rotateSpeed);
         } else {
             this.rotation = Math.max(targetAngle, this.rotation - this.rotateSpeed);
         }
     };
-    this.getTargetAngle          = function () {
+    this.getTargetAngle = function () {
         return math.angle(this.building.x, this.building.y, this.target.x, this.target.y)
             + this.getAccuracyModification();
     };
-    this.getTargetLeadingAngle   = function () {
+    this.getTargetLeadingAngle = function () {
         return math.leadingAngle(this.building.x, this.building.y, this.projectileSpeed, this.target.x, this.target.y, this.target.velocity.x, this.target.velocity.y)
             + this.getAccuracyModification();
     };
-    this.getTargetLeadingVector  = function () {
+    this.getTargetLeadingVector = function () {
         return math.leadingVector(this.building.x, this.building.y, this.projectileSpeed, this.target.x, this.target.y, this.target.velocity.x, this.target.velocity.y);
     };
     this.getAccuracyModification = function () {
@@ -166,159 +164,143 @@ function Weapon(building) {
         return Math.PI * (Math.random() * this.accuracy - (this.accuracy / 2));
     };
 }
+Weapon.prototype = Object.create(PIXI.Container.prototype);
+Weapon.prototype.constructor = Weapon;
 
 function Missile(options) {
-    var func = function (building) {
-        PIXI.Container.call(this);
-        Weapon.call(this, building);
-        this.projectileSpeed = options.projectileSpeed;
-        this.explosiveSpeed = options.explosiveSpeed;
-        this.explosiveTime = options.explosiveTime;
-        this.explosiveInitialSize = options.explosiveInitialSize;
-        this.range = options.range;
-        this.damage = options.damage;
-        this.fireRate = options.fireRate;
-        this.fireRateCount = options.fireRate;
-        this.acceleration = options.acceleration;
-        this.shotSpeedVariance = options.accuracy;
-        /** @return {number} **/
-        this.getAmmoConsumption = function () {
-            return this.damage / 1.5;
-        };
-        this.createAttributeForStat('projectileSpeed', true, 10, 1.25, this.attributeCost);
-        this.createAttributeForStat('explosiveSpeed', true, 4, 1.1, this.attributeCost);
-        this.createAttributeForStat('explosiveTime', true, 10, 1.1, this.attributeCost);
-        this.createAttributeForStat('explosiveInitialSize', true, 30, 1.1, this.attributeCost);
-        this.createProjectile = function () {
-            return new Projectiles.Missile(this);
-        };
+    Weapon.call(this);
+    this.projectileSpeed = options.projectileSpeed;
+    this.explosiveSpeed = options.explosiveSpeed;
+    this.explosiveTime = options.explosiveTime;
+    this.explosiveInitialSize = options.explosiveInitialSize;
+    this.range = options.range;
+    this.damage = options.damage;
+    this.fireRate = options.fireRate;
+    this.fireRateCount = options.fireRate;
+    this.acceleration = options.acceleration;
+    this.shotSpeedVariance = options.accuracy;
+    /** @return {number} **/
+    this.getAmmoConsumption = function () {
+        return this.damage / 1.5;
     };
-    return setConstructor(func);
+    this.createAttributeForStat('projectileSpeed', true, 10, 1.25, this.attributeCost);
+    this.createAttributeForStat('explosiveSpeed', true, 4, 1.1, this.attributeCost);
+    this.createAttributeForStat('explosiveTime', true, 10, 1.1, this.attributeCost);
+    this.createAttributeForStat('explosiveInitialSize', true, 30, 1.1, this.attributeCost);
+    this.createProjectile = function () {
+        return new Projectiles.Missile(this);
+    };
 }
+Missile.prototype = Object.create(Weapon.prototype);
+Missile.prototype.constructor = Missile;
 
 function Gun(options) {
-    var func = function (building) {
-        PIXI.Container.call(this);
-        Weapon.call(this, building);
-        var me                   = this;
-        this.range = options.range;
-        this.fireRate = options.fireRate;
-        this.fireRateCount = options.fireRate;
-        this.projectileSpeed = options.projectileSpeed;
-        this.damage = options.damage;
-        this.accuracy = 1 - options.accuracy;
-        this.shotsPerShot = options.shotsPerShot;
-        this.projectileClass = Projectiles.Bullet;
-        this.weaponAttributeCost = this.attributeCost;
-        this.createAttributeForStat('ProjectileSpeed', true, 10, 1.25, this.attributeCost);
-        /** @return {number} **/
-        this.attributeCost = function () {
-            return me.weaponAttributeCost() * (1 + me.projectileSpeed / 5);
-        };
-        /** @return {number} **/
-        this.getAmmoConsumption = function () {
-            return this.damage / 2 * this.projectileSpeed / 3;
-        };
-        this.createProjectile = function () {
-            return new this.projectileClass(this);
-        };
+    Weapon.call(this);
+    var me = this;
+    this.range = options.range;
+    this.fireRate = options.fireRate;
+    this.fireRateCount = options.fireRate;
+    this.projectileSpeed = options.projectileSpeed;
+    this.damage = options.damage;
+    this.accuracy = 1 - options.accuracy;
+    this.shotsPerShot = options.shotsPerShot;
+    this.projectileClass = Projectiles.Bullet;
+    this.weaponAttributeCost = this.attributeCost;
+    this.createAttributeForStat('ProjectileSpeed', true, 10, 1.25, this.attributeCost);
+    /** @return {number} **/
+    this.attributeCost = function () {
+        return me.weaponAttributeCost() * (1 + me.projectileSpeed / 5);
     };
-    return setConstructor(func);
+    /** @return {number} **/
+    this.getAmmoConsumption = function () {
+        return this.damage / 2 * this.projectileSpeed / 3;
+    };
+    this.createProjectile = function () {
+        return new this.projectileClass(this);
+    };
 }
+Gun.prototype = Object.create(Weapon.prototype);
+Gun.prototype.constructor = Gun;
 
 function Cannon(options) {
-    var constructor = Gun(options);
-    var func        = function (building) {
-        var me = this;
-        constructor.call(me, building);
-        this.projectileClass = Projectiles.Cannon;
-        this.explosiveSpeed = options.explosiveSpeed;
-        this.explosiveTime = options.explosiveTime;
-        this.explosiveInitialSize = options.explosiveInitialSize;
-        this.gunAttributeCost = this.attributeCost;
-        /** @return {number} **/
-        this.getAmmoConsumption = function () {
-            return this.damage * 2 * (this.explosiveSpeed + this.explosiveTime + this.explosiveInitialSize / 20);
-        };
-        /** @return {number} **/
-        this.attributeCost = function () {
-            return me.gunAttributeCost() * (1 + (me.explosiveTime + me.explosiveSpeed + me.explosiveInitialSize / 20) / 5);
-        };
-        this.createAttributeForStat('explosiveSpeed', true, 4, 1.1, this.attributeCost);
-        this.createAttributeForStat('explosiveTime', true, 10, 1.1, this.attributeCost);
-        this.createAttributeForStat('explosiveInitialSize', true, 30, 1.1, this.attributeCost);
+    var me = this;
+    Gun.call(me);
+    this.projectileClass = Projectiles.Cannon;
+    this.explosiveSpeed = options.explosiveSpeed;
+    this.explosiveTime = options.explosiveTime;
+    this.explosiveInitialSize = options.explosiveInitialSize;
+    this.gunAttributeCost = this.attributeCost;
+    /** @return {number} **/
+    this.getAmmoConsumption = function () {
+        return this.damage * 2 * (this.explosiveSpeed + this.explosiveTime + this.explosiveInitialSize / 20);
     };
-    return setConstructor(func);
+    /** @return {number} **/
+    this.attributeCost = function () {
+        return me.gunAttributeCost() * (1 + (me.explosiveTime + me.explosiveSpeed + me.explosiveInitialSize / 20) / 5);
+    };
+    this.createAttributeForStat('explosiveSpeed', true, 4, 1.1, this.attributeCost);
+    this.createAttributeForStat('explosiveTime', true, 10, 1.1, this.attributeCost);
+    this.createAttributeForStat('explosiveInitialSize', true, 30, 1.1, this.attributeCost);
 }
+Cannon.prototype = Object.create(Weapon.prototype);
+Cannon.prototype.constructor = Cannon;
 
 function GrenadeLauncher(options) {
-    var constructor = Gun(options);
-    var func        = function (building) {
-        var me = this;
-        constructor.call(this, building);
-        this.projectileClass = Projectiles.Grenade;
-        this.projectileSlowFactor = options.projectileSlowFactor;
-        this.explosiveSpeed = options.explosiveSpeed;
-        this.explosiveTime = options.explosiveTime;
-        this.explosiveInitialSize = options.explosiveInitialSize;
-        this.gunAttributeCost = this.attributeCost;
-        /** @return {number} **/
-        this.getAmmoConsumption = function () {
-            return this.damage * 2 * (this.explosiveSpeed + this.explosiveTime + this.explosiveInitialSize / 20);
-        };
-        /** @return {number} **/
-        this.attributeCost = function () {
-            return me.gunAttributeCost() * (1 + (me.explosiveTime + me.explosiveSpeed + me.explosiveInitialSize / 20) / 5);
-        };
-        this.createAttributeForStat('explosiveSpeed', true, 4, 1.1, this.attributeCost);
-        this.createAttributeForStat('explosiveTime', true, 10, 1.1, this.attributeCost);
-        this.createAttributeForStat('explosiveInitialSize', true, 30, 1.1, this.attributeCost);
+    var me = this;
+    Gun.call(this, building);
+    this.projectileClass = Projectiles.Grenade;
+    this.projectileSlowFactor = options.projectileSlowFactor;
+    this.explosiveSpeed = options.explosiveSpeed;
+    this.explosiveTime = options.explosiveTime;
+    this.explosiveInitialSize = options.explosiveInitialSize;
+    this.gunAttributeCost = this.attributeCost;
+    /** @return {number} **/
+    this.getAmmoConsumption = function () {
+        return this.damage * 2 * (this.explosiveSpeed + this.explosiveTime + this.explosiveInitialSize / 20);
     };
-    return setConstructor(func);
+    /** @return {number} **/
+    this.attributeCost = function () {
+        return me.gunAttributeCost() * (1 + (me.explosiveTime + me.explosiveSpeed + me.explosiveInitialSize / 20) / 5);
+    };
+    this.createAttributeForStat('explosiveSpeed', true, 4, 1.1, this.attributeCost);
+    this.createAttributeForStat('explosiveTime', true, 10, 1.1, this.attributeCost);
+    this.createAttributeForStat('explosiveInitialSize', true, 30, 1.1, this.attributeCost);
 }
+GrenadeLauncher.prototype = Object.create(Weapon.prototype);
+GrenadeLauncher.prototype.constructor = GrenadeLauncher;
 
 function Laser(options) {
-    var func = function (building) {
-        PIXI.Container.call(this);
-        Weapon.call(this, building);
-        this.lifespan = options.lifeSpan;
-        this.range = options.range;
-        this.damage = options.damage;
-        this.fireRate = options.fireRate;
-        this.fireRateCount = options.fireRate;
-        this.accuracy = 1 - options.accuracy;
-        /** @return {number} **/
-        this.getAmmoConsumption = function () {
-            return this.damage * 3 / this.lifespan;
-        };
-        this.createProjectile = function () {
-            return new Projectiles.Laser(this);
-        };
+    Weapon.call(this);
+    this.lifespan = options.lifeSpan;
+    this.range = options.range;
+    this.damage = options.damage;
+    this.fireRate = options.fireRate;
+    this.fireRateCount = options.fireRate;
+    this.accuracy = 1 - options.accuracy;
+    /** @return {number} **/
+    this.getAmmoConsumption = function () {
+        return this.damage * 3 / this.lifespan;
     };
-    return setConstructor(func);
+    this.createProjectile = function () {
+        return new Projectiles.Laser(this);
+    };
 }
+Laser.prototype = Object.create(Weapon.prototype);
+Laser.prototype.constructor = Laser;
 
 function Shocker(options) {
-    var func = function (building) {
-        PIXI.Container.call(this);
-        Weapon.call(this, building);
-        this.lifespan = options.lifeSpan;
-        this.range = options.range;
-        this.damage = options.damage;
-        this.fireRate = this.fireRateCount = options.fireRate;
-        /** @return {number} **/
-        this.getAmmoConsumption = function () {
-            return this.damage * 3 / this.lifespan;
-        };
-        this.createProjectile = function () {
-            return new Projectiles.Shock(this);
-        };
+    Weapon.call(this);
+    this.lifespan = options.lifeSpan;
+    this.range = options.range;
+    this.damage = options.damage;
+    this.fireRate = this.fireRateCount = options.fireRate;
+    /** @return {number} **/
+    this.getAmmoConsumption = function () {
+        return this.damage * 3 / this.lifespan;
     };
-    return setConstructor(func);
+    this.createProjectile = function () {
+        return new Projectiles.Shock(this);
+    };
 }
-
-function setConstructor(Func) {
-    Func.prototype             = Object.create(PIXI.Container.prototype);
-    Func.prototype.constructor = Func;
-    return Func;
-}
+Shocker.prototype = Object.create(Weapon.prototype);
+Shocker.prototype.constructor = Shocker;

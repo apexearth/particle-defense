@@ -1,27 +1,21 @@
-var loader = require('./building.loader');
 var Images = require('../../img');
 var Building = require('./building');
 
-module.exports = loader({
-    name: 'EnergyFab',
-    constructor: {
-        cost: {
-            energy: 125,
-            metal: 50
-        },
-        extendedConstructor: function () {
-            Building.prototype.addStorageToPlayer.call(this);
-        }
-    },
-    getSprite: Images.buildings.EnergyFab,
-    template: {
-        health: 20,
-        resourceStorage: {
-            energy: 100
-        },
-        resourceGeneration: {
-            energy: 3
-        },
-        updates: []
-    }
-});
+module.exports = EnergyFab;
+
+function EnergyFab() {
+    Building.call(this);
+    this.name = 'EnergyFab';
+    this.container.addChild(Images.buildings.EnergyFab);
+    this.health = 5;
+    this.resourceStorage.energy = 100;
+    this.resourceGeneration.energy = 3;
+}
+
+EnergyFab.prototype = Object.create(Building.prototype);
+EnergyFab.prototype.constructor = EnergyFab;
+
+EnergyFab.cost = {
+    energy: 35,
+    metal: 20
+};

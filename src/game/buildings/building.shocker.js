@@ -1,21 +1,21 @@
-var loader = require('./building.loader');
-var Images = require('../../img');
 var Weapons = require('../Weapons');
+var Images = require('../../img');
+var Building = require('./building');
 
-module.exports = loader({
-    name: 'Shocker',
-    constructor: {
-        cost: {
-            energy: 25,
-            metal: 20
-        }
-    },
-    getSprite: Images.buildings.LargePlatform,
-    template: {
-        health: 5,
-        Canvas: function (/*canvas*/) {
-            // nothing yet
-        },
-        weapons: [Weapons.Shocker(100, 30, 10, 1)]
-    }
-});
+module.exports = Shocker;
+
+function Shocker() {
+    Building.call(this);
+    this.name = 'Shocker';
+    this.container.addChild(Images.buildings.LargePlatform);
+    this.health = 5;
+    this.addWeapon(Weapons.Shocker(100, 30, 10, 1));
+}
+
+Shocker.prototype = Object.create(Building.prototype);
+Shocker.prototype.constructor = Shocker;
+
+Shocker.cost = {
+    energy: 25,
+    metal: 20
+};

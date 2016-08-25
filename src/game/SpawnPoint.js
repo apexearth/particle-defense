@@ -20,9 +20,8 @@ function SpawnPoint(level, template) {
     this.level = level;
     this.position.x = template.x * Settings.BlockSize;
     this.position.y = template.y * Settings.BlockSize;
-    this.blockX = template.x;
-    this.blockY = template.y;
-    
+    this.block = level.getBlock(template.x, template.y);
+
     this.currentWave = null;
     this.waves = [];
     this.createWave = function (waveDelay, spawnInterval, units) {
@@ -73,8 +72,8 @@ function SpawnPoint(level, template) {
                 unit.visible = false;
                 if (w.Template !== undefined) unit.loadTemplate(w.Template);
                 if (w.Customization !== undefined) unit.loadTemplate(w.Customization);
-                unit.position.x = me.blockX * Settings.BlockSize + Settings.BlockSize / 2;
-                unit.position.y = me.blockY * Settings.BlockSize + Settings.BlockSize / 2;
+                unit.position.x = me.block.x * Settings.BlockSize + Settings.BlockSize / 2;
+                unit.position.y = me.block.y * Settings.BlockSize + Settings.BlockSize / 2;
                 unit.initialize();
                 return unit;
             } else throw new Error('A wave must have a unit template.');

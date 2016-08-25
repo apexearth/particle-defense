@@ -1,18 +1,21 @@
-var loader = require('./building.loader');
-var Images = require('../../img');
 var Weapons = require('../Weapons');
+var Images = require('../../img');
+var Building = require('./building');
 
-module.exports = loader({
-    name:        'LethargicCannon',
-    constructor: {
-        cost: {
-            energy: 60,
-            metal: 30
-        }
-    },
-    getSprite: Images.buildings.LargePlatform,
-    template:    {
-        health: 5,
-        weapons: [Weapons.Cannon(85, 30, 1.75, 1.75, .95, 1, .15, 4, 7)]
-    }
-});
+module.exports = LethargicCannon;
+
+function LethargicCannon() {
+    Building.call(this);
+    this.name = 'LethargicCannon';
+    this.container.addChild(Images.buildings.LargePlatform);
+    this.health = 5;
+    this.addWeapon(Weapons.Cannon(85, 30, 1.75, 1.75, .95, 1, .15, 4, 7));
+}
+
+LethargicCannon.prototype = Object.create(Building.prototype);
+LethargicCannon.prototype.constructor = LethargicCannon;
+
+LethargicCannon.cost = {
+    energy: 60,
+    metal: 30
+};

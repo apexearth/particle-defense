@@ -10,12 +10,20 @@ function Map(level, width, height, template) {
     this.level = level;
     this.container = new PIXI.Container();
     this.blockSize = Settings.BlockSize;
-    var _grid = new Grid(0, 0, width, height);
     this.width = width;
     this.height = height;
     this.pixelWidth = width * this.blockSize;
     this.pixelHeight = height * this.blockSize;
 
+    var _grid = new Grid({
+        bounds: {
+            left: 0,
+            top: 0,
+            right: width,
+            bottom: height
+        },
+        blockSize: this.blockSize
+    });
 
     this.blockStatus = function (x, y) {
         return _grid.blockStatus(x, y);

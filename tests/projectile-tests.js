@@ -8,6 +8,9 @@
     it('should move', function () {
         var level = Levels.LevelTest();
         var building = level.buildings[1];
+        var unit = new Unit();
+        level.addUnit(unit);
+
         var projectile = new Projectiles.Bullet(
             building.weapons[0],
             math.angle(0, 0, 50, 50),
@@ -21,8 +24,8 @@
     it('should die on impact, by default', function () {
         var level = Levels.LevelTest();
         var building = level.buildings[1];
-        var unit = new Unit(level, {x: building.x - 50, y: building.y});
-        level.units.push(unit);
+        var unit = new Unit({x: building.x - 50, y: building.y});
+        level.addUnit(unit);
 
         var projectile = new Projectiles.Bullet(
             building.weapons[0],

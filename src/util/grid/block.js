@@ -5,11 +5,19 @@ module.exports = Block;
 function Block(x, y) {
     var _status = BlockStatus.IsEmpty;
     var _building = null;
-    this.x = x;
-    this.y = y;
     this.objects = [];
 
     Object.defineProperties(this, {
+        x: {
+            get: function () {
+                return x;
+            }
+        },
+        y: {
+            get: function () {
+                return y;
+            }
+        },
         status: {
             get: function () {
                 return _status;
@@ -34,13 +42,13 @@ function Block(x, y) {
             }
         }
     });
-    this.GetBuilding = function () {
+    this.getBuilding = function () {
         return _building;
     };
-    this.Add = function (object) {
+    this.add = function (object) {
         this.objects.push(object);
     };
-    this.Remove = function (object) {
+    this.remove = function (object) {
         this.objects.splice(this.objects.indexOf(object), 1);
     };
 }

@@ -19,7 +19,10 @@ function CreateLevel(json) {
     
     for (var _b in json.buildings) {
         var b = json.buildings[_b];
-        var building = new Buildings[b.constructor](level, player, b.Template);
+        var building = new Buildings[b.constructor]({
+            level: level,
+            player: player
+        });
         level.addBuilding(building);
     }
     

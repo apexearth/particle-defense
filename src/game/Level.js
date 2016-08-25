@@ -111,12 +111,15 @@ function Level(width, height, mapTemplate) {
         }
     };
     this.addUnit = function (unit) {
+        unit.level = this;
+        unit.updateBlockLocation();
         this.container.addChild(unit);
         this.units.push(unit);
     };
     this.removeUnit = function (unit) {
         var index = this.units.indexOf(unit);
         if (index > -1) {
+            unit.level = null;
             this.container.removeChild(unit);
             this.units.splice(index, 1);
         }
@@ -178,7 +181,7 @@ function Level(width, height, mapTemplate) {
         var i = this.spawnPoints.length;
         while (i--) {
             var spawnPoint = this.spawnPoints[i];
-            var spawnPointBlock = this.getBlock(spawnPoint.blockX, spawnPoint.blockY);
+            var spawnPointBlock = this.getBlock(spawnPoint.block.x, spawnPoint.block.y);
             var path = this.getPath(spawnPointBlock, this.player.homeBase.block);
             if (path.length > 0) {
                 _buildableBlocks.push(block);
