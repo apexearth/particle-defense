@@ -17,9 +17,6 @@
         };
         var building = new Building(options);
 
-        expect(building.block).to.exist;
-        expect(building.block.x).to.equal(0);
-        expect(building.block.y).to.equal(0);
         expect(building.level).to.equal(options.level);
         expect(building.player).to.equal(options.player);
         expect(building.container).to.exist;
@@ -38,6 +35,11 @@
         expect(building.position).to.exist;
         expect(building.position.x).to.equal(building.width / 2);
         expect(building.position.y).to.equal(building.height / 2);
+
+        options.level.addBuilding(building);
+        expect(building.block).to.exist;
+        expect(building.block.x).to.equal(0);
+        expect(building.block.y).to.equal(0);
     });
 
     it('should attack units in range of any of it\'s weapons', function () {

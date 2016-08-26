@@ -3,19 +3,13 @@ var Projectile = require('./projectile');
 
 module.exports = VelocityProjectile;
 
-function VelocityProjectile(weapon) {
-    Projectile.call(this, weapon);
+function VelocityProjectile(options) {
+    Projectile.call(this, options);
 
     this.graphics = new PIXI.Graphics();
     this.addChild(this.graphics);
 
     this.lastPosition = this.position;
-    this.direction = weapon.getTargetLeadingAngle();
-    this.initialVelocity = weapon.projectileSpeed;
-    this.velocity = {
-        x: Math.cos(this.direction) * this.initialVelocity,
-        y: Math.sin(this.direction) * this.initialVelocity
-    };
     this.width = Math.sqrt(this.damage) * 2 / this.initialVelocity * 3;
     this.projectileUpdate = this.update;
     this.update = function () {

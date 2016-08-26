@@ -85,22 +85,30 @@ function Level(options) {
     }
 
     this.addBuilding = function (building) {
+        var block = this.getBlock(building.blockX, building.blockY);
+        if (block.building !== null) throw new Error('A building already exists at ' + building.blockX + ', ' + building.blockY);
+        building.block = block;
+        building.block.building = this;
         this.container.addChild(building.container);
         this.buildings.push(building);
         if (building.player) {
             building.player.buildings.push(building);
+            building.addStorageToPlayer();
         }
         return building;
     };
     this.removeBuilding = function (building) {
         var index = this.buildings.indexOf(building);
         if (index > -1) {
+            building.block.building = null;
+            building.block = null;
             this.container.removeChild(building.container);
             this.buildings.splice(index, 1);
         }
         if (building.player) {
             index = building.player.buildings.indexOf(building);
             building.player.buildings.splice(index, 1);
+            building.removeStorageFromPlayer();
         }
         return building;
     };

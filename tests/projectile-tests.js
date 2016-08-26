@@ -8,13 +8,21 @@
     it('should move', function () {
         var level = Levels.LevelTest();
         var building = level.buildings[1];
-        var unit = new Unit();
+        var unit = new Unit({
+            level: level,
+            player: level.players[0]
+        });
         level.addUnit(unit);
 
-        var projectile = new Projectiles.Bullet(
-            building.weapons[0],
-            math.angle(0, 0, 50, 50),
-            2);
+        var projectile = new Projectiles.Bullet({
+            level: level,
+            player: level.players[0],
+            
+            velocity: 10,
+            direction: math.angle(0, 0, 50, 50),
+
+        });
+
         level.projectiles.push(projectile);
         level.update();
         expect(projectile.x).to.be.above(0);

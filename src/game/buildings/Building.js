@@ -10,9 +10,8 @@ function Building(options) {
     this.player = options.player;
     options.blockX = options.blockX || 0;
     options.blockY = options.blockY || 0;
-    this.block = this.level.getBlock(options.blockX, options.blockY);
-    if (this.block.building !== null) throw new Error('A building already exists at ' + options.blockX + ', ' + options.blockY);
-    this.block.building = this;
+    this.blockX = options.blockX;
+    this.blockY = options.blockY;
 
     this.container = new PIXI.Container();
     this.graphics = new PIXI.Graphics();
@@ -40,6 +39,31 @@ function Building(options) {
 
     this.upgradeCount = 0;
     this.Attributes = {};
+
+    Object.defineProperties(this, {
+        selected: {
+            get: function () {
+                return selected;
+            }.bind(this),
+            set: function (value) {
+                if (value) {
+                    this.abilities = new Building.abilities(this);
+                    selected = true;
+                } else {
+                    this.abilities = null;
+                    selected = false;
+                }
+            }.bind(this)
+        },
+        position: {
+            get: function () {
+                return this.container.position;
+            }.bind(this)
+        }
+    });
+    
+    this.position.x = this.blockX * Settings.BlockSize + Settings.BlockSize / 2;
+    this.position.y = this.blockY * Settings.BlockSize + Settings.BlockSize / 2;
 
     this.addWeapon = function (weapon) {
         this.weapons.push(weapon);
@@ -105,10 +129,7 @@ function Building(options) {
 
     this.update = function () {
         if (this.health <= 0) {
-            Building.prototype.removeStorageFromPlayer.call(this);
-            this.level.buildings.splice(this.level.buildings.indexOf(this), 1);
-            this.player.buildings.splice(this.player.buildings.indexOf(this), 1);
-            delete this.block.building;
+            this.level.removeBuilding(this);
             return;
         }
 
@@ -141,30 +162,7 @@ function Building(options) {
         }
     };
 
-    Object.defineProperties(this, {
-        selected: {
-            get: function () {
-                return selected;
-            }.bind(this),
-            set: function (value) {
-                if (value) {
-                    this.abilities = new Building.abilities(this);
-                    selected = true;
-                } else {
-                    this.abilities = null;
-                    selected = false;
-                }
-            }.bind(this)
-        },
-        position: {
-            get: function () {
-                return this.container.position;
-            }.bind(this)
-        }
-    });
 
-    this.position.x = this.block.x * Settings.BlockSize + Settings.BlockSize / 2;
-    this.position.y = this.block.y * Settings.BlockSize + Settings.BlockSize / 2;
     this.updateAttributes();
 
     if (this.player) {

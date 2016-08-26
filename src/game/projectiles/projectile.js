@@ -3,15 +3,27 @@ var Settings = require('../Settings');
 
 module.exports = Projectile;
 
-function Projectile(weapon) {
+function Projectile(options) {
     PIXI.Container.call(this);
-    this.level = weapon.building.level;
+    if (!options.level) throw new Error('Projectiles require a level option to be created.');
+    if (!options.player) throw new Error('Projectiles require a player option to be created.');
+    if (!options.direction) throw new Error('Projectiles require a direction option to be created.');
+    if (!options.velocity) throw new Error('Projectiles require a direction option to be created.');
+    if (!options.position) throw new Error('Projectiles require a position option to be created.');
+    if (!options.damage) throw new Error('Projectiles require a damage option to be created.');
+    this.level = options.level;
+    this.player = options.player;
+    this.direction = options.direction;
+    this.initialVelocity = options.velocity;
+    this.position.x = options.position.x;
+    this.position.y = options.position.y;
+    this.damage = options.damage;
+    this.velocity = {
+        x: Math.cos(this.direction) * this.initialVelocity,
+        y: Math.sin(this.direction) * this.initialVelocity
+    };
+
     this.level.addProjectile(this);
-    this.building = weapon.building;
-    this.weapon = weapon;
-    this.position.x = weapon.building.position.x;
-    this.position.y = weapon.building.position.y;
-    this.damage = weapon.damage;
     /** @returns Number **/
     this.effectiveDamage = function (/*unit*/) {
         return this.damage;

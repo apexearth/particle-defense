@@ -1,5 +1,6 @@
 ﻿describe('level', function () {
-    var Level = require('./');
+    var Level = require('./Level');
+    var Player = require('../Player');
     var Building = require('../buildings/Building');
     var Settings = require('../Settings');
     var expect = require('chai').expect;
@@ -49,7 +50,10 @@
         expect(level.buildings.length).to.equal(0);
         expect(level.container.children.length).to.equal(1);
 
-        var building = new Building(level);
+        var building = new Building({
+            level: level,
+            player: new Player()
+        });
         var addedBuilding = level.addBuilding(building);
         expect(addedBuilding).to.equal(building);
         expect(level.buildings.length).to.equal(1);
