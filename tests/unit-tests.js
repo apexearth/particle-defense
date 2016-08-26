@@ -7,7 +7,10 @@
 
     it('should move towards the target move location', function () {
         var level = Levels.LevelTest();
-        var unit = new Unit();
+        var unit = new Unit({
+            level: level,
+            player: level.players[0]
+        });
         level.addUnit(unit);
         unit.setDestination(level.player.homeBase);
 
@@ -21,7 +24,10 @@
     });
     it('should be able to take damage', function () {
         var level = Levels.LevelTest();
-        var unit = new Unit();
+        var unit = new Unit({
+            level: level,
+            player: level.players[0]
+        });
         level.addUnit(unit);
         unit.setDestination(level.player.homeBase);
 
@@ -31,7 +37,10 @@
     });
     it('should die when it runs out of health, and be removed from the level', function () {
         var level = Levels.LevelTest();
-        var unit = new Unit();
+        var unit = new Unit({
+            level: level,
+            player: level.players[0]
+        });
         level.addUnit(unit);
         unit.setDestination(level.player.homeBase);
         unit.damage(unit.health);
@@ -40,7 +49,10 @@
     });
     it('should die when it runs out of health, and be removed from the level', function () {
         var level = Levels.LevelTest();
-        var unit = new Unit();
+        var unit = new Unit({
+            level: level,
+            player: level.players[0]
+        });
         level.addUnit(unit);
         unit.setDestination(level.player.homeBase);
         level.units.push(unit);
@@ -50,8 +62,14 @@
         expect(level.player.score).to.be.above(0);
     });
     it('should have a helper function to deliver an array of units', function () {
+        var level = Levels.LevelTest();
         var units = Units.Array(function () {
-            return new Unit({x: 10, y: 10});
+            return new Unit({
+                level: level,
+                player: level.players[0],
+                x: 10,
+                y: 10
+            });
         }, 10);
         expect(units.length).to.equal(10);
         expect(units[0].constructor).to.equal(Unit);
@@ -60,7 +78,10 @@
         var level = Levels.LevelTest();
         level.buildings = [];
         level.player.buildings = [];
-        var unit = new Unit(level);
+        var unit = new Unit({
+            level: level,
+            player: level.players[0]
+        });
         unit.velocity.x = 10;
         unit.velocity.y = 10;
         unit.update();

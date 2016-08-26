@@ -116,7 +116,6 @@ function Level(options) {
         }
     };
     this.addUnit = function (unit) {
-        unit.level = this;
         unit.updateBlockLocation();
         this.container.addChild(unit);
         this.units.push(unit);

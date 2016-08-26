@@ -108,11 +108,9 @@ function Unit(options) {
     };
     this.die = function () {
         this.dead = true;
-        var i = this.level.units.indexOf(this);
-        if (i !== -1) this.level.units.splice(i, 1);
+        this.level.player.score += this.score;
         this.level.getBlock(this.block.x, this.block.y).remove(this);
         this.level.removeUnit(this);
-        this.level.player.score += this.score;
     };
     this.draw = function (context) {
         context.strokeStyle = '#fff';
