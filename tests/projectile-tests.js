@@ -1,5 +1,5 @@
 ﻿describe('Projectile Tests', function () {
-    var Levels = require('../src/game/level').list;
+    var Levels = require('../src/game/levels');
     var Projectiles = require('../src/game/projectiles');
     var math = require('../src/util/math');
     var Unit = require('../src/game/units/Unit');
@@ -24,12 +24,12 @@
     it('should die on impact, by default', function () {
         var level = Levels.LevelTest();
         var building = level.buildings[1];
-        var unit = new Unit({x: building.x - 50, y: building.y});
+        var unit = new Unit({x: building.position.x - 50, y: building.position.y});
         level.addUnit(unit);
 
         var projectile = new Projectiles.Bullet(
             building.weapons[0],
-            math.angle(building.x, building.y, unit.x, unit.y),
+            math.angle(building.position.x, building.position.y, unit.x, unit.y),
             3);
         level.projectiles.push(projectile);
 

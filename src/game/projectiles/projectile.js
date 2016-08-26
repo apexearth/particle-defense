@@ -5,8 +5,8 @@ module.exports = Projectile;
 
 function Projectile(weapon) {
     PIXI.Container.call(this);
-    weapon.level.addProjectile(this);
     this.level = weapon.building.level;
+    this.level.addProjectile(this);
     this.building = weapon.building;
     this.weapon = weapon;
     this.position.x = weapon.building.position.x;

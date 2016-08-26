@@ -1,5 +1,5 @@
 ﻿describe('Unit Tests', function () {
-    var Levels = require('../src/game/level').list;
+    var Levels = require('../src/game/levels');
     var math = require('../src/util/math');
     var Units = require('../src/game/units');
     var Unit = require('../src/game/units/Unit');
@@ -13,9 +13,9 @@
 
         var i = 5;
         while (i--) {
-            var initialDistance = math.distance(unit.x - unit.destination.x, unit.y - unit.destination.y);
+            var initialDistance = math.distance(unit.x - unit.target.position.x, unit.y - unit.target.position.y);
             level.update();
-            var distanceAfterUpdate = math.distance(unit.x - unit.destination.x, unit.y - unit.destination.y);
+            var distanceAfterUpdate = math.distance(unit.x - unit.target.position.x, unit.y - unit.target.position.y);
             expect(initialDistance).to.be.above(distanceAfterUpdate);
         }
     });

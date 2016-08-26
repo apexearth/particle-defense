@@ -28,7 +28,7 @@ function Weapon(options) {
     this.rotateSpeed = degree * 5;
     this.getTargetAngle = function () {
         if (this.target == null) return NaN;
-        return math.angle(this.building.x, this.building.y, this.target.x, this.target.y);
+        return math.angle(this.building.position.x, this.building.position.y, this.target.position.x, this.target.position.y);
     };
 
     // Simple Line graphic for now...
@@ -109,14 +109,14 @@ function Weapon(options) {
         var i = this.building.level.units.length;
         while (i--) {
             var unit = this.building.level.units[i];
-            if (math.distance(unit.x - this.building.x, unit.y - this.building.y) <= this.range) {
+            if (math.distance(unit.x - this.building.position.x, unit.y - this.building.position.y) <= this.range) {
                 this.target = unit;
             }
         }
     };
 
     this.tryFireAtTarget = function () {
-        if (math.distance(this.target.x - this.building.x, this.target.y - this.building.y) > this.range) {
+        if (math.distance(this.target.position.x - this.building.position.x, this.target.position.y - this.building.position.y) > this.range) {
             this.resetTarget();
         } else if (this.building.player.resources.ammo >= this.getAmmoConsumption()) {
             var difference = Math.abs(this.rotation - this.getTargetAngle());
@@ -152,15 +152,15 @@ function Weapon(options) {
         }
     };
     this.getTargetAngle = function () {
-        return math.angle(this.building.x, this.building.y, this.target.x, this.target.y)
+        return math.angle(this.building.position.x, this.building.position.y, this.target.position.x, this.target.position.y)
             + this.getAccuracyModification();
     };
     this.getTargetLeadingAngle = function () {
-        return math.leadingAngle(this.building.x, this.building.y, this.projectileSpeed, this.target.x, this.target.y, this.target.velocity.x, this.target.velocity.y)
+        return math.leadingAngle(this.building.position.x, this.building.position.y, this.projectileSpeed, this.target.position.x, this.target.position.y, this.target.velocity.x, this.target.velocity.y)
             + this.getAccuracyModification();
     };
     this.getTargetLeadingVector = function () {
-        return math.leadingVector(this.building.x, this.building.y, this.projectileSpeed, this.target.x, this.target.y, this.target.velocity.x, this.target.velocity.y);
+        return math.leadingVector(this.building.position.x, this.building.position.y, this.projectileSpeed, this.target.position.x, this.target.position.y, this.target.velocity.x, this.target.velocity.y);
     };
     this.getAccuracyModification = function () {
         if (this.accuracy == null) return 0;

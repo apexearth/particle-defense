@@ -1,7 +1,6 @@
 ﻿var PIXI = require('pixi.js');
 var math = require('../../util/math');
 var Settings = require('../Settings');
-var General = require('../../util/General');
 
 module.exports = Unit;
 
@@ -12,8 +11,11 @@ function Unit(options) {
     this.level = options.level;
     this.player = options.player;
 
-    this.position.x = 0;
-    this.position.y = 0;
+    options.blockX = options.blockX || 0;
+    options.blockY = options.blockY || 0;
+    this.block = this.level.getBlock(options.blockX, options.blockY);
+    this.position.x = options.blockX * Settings.BlockSize + Settings.BlockSize / 2;
+    this.position.y = options.blockY * Settings.BlockSize + Settings.BlockSize / 2;
     this.velocity = {
         x: 0,
         y: 0
@@ -21,8 +23,7 @@ function Unit(options) {
     this.radius = 3;
     this.moveSpeed = 1;
     this.health = 10;
-    this.block = null;
-    this.destination = null;
+    this.target = null;
     this.path = null;
     this.score = this.health * this.moveSpeed;
     this.dead = false;
@@ -98,10 +99,10 @@ function Unit(options) {
         this.updateBlockLocation();
 
         // Check if reached the target
-        if (this.destination != null
-            && this.block.x == this.destination.block.x
-            && this.block.y == this.destination.block.y) {
-            this.destination.health--;
+        if (this.target != null
+            && this.position.x === this.target.position.x
+            && this.position.y === this.target.position.y) {
+            this.target.health--;
             this.die();
         }
     };
@@ -122,27 +123,12 @@ function Unit(options) {
         context.stroke();
     };
     this.setDestination = function (target) {
-        this.destination = target;
+        this.target = target;
         this.findPath();
     };
     this.findPath = function () {
         this.path = this.level.getPathForUnit(this);
     };
-    this.loadTemplate = function (template) {
-        General.NestedCopyTo(template, this);
-    };
-    this.loadTemplates = function () {
-        if (templates === undefined)return;
-        if (templates instanceof Array)
-            for (var template in templates) {
-                if (templates.hasOwnProperty(template))
-                    this.loadTemplate(templates[template]);
-            }
-        else
-            this.loadTemplate(templates);
-    };
-
-    this.loadTemplates();
 }
 
 Unit.prototype = Object.create(PIXI.Container.prototype);

@@ -222,7 +222,7 @@ function Level(options) {
     this.getPathForUnit = function (unit) {
         return this.getPath(
             _map.getBlockFromCoords(unit.position.x, unit.position.y),
-            _map.getBlockFromVector(unit.destination)
+            _map.getBlockFromCoords(unit.target.position.x, unit.target.position.y)
         );
     };
     this.getPath = function (blockStart, blockTarget) {

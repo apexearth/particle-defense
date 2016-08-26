@@ -43,8 +43,14 @@
     it('should attack units in range of any of it\'s weapons', function () {
         var level = Levels.LevelTest();
         level.player.resources.ammo = 10;
-        var unit = new Unit({x: level.width / 2, y: level.height / 2});
+        var unit = new Unit({
+            level: level,
+            player: level.players[1],
+            blockX: 5,
+            blockY: 5
+        });
         level.addUnit(unit);
+
         var turret = new Gun({
             level: level,
             player: level.player,
@@ -52,10 +58,8 @@
             blockY: unit.block.y + 2
         });
         turret.weapons[0].range = 1000;
-
-        level.buildings.push(turret);
-        level.player.buildings.push(turret);
-        var health = unit.health;
+        level.addBuilding(turret);
+        var initialHealth = unit.health;
 
         level.update();
         expect(turret.weapons[0].target).not.to.equal(null);
@@ -64,21 +68,31 @@
         var i = 50;
         while (i--)
             level.update();
-        expect(health).to.be.above(unit.health);
+        expect(initialHealth).to.be.above(unit.health);
     });
 
     it('should not attack units out of range', function () {
         var level = Levels.LevelTest();
-        var unit = new Unit({x: level.player.homeBase.x - 50, y: level.player.homeBase.y - 50});
+        var unit = new Unit({
+            level: level,
+            player: level.players[1],
+            blockX: level.player.homeBase.block.x - 1,
+            blockY: level.player.homeBase.block.y - 1
+        });
         unit.setDestination(level.player.homeBase);
         level.units.push(unit);
-        var turret = new Gun(level, level.player, 5, 9);
+        var turret = new Gun({
+            level: level,
+            player: level.player,
+            blockX: 5,
+            blockY: 9
+        });
         turret.weapons[0].range = 10;
         level.buildings.push(turret);
 
-        var health = unit.health;
+        var initialHealth = unit.health;
         level.update();
-        expect(health).to.equal(unit.health);
+        expect(initialHealth).to.equal(unit.health);
     });
 
     it('can provide energy and metal', function () {

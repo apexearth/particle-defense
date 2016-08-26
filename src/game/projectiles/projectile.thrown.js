@@ -12,8 +12,8 @@ function ThrownProjectile(weapon) {
 
     this.lastPosition         = this.position;
     this.target = weapon.getTargetLeadingVector();
-    this.initialDistance = math.distance(this.position.x - this.target.x, this.position.y - this.target.y);
-    this.direction = math.angle(this.position.x, this.position.y, this.target.x, this.target.y);
+    this.initialDistance = math.distance(this.position.x - this.target.position.x, this.position.y - this.target.position.y);
+    this.direction = math.angle(this.position.x, this.position.y, this.target.position.x, this.target.position.y);
     this.initialVelocity = weapon.projectileSpeed;
     this.currentVelocity = weapon.projectileSpeed;
     this.projectileSlowFactor = weapon.projectileSlowFactor;
@@ -22,7 +22,7 @@ function ThrownProjectile(weapon) {
         this.projectileUpdate();
         this.lastPosition = this.position.clone();
         if (this.distance == null || this.distance > this.width) {
-            this.distance = math.Distance(this.position.x - this.target.x, this.position.y - this.target.y);
+            this.distance = math.Distance(this.position.x - this.target.position.x, this.position.y - this.target.position.y);
             this.currentVelocity = this.initialVelocity * (Math.pow(this.distance + 25, this.projectileSlowFactor) * 2 / Math.pow(this.initialDistance, this.projectileSlowFactor));
             this.velocity.x = Math.cos(this.direction) * this.currentVelocity;
             this.velocity.y = Math.sin(this.direction) * this.currentVelocity;

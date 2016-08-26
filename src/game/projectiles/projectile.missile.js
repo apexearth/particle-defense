@@ -20,8 +20,8 @@ function MissileProjectile(weapon) {
         if (this.target !== null) {
             if (this.target.dead) this.target = null;
             if (this.target !== null) {
-                var expectedAverageVelocity = this.acceleration * math.distance(this.position.x - this.target.x, this.position.y - this.target.y) / 2 + this.currentVelocity;
-                this.direction = math.leadingAngle(this.position.x, this.position.y, expectedAverageVelocity, this.target.x, this.target.y, this.target.velocity.x, this.target.velocity.y);
+                var expectedAverageVelocity = this.acceleration * math.distance(this.position.x - this.target.position.x, this.position.y - this.target.position.y) / 2 + this.currentVelocity;
+                this.direction = math.leadingAngle(this.position.x, this.position.y, expectedAverageVelocity, this.target.position.x, this.target.position.y, this.target.velocity.x, this.target.velocity.y);
             }
         }
         this.inheritedUpdateMissileProjectile();

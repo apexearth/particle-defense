@@ -20,9 +20,10 @@ function CreateLevel(json) {
         mapTemplate: json.mapTemplate
     });
 
-    var player = new Player(level);
+    var player = new Player();
     level.addPlayer(player);
     level.player = player;
+    level.addPlayer(new Player());
 
     for (var _b in json.buildings) {
         var b = json.buildings[_b];
