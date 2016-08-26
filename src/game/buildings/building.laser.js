@@ -4,12 +4,12 @@ var Building = require('./building');
 
 module.exports = Laser;
 
-function Laser() {
-    Building.call(this);
+function Laser(options) {
+    Building.call(this, options);
     this.name = 'Laser';
-    this.container.addChild(Images.buildings.Platform);
+    this.container.addChild(Images.buildings.Platform());
     this.health = 5;
-    this.addWeapon(Weapons.Laser({
+    this.addWeapon(new Weapons.Laser({
         range: 100,
         lifeSpan: 60,
         damage: 4,

@@ -15,8 +15,13 @@ module.exports = {
     Shocker: Shocker
 };
 
-function Weapon() {
+function Weapon(options) {
     PIXI.Container.call(this);
+
+    options = options || {};
+    this.building = options.building;
+    this.player = this.building.player;
+
     this.range = 200;
     this.damage = 1;
     this.firingCode = degree * 15;
@@ -41,8 +46,6 @@ function Weapon() {
     this.fireRateCount = 10;
     this.shotsPerShot = 1;
     this.accuracy = .05;
-
-    this.player = this.building.player;
 
     var weapon = this;
     var me = this;
@@ -168,7 +171,7 @@ Weapon.prototype = Object.create(PIXI.Container.prototype);
 Weapon.prototype.constructor = Weapon;
 
 function Missile(options) {
-    Weapon.call(this);
+    Weapon.call(this, options);
     this.projectileSpeed = options.projectileSpeed;
     this.explosiveSpeed = options.explosiveSpeed;
     this.explosiveTime = options.explosiveTime;
@@ -195,7 +198,7 @@ Missile.prototype = Object.create(Weapon.prototype);
 Missile.prototype.constructor = Missile;
 
 function Gun(options) {
-    Weapon.call(this);
+    Weapon.call(this, options);
     var me = this;
     this.range = options.range;
     this.fireRate = options.fireRate;
@@ -223,8 +226,7 @@ Gun.prototype = Object.create(Weapon.prototype);
 Gun.prototype.constructor = Gun;
 
 function Cannon(options) {
-    var me = this;
-    Gun.call(me);
+    Gun.call(this, options);
     this.projectileClass = Projectiles.Cannon;
     this.explosiveSpeed = options.explosiveSpeed;
     this.explosiveTime = options.explosiveTime;
@@ -236,7 +238,7 @@ function Cannon(options) {
     };
     /** @return {number} **/
     this.attributeCost = function () {
-        return me.gunAttributeCost() * (1 + (me.explosiveTime + me.explosiveSpeed + me.explosiveInitialSize / 20) / 5);
+        return this.gunAttributeCost() * (1 + (this.explosiveTime + this.explosiveSpeed + this.explosiveInitialSize / 20) / 5);
     };
     this.createAttributeForStat('explosiveSpeed', true, 4, 1.1, this.attributeCost);
     this.createAttributeForStat('explosiveTime', true, 10, 1.1, this.attributeCost);
@@ -247,7 +249,7 @@ Cannon.prototype.constructor = Cannon;
 
 function GrenadeLauncher(options) {
     var me = this;
-    Gun.call(this, building);
+    Gun.call(this, options);
     this.projectileClass = Projectiles.Grenade;
     this.projectileSlowFactor = options.projectileSlowFactor;
     this.explosiveSpeed = options.explosiveSpeed;
@@ -270,7 +272,7 @@ GrenadeLauncher.prototype = Object.create(Weapon.prototype);
 GrenadeLauncher.prototype.constructor = GrenadeLauncher;
 
 function Laser(options) {
-    Weapon.call(this);
+    Weapon.call(this, options);
     this.lifespan = options.lifeSpan;
     this.range = options.range;
     this.damage = options.damage;
@@ -289,7 +291,7 @@ Laser.prototype = Object.create(Weapon.prototype);
 Laser.prototype.constructor = Laser;
 
 function Shocker(options) {
-    Weapon.call(this);
+    Weapon.call(this, options);
     this.lifespan = options.lifeSpan;
     this.range = options.range;
     this.damage = options.damage;

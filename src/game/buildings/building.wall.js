@@ -3,10 +3,10 @@ var Building = require('./building');
 
 module.exports = Wall;
 
-function Wall() {
-    Building.call(this);
+function Wall(options) {
+    Building.call(this, options);
     this.name = 'Wall';
-    this.container.addChild(Images.buildings.SmallPlatform);
+    this.container.addChild(Images.buildings.SmallPlatform());
     this.health = 20;
 }
 

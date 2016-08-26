@@ -1,29 +1,34 @@
 ﻿var PIXI = require('pixi.js');
-var renderer = require('./renderer');
-var Map = require('./Map');
-var PlayerCommands = require('./PlayerCommands');
-var General = require('../util/General');
-var CommandQueue = require('./CommandQueue');
-var BlockStatus = require('../util/grid/block-status');
+var renderer = require('../renderer');
+var Map = require('../Map');
+var PlayerCommands = require('../PlayerCommands');
+var General = require('../../util/General');
+var CommandQueue = require('../CommandQueue');
+var BlockStatus = require('../../util/grid/block-status');
 
-var input = require('../util/input');
+var input = require('../../util/input');
 var Mouse = input.Mouse;
 var Keyboard = input.Keyboard;
 
-var common = require('./common');
+var common = require('../common');
 var Settings = common.Settings;
 
 module.exports = Level;
+Level.list = require('./levels');
 
-function Level(width, height, mapTemplate) {
+function Level(options) {
+    options = options || {};
+    options.width = options.width || 10;
+    options.height = options.height || 10;
+
     this.container = new PIXI.Container();
     renderer.addChild(this.container);
     this.position = this.container.position;
-    this.position.x = -width * Settings.BlockSize / 2;
-    this.position.y = -height * Settings.BlockSize / 2;
+    this.position.x = -options.width * Settings.BlockSize / 2;
+    this.position.y = -options.height * Settings.BlockSize / 2;
 
 
-    var _map = new Map(this, width, height, mapTemplate);
+    var _map = new Map(this, options.width, options.height, options.mapTemplate);
     this.container.addChild(_map.container);
     this.spawnPoints = [];
 
@@ -80,7 +85,7 @@ function Level(width, height, mapTemplate) {
     }
 
     this.addBuilding = function (building) {
-        this.container.addChild(building);
+        this.container.addChild(building.container);
         this.buildings.push(building);
         if (building.player) {
             building.player.buildings.push(building);
@@ -90,7 +95,7 @@ function Level(width, height, mapTemplate) {
     this.removeBuilding = function (building) {
         var index = this.buildings.indexOf(building);
         if (index > -1) {
-            this.container.removeChild(building);
+            this.container.removeChild(building.container);
             this.buildings.splice(index, 1);
         }
         if (building.player) {

@@ -1,5 +1,5 @@
 ﻿describe('Unit Tests', function () {
-    var Levels = require('../src/game/Levels');
+    var Levels = require('../src/game/level').list;
     var math = require('../src/util/math');
     var Units = require('../src/game/units');
     var Unit = require('../src/game/units/Unit');

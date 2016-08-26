@@ -4,12 +4,12 @@ var Building = require('./building');
 
 module.exports = LethargicCannon;
 
-function LethargicCannon() {
-    Building.call(this);
+function LethargicCannon(options) {
+    Building.call(this, options);
     this.name = 'LethargicCannon';
-    this.container.addChild(Images.buildings.LargePlatform);
+    this.container.addChild(Images.buildings.LargePlatform());
     this.health = 5;
-    this.addWeapon(Weapons.Cannon(85, 30, 1.75, 1.75, .95, 1, .15, 4, 7));
+    this.addWeapon(new Weapons.Cannon(85, 30, 1.75, 1.75, .95, 1, .15, 4, 7));
 }
 
 LethargicCannon.prototype = Object.create(Building.prototype);

@@ -4,12 +4,12 @@ var Building = require('./building');
 
 module.exports = Shocker;
 
-function Shocker() {
-    Building.call(this);
+function Shocker(options) {
+    Building.call(this, options);
     this.name = 'Shocker';
-    this.container.addChild(Images.buildings.LargePlatform);
+    this.container.addChild(Images.buildings.LargePlatform());
     this.health = 5;
-    this.addWeapon(Weapons.Shocker(100, 30, 10, 1));
+    this.addWeapon(new Weapons.Shocker(100, 30, 10, 1));
 }
 
 Shocker.prototype = Object.create(Building.prototype);

@@ -3,12 +3,13 @@ var Building = require('./building');
 
 module.exports = AmmoFab;
 
-function AmmoFab() {
-    Building.call(this);
+function AmmoFab(options) {
+    Building.call(this, options);
     this.name = 'AmmoFab';
-    this.container.addChild(Images.buildings.AmmoFab);
+    this.container.addChild(Images.buildings.AmmoFab());
     this.health = 20;
     this.resourceStorage.ammo = 50;
+    this.addStorageToPlayer();
     this.resourceGeneration.ammo = 6;
 }
 

@@ -4,12 +4,12 @@ var Building = require('./building');
 
 module.exports = SharpShooter;
 
-function SharpShooter() {
-    Building.call(this);
+function SharpShooter(options) {
+    Building.call(this, options);
     this.name = 'SharpShooter';
-    this.container.addChild(Images.buildings.LargePlatform);
+    this.container.addChild(Images.buildings.LargePlatform());
     this.health = 5;
-    this.addWeapon(Weapons.Gun({
+    this.addWeapon(new Weapons.Gun({
         range: 200,
         fireRate: 30,
         damage: 20,

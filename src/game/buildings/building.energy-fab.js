@@ -3,12 +3,13 @@ var Building = require('./building');
 
 module.exports = EnergyFab;
 
-function EnergyFab() {
-    Building.call(this);
+function EnergyFab(options) {
+    Building.call(this, options);
     this.name = 'EnergyFab';
-    this.container.addChild(Images.buildings.EnergyFab);
+    this.container.addChild(Images.buildings.EnergyFab());
     this.health = 5;
     this.resourceStorage.energy = 100;
+    this.addStorageToPlayer();
     this.resourceGeneration.energy = 3;
 }
 

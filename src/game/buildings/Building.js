@@ -4,9 +4,15 @@ var PIXI = require('pixi.js');
 
 module.exports = Building;
 function Building(options) {
+    if (!options.level) throw new Error('A level is required to create a building.');
+    if (!options.player) throw new Error('A player is required to create a building.');
     this.level = options.level;
     this.player = options.player;
+    options.blockX = options.blockX || 0;
+    options.blockY = options.blockY || 0;
     this.block = this.level.getBlock(options.blockX, options.blockY);
+    if (this.block.building !== null) throw new Error('A building already exists at ' + options.blockX + ', ' + options.blockY);
+    this.block.building = this;
 
     this.container = new PIXI.Container();
     this.graphics = new PIXI.Graphics();
@@ -164,7 +170,6 @@ function Building(options) {
     if (this.player) {
         this.player.addBuildingCost(this.Name);
     }
-    Building.prototype.addStorageToPlayer.call(this);
 }
 
 Building.prototype.addStorageToPlayer = function () {

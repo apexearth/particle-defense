@@ -70,7 +70,7 @@ function SpawnPoint(level, template) {
             if (w.unitType !== undefined) {
                 var unit = new Units[w.unitType](level);
                 unit.visible = false;
-                if (w.Template !== undefined) unit.loadTemplate(w.Template);
+                if (w.template !== undefined) unit.loadTemplate(w.template);
                 if (w.Customization !== undefined) unit.loadTemplate(w.Customization);
                 unit.position.x = me.block.x * Settings.BlockSize + Settings.BlockSize / 2;
                 unit.position.y = me.block.y * Settings.BlockSize + Settings.BlockSize / 2;

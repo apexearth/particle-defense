@@ -1,7 +1,7 @@
-﻿describe('Level Tests', function () {
-    var Level = require('../src/game/Level');
-    var Building = require('../src/game/buildings/Building');
-    var Settings = require('../src/game/Settings');
+﻿describe('level', function () {
+    var Level = require('./');
+    var Building = require('../buildings/Building');
+    var Settings = require('../Settings');
     var expect = require('chai').expect;
 
     var width = 10;
@@ -9,7 +9,10 @@
     var level;
 
     beforeEach(function () {
-        level = new Level(width, height);
+        level = new Level({
+            width: width,
+            height: height
+        });
     });
 
     it('initialization', function () {

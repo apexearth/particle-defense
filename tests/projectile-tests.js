@@ -1,5 +1,5 @@
 ﻿describe('Projectile Tests', function () {
-    var Levels = require('../src/game/Levels');
+    var Levels = require('../src/game/level').list;
     var Projectiles = require('../src/game/projectiles');
     var math = require('../src/util/math');
     var Unit = require('../src/game/units/Unit');

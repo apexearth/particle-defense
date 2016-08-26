@@ -4,12 +4,12 @@ var Building = require('./building');
 
 module.exports = FastGun;
 
-function FastGun() {
-    Building.call(this);
+function FastGun(options) {
+    Building.call(this, options);
     this.name = 'FastGun';
-    this.container.addChild(Images.buildings.EnergyFab);
+    this.container.addChild(Images.buildings.EnergyFab());
     this.health = 5;
-    this.addWeapon(Weapons.Gun({
+    this.addWeapon(new Weapons.Gun({
         range: 100,
         fireRate: 10,
         damage: 3,

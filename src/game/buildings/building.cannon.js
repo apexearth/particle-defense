@@ -4,10 +4,10 @@ var Building = require('./building');
 
 module.exports = Cannon;
 
-function Cannon() {
-    Building.call(this);
+function Cannon(options) {
+    Building.call(this, options);
     this.name = 'Cannon';
-    this.container.addChild(Images.buildings.SmallPlatform);
+    this.container.addChild(Images.buildings.SmallPlatform());
     this.health = 5;
     this.addWeapon(Weapons.Cannon({
         range: 100,

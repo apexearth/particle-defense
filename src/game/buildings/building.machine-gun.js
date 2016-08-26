@@ -4,12 +4,12 @@ var Building = require('./building');
 
 module.exports = MachineGun;
 
-function MachineGun() {
-    Building.call(this);
+function MachineGun(options) {
+    Building.call(this, options);
     this.name = 'MachineGun';
-    this.container.addChild(Images.buildings.LargePlatform);
+    this.container.addChild(Images.buildings.LargePlatform());
     this.health = 5;
-    this.addWeapon(Weapons.Gun({
+    this.addWeapon(new Weapons.Gun({
         range: 100,
         fireRate: 5,
         damage: 2,

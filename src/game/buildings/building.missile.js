@@ -4,12 +4,12 @@ var Building = require('./building');
 
 module.exports = MissileLauncher;
 
-function MissileLauncher() {
-    Building.call(this);
+function MissileLauncher(options) {
+    Building.call(this, options);
     this.name = 'MissileLauncher';
-    this.container.addChild(Images.buildings.Platform);
+    this.container.addChild(Images.buildings.Platform());
     this.health = 5;
-    this.addWeapon(Weapons.Missile({
+    this.addWeapon(new Weapons.Missile({
         projectileSpeed: 200,
         explosiveSpeed: 45,
         explosiveTime: 2,

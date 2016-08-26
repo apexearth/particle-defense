@@ -4,12 +4,12 @@ var Building = require('./building');
 
 module.exports = CrossEyes;
 
-function CrossEyes() {
-    Building.call(this);
+function CrossEyes(options) {
+    Building.call(this, options);
     this.name = 'CrossEyes';
-    this.container.addChild(Images.buildings.SmallPlatform);
+    this.container.addChild(Images.buildings.SmallPlatform());
     this.health = 5;
-    this.addWeapon(Weapons.Gun({
+    this.addWeapon(new Weapons.Gun({
         range: 150,
         fireRate: 13,
         damage: 8,

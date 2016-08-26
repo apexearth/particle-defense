@@ -1,5 +1,5 @@
 ﻿describe('Player Tests', function () {
-    var Levels = require('../src/game/Levels');
+    var Levels = require('../src/game/level').list;
     var Buildings = require('../src/game/buildings/');
     var PlayerCommands = require('../src/game/PlayerCommands');
     var Player = require('../src/game/Player');

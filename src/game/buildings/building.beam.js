@@ -4,10 +4,10 @@ var Building = require('./building');
 
 module.exports = Beam;
 
-function Beam() {
-    Building.call(this);
+function Beam(options) {
+    Building.call(this, options);
     this.name = 'Beam';
-    this.container.addChild(Images.buildings.SmallPlatform);
+    this.container.addChild(Images.buildings.SmallPlatform());
     this.health = 5;
     this.addWeapon(Weapons.Laser({
         range: 100,

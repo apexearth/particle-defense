@@ -1,5 +1,5 @@
 ﻿describe('Play Tests', function () {
-    var Levels = require('../src/game/Levels');
+    var Levels = require('../src/game/level').list;
     var expect = require('chai').expect;
 
     it('The basic tower should defeat a simple wave and win the game.', function () {

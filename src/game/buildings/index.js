@@ -22,5 +22,5 @@ var requires = [
 ];
 
 requires.forEach(function (building) {
-    buildings[building.Name] = building;
+    buildings[building.name] = building;
 });

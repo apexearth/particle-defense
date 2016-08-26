@@ -4,12 +4,12 @@ var Building = require('./building');
 
 module.exports = GrenadeLauncher;
 
-function GrenadeLauncher() {
-    Building.call(this);
+function GrenadeLauncher(options) {
+    Building.call(this, options);
     this.name = 'GrenadeLauncher';
-    this.container.addChild(Images.buildings.Platform);
+    this.container.addChild(Images.buildings.Platform());
     this.health = 5;
-    this.addWeapon(Weapons.GrenadeLauncher(100, 30, 3, 2, 1, .95, 1, .35, 1, 5));
+    this.addWeapon(new Weapons.GrenadeLauncher(100, 30, 3, 2, 1, .95, 1, .35, 1, 5));
 }
 
 GrenadeLauncher.prototype = Object.create(Building.prototype);

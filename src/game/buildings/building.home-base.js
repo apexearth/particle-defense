@@ -1,16 +1,17 @@
 var Images = require('../../img');
-var Building = require('./building');
+var Building = require('./Building');
 
 module.exports = HomeBase;
 
-function HomeBase() {
-    Building.call(this);
+function HomeBase(options) {
+    Building.call(this, options);
     this.name = 'HomeBase';
-    this.container.addChild(Images.buildings.HomeBase);
+    this.container.addChild(Images.buildings.HomeBase());
     this.health = 5;
     this.resourceStorage.ammo = 200;
     this.resourceStorage.metal = 100;
     this.resourceStorage.energy = 200;
+    this.addStorageToPlayer();
     this.resourceGeneration.ammo = 6;
     this.resourceGeneration.metal = 1.5;
     this.resourceGeneration.energy = 3;
