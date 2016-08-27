@@ -4,6 +4,7 @@ var PIXI = require('pixi.js');
 
 module.exports = Building;
 function Building(options) {
+    if (!options) throw new Error('Options are required to create a building');
     if (!options.level) throw new Error('A level is required to create a building.');
     if (!options.player) throw new Error('A player is required to create a building.');
     this.level = options.level;

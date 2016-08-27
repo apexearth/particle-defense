@@ -10,8 +10,8 @@ module.exports = Weapon;
 function Weapon(options) {
     PIXI.Container.call(this);
 
-    if (!options.level) throw new Error('Projectiles require a level option to be created.');
-    if (!options.building) throw new Error('Projectiles require a level option to be created.');
+    if (!options.level) throw new Error('Weapons require a level option to be created.');
+    if (!options.building) throw new Error('Weapons require a building option to be created.');
     this.name = this.constructor.name;
     this.level = options.level;
     this.building = options.building;

@@ -43,7 +43,7 @@
         expect(building.block.y).to.equal(0);
     });
 
-    it('.addWeapon()', function addWeapon() {
+    it('.addWeapon()', function () {
         var options = {
             level: new Level(),
             player: new Player()
