@@ -5,7 +5,6 @@ module.exports = Missile;
 
 function Missile(options) {
     Weapon.call(this, options);
-    this.name = this.constructor.name;
     this.projectileSpeed = options.projectileSpeed;
     this.explosiveSpeed = options.explosiveSpeed;
     this.explosiveTime = options.explosiveTime;

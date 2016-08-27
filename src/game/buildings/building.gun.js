@@ -1,5 +1,5 @@
 var Images = require('../../img');
-var Weapons = require('../weapons');
+var weapons = require('../weapons');
 var Building = require('./building');
 
 module.exports = Gun;
@@ -9,7 +9,7 @@ function Gun(options) {
     this.name = 'Gun';
     this.container.addChild(Images.buildings.SmallPlatform());
     this.health = 5;
-    this.addWeapon(new Weapons.Gun({
+    this.addWeapon(new weapons.Gun({
         level: this.level,
         building: this,
         range: 150,

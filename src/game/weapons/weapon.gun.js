@@ -6,7 +6,6 @@ module.exports = Gun;
 function Gun(options) {
     Weapon.call(this, options);
     var me = this;
-    this.name = this.constructor.name;
     this.range = options.range;
     this.fireRate = options.fireRate;
     this.fireRateCount = options.fireRate;

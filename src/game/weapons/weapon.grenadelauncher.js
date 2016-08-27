@@ -6,7 +6,6 @@ module.exports = GrenadeLauncher;
 function GrenadeLauncher(options) {
     var me = this;
     Gun.call(this, options);
-    this.name = this.constructor.name;
     this.projectileClass = Projectiles.Grenade;
     this.projectileSlowFactor = options.projectileSlowFactor;
     this.explosiveSpeed = options.explosiveSpeed;

@@ -5,7 +5,6 @@ module.exports = Laser;
 
 function Laser(options) {
     Weapon.call(this, options);
-    this.name = this.constructor.name;
     this.lifespan = options.lifeSpan;
     this.range = options.range;
     this.damage = options.damage;

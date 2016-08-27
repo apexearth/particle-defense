@@ -1,10 +1,11 @@
 ﻿describe('Building Tests', function () {
     var math = require('../../util/math');
-    var Player = require('../../game/Player');
-    var Levels = require('../../game/levels/');
+    var Player = require('../Player');
+    var Levels = require('../levels/');
     var Level = Levels.Level;
     var Buildings = require('./');
     var Building = require('./Building');
+    var weapons = require('../weapons');
     var Unit = require('../units/unit');
     var PlayerCommands = require('../PlayerCommands');
     var expect = require('chai').expect;
@@ -40,6 +41,32 @@
         expect(building.block).to.exist;
         expect(building.block.x).to.equal(0);
         expect(building.block.y).to.equal(0);
+    });
+
+    it('.addWeapon()', function addWeapon() {
+        var options = {
+            level: new Level(),
+            player: new Player()
+        };
+        var building = new Building(options);
+        var weapon = new weapons.Gun(Object.assign({building: building}, options));
+        expect(building.weapons.length).to.equal(0);
+        building.addWeapon(weapon);
+        expect(building.weapons.length).to.equal(1);
+    });
+
+    it('.removeWeapon()', function () {
+        var options = {
+            level: new Level(),
+            player: new Player()
+        };
+        var building = new Building(options);
+        var weapon = new weapons.Gun(Object.assign({building: building}, options));
+        expect(building.weapons.length).to.equal(0);
+        building.addWeapon(weapon);
+        expect(building.weapons.length).to.equal(1);
+        building.removeWeapon(weapon);
+        expect(building.weapons.length).to.equal(0);
     });
 
     it('should attack units in range of any of it\'s weapons', function () {

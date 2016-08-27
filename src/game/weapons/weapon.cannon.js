@@ -5,7 +5,6 @@ module.exports = Cannon;
 
 function Cannon(options) {
     Gun.call(this, options);
-    this.name = this.constructor.name;
     this.projectileClass = Projectiles.Cannon;
     this.explosiveSpeed = options.explosiveSpeed;
     this.explosiveTime = options.explosiveTime;

@@ -67,7 +67,13 @@ function Building(options) {
 
     this.addWeapon = function (weapon) {
         this.weapons.push(weapon);
-        weapon.building = this;
+    };
+
+    this.removeWeapon = function (weapon) {
+        var index = this.weapons.indexOf(weapon);
+        if (index >= 0) {
+            this.weapons.splice(index, 1);
+        }
     };
 
     this.updateAttributes = function () {
