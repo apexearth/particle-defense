@@ -1,4 +1,4 @@
-var Weapons = require('../Weapons');
+var Weapons = require('../weapons');
 var Images = require('../../img');
 var Building = require('./building');
 

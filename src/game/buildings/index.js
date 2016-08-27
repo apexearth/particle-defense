@@ -1,6 +1,6 @@
-var buildings = module.exports = {};
+module.exports = {};
 
-var requires = [
+[
     require('./building.ammo-fab'),
     require('./building.beam'),
     require('./building.behemoth'),
@@ -19,8 +19,7 @@ var requires = [
     require('./building.sharp-shooter'),
     require('./building.shocker'),
     require('./building.wall')
-];
-
-requires.forEach(function (building) {
-    buildings[building.name] = building;
-});
+]
+    .forEach(function (building) {
+        module.exports[building.name] = building;
+    });
