@@ -113,13 +113,13 @@ function Level(options) {
         return building;
     };
     this.addProjectile = function (projectile) {
-        this.container.addChild(projectile);
+        this.container.addChild(projectile.container);
         this.projectiles.push(projectile);
     };
     this.removeProjectile = function (projectile) {
         var index = this.projectiles.indexOf(projectile);
         if (index > -1) {
-            this.container.removeChild(projectile);
+            this.container.removeChild(projectile.container);
             this.projectiles.splice(index, 1);
         }
     };

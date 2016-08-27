@@ -18,9 +18,14 @@ module.exports = {
 function Weapon(options) {
     PIXI.Container.call(this);
 
-    options = options || {};
+    if (!options.level) throw new Error('Projectiles require a level option to be created.');
+    if (!options.building) throw new Error('Projectiles require a level option to be created.');
+    this.level = options.level;
     this.building = options.building;
     this.player = this.building.player;
+
+    this.position.x = this.building.position.x;
+    this.position.y = this.building.position.y;
 
     this.range = 200;
     this.damage = 1;
@@ -219,7 +224,14 @@ function Gun(options) {
         return this.damage / 2 * this.projectileSpeed / 3;
     };
     this.createProjectile = function () {
-        return new this.projectileClass(this);
+        return new this.projectileClass({
+            level: this.level,
+            player: this.player,
+            direction: this.rotation,
+            position: this.position,
+            velocity: this.projectileSpeed,
+            damage: this.damage
+        });
     };
 }
 Gun.prototype = Object.create(Weapon.prototype);

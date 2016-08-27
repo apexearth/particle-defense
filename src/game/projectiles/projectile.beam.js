@@ -8,7 +8,7 @@ function BeamProjectile(weapon) {
     Projectile.call(this, weapon);
 
     this.graphics = new PIXI.Graphics();
-    this.addChild(this.graphics);
+    this.container.addChild(this.graphics);
     
     this.lifespan = weapon.lifespan;
     this.fadeTime = weapon.lifespan / 2;
@@ -46,5 +46,5 @@ function BeamProjectile(weapon) {
 
 }
 
-BeamProjectile.prototype             = Object.create(PIXI.Container.prototype);
+BeamProjectile.prototype = Object.create(Projectile.prototype);
 BeamProjectile.prototype.constructor = BeamProjectile;

@@ -10,6 +10,8 @@ function Behemoth(options) {
     this.container.addChild(Images.buildings.SmallPlatform());
     this.health = 5;
     this.addWeapon(Weapons.Gun({
+        level: this.level,
+        building: this,
         range: 300,
         fireRate: 60,
         damage: 20,

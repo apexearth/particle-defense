@@ -8,7 +8,7 @@ function ThrownProjectile(weapon) {
     Projectile.call(this, weapon);
 
     this.graphics = new PIXI.Graphics();
-    this.addChild(this.graphics);
+    this.container.addChild(this.graphics);
 
     this.lastPosition         = this.position;
     this.target = weapon.getTargetLeadingVector();
@@ -47,5 +47,5 @@ function ThrownProjectile(weapon) {
     };
 }
 
-ThrownProjectile.prototype             = Object.create(PIXI.Container.prototype);
+ThrownProjectile.prototype = Object.create(Projectile.prototype);
 ThrownProjectile.prototype.constructor = ThrownProjectile;

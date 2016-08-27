@@ -10,6 +10,8 @@ function Beam(options) {
     this.container.addChild(Images.buildings.SmallPlatform());
     this.health = 5;
     this.addWeapon(Weapons.Laser({
+        level: this.level,
+        building: this,
         range: 100,
         lifeSpan: 1,
         damage: .05,

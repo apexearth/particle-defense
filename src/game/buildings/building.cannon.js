@@ -10,6 +10,8 @@ function Cannon(options) {
     this.container.addChild(Images.buildings.SmallPlatform());
     this.health = 5;
     this.addWeapon(Weapons.Cannon({
+        level: this.level,
+        building: this,
         range: 100,
         fireRate: 30,
         damage: 3,

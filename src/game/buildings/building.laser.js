@@ -10,6 +10,8 @@ function Laser(options) {
     this.container.addChild(Images.buildings.Platform());
     this.health = 5;
     this.addWeapon(new Weapons.Laser({
+        level: this.level,
+        building: this,
         range: 100,
         lifeSpan: 60,
         damage: 4,

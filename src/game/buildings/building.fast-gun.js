@@ -10,6 +10,8 @@ function FastGun(options) {
     this.container.addChild(Images.buildings.EnergyFab());
     this.health = 5;
     this.addWeapon(new Weapons.Gun({
+        level: this.level,
+        building: this,
         range: 100,
         fireRate: 10,
         damage: 3,

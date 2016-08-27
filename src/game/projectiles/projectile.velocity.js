@@ -7,16 +7,16 @@ function VelocityProjectile(options) {
     Projectile.call(this, options);
 
     this.graphics = new PIXI.Graphics();
-    this.addChild(this.graphics);
+    this.container.addChild(this.graphics);
 
     this.lastPosition = this.position;
     this.width = Math.sqrt(this.damage) * 2 / this.initialVelocity * 3;
     this.projectileUpdate = this.update;
     this.update = function () {
-        this.projectileUpdate();
         this.lastPosition = this.position.clone();
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
+        this.projectileUpdate();
 
         this.graphics.clear();
         this.graphics.lineStyle(this.width, 0xFFFFFF, 1);
@@ -28,5 +28,5 @@ function VelocityProjectile(options) {
     };
 }
 
-VelocityProjectile.prototype = Object.create(PIXI.Container.prototype);
+VelocityProjectile.prototype = Object.create(Projectile.prototype);
 VelocityProjectile.prototype.constructor = VelocityProjectile;

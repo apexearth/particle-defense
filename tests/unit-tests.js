@@ -9,16 +9,21 @@
         var level = Levels.LevelTest();
         var unit = new Unit({
             level: level,
-            player: level.players[0]
+            player: level.players[0],
+            position: {
+                x: level.player.homeBase.position.x - 100,
+                y: level.player.homeBase.position.y
+            }
         });
         level.addUnit(unit);
         unit.setDestination(level.player.homeBase);
+        expect(unit.path.length).to.be.greaterThan(0);
 
         var i = 5;
         while (i--) {
-            var initialDistance = math.distance(unit.x - unit.target.position.x, unit.y - unit.target.position.y);
+            var initialDistance = math.distance(unit.position.x - unit.target.position.x, unit.position.y - unit.target.position.y);
             level.update();
-            var distanceAfterUpdate = math.distance(unit.x - unit.target.position.x, unit.y - unit.target.position.y);
+            var distanceAfterUpdate = math.distance(unit.position.x - unit.target.position.x, unit.position.y - unit.target.position.y);
             expect(initialDistance).to.be.above(distanceAfterUpdate);
         }
     });
@@ -26,7 +31,8 @@
         var level = Levels.LevelTest();
         var unit = new Unit({
             level: level,
-            player: level.players[0]
+            player: level.players[0],
+            position: {x: 0, y: 0}
         });
         level.addUnit(unit);
         unit.setDestination(level.player.homeBase);
@@ -39,19 +45,23 @@
         var level = Levels.LevelTest();
         var unit = new Unit({
             level: level,
-            player: level.players[0]
+            player: level.players[0],
+            position: {x: 0, y: 0}
         });
         level.addUnit(unit);
         unit.setDestination(level.player.homeBase);
+        expect(unit.path.length).to.be.greaterThan(0);
+
         unit.damage(unit.health);
         level.update();
         expect(level.units.indexOf(unit)).to.equal(-1);
     });
-    it('should die when it runs out of health, and be removed from the level', function () {
+    it('should increase player score when dying', function () {
         var level = Levels.LevelTest();
         var unit = new Unit({
             level: level,
-            player: level.players[0]
+            player: level.players[0],
+            position: {x: 0, y: 0}
         });
         level.addUnit(unit);
         unit.setDestination(level.player.homeBase);
@@ -67,8 +77,7 @@
             return new Unit({
                 level: level,
                 player: level.players[0],
-                x: 10,
-                y: 10
+                position: {x: 0, y: 0}
             });
         }, 10);
         expect(units.length).to.equal(10);
@@ -80,7 +89,8 @@
         level.player.buildings = [];
         var unit = new Unit({
             level: level,
-            player: level.players[0]
+            player: level.players[0],
+            position: {x: 0, y: 0}
         });
         unit.velocity.x = 10;
         unit.velocity.y = 10;

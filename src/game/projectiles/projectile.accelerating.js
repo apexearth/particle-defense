@@ -1,4 +1,3 @@
-var PIXI = require('pixi.js');
 var VelocityProjectile = require('./projectile.velocity');
 
 module.exports = AcceleratingProjectile;
@@ -14,5 +13,5 @@ function AcceleratingProjectile(weapon) {
     };
 }
 
-AcceleratingProjectile.prototype             = Object.create(PIXI.Container.prototype);
+AcceleratingProjectile.prototype = Object.create(VelocityProjectile.prototype);
 AcceleratingProjectile.prototype.constructor = AcceleratingProjectile;

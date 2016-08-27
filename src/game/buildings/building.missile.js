@@ -10,6 +10,8 @@ function MissileLauncher(options) {
     this.container.addChild(Images.buildings.Platform());
     this.health = 5;
     this.addWeapon(new Weapons.Missile({
+        level: this.level,
+        building: this,
         projectileSpeed: 200,
         explosiveSpeed: 45,
         explosiveTime: 2,

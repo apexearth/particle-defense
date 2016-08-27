@@ -10,6 +10,8 @@ function CrossEyes(options) {
     this.container.addChild(Images.buildings.SmallPlatform());
     this.health = 5;
     this.addWeapon(new Weapons.Gun({
+        level: this.level,
+        building: this,
         range: 150,
         fireRate: 13,
         damage: 8,

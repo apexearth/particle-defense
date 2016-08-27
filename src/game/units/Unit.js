@@ -8,14 +8,13 @@ function Unit(options) {
     PIXI.Container.call(this);
     if (!options.level) throw new Error('A level is required to create a unit.');
     if (!options.player) throw new Error('A player is required to create a unit.');
+    if (!options.position) throw new Error('A position is required to create a unit.');
     this.level = options.level;
     this.player = options.player;
 
-    options.blockX = options.blockX || 0;
-    options.blockY = options.blockY || 0;
-    this.block = this.level.getBlock(options.blockX, options.blockY);
-    this.position.x = options.blockX * Settings.BlockSize + Settings.BlockSize / 2;
-    this.position.y = options.blockY * Settings.BlockSize + Settings.BlockSize / 2;
+    this.block = this.level.getBlock((options.position.x / Settings.BlockSize) ^ 0, (options.position.y / Settings.BlockSize) ^ 0);
+    this.position.x = options.position.x;
+    this.position.y = options.position.y;
     this.velocity = {
         x: 0,
         y: 0

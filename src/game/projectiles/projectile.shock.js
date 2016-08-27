@@ -9,7 +9,7 @@ function ShockProjectile(weapon) {
     Projectile.call(this, weapon);
 
     this.graphics = new PIXI.Graphics();
-    this.addChild(this.graphics);
+    this.container.addChild(this.graphics);
 
     // Vars
     this.lifespan = Settings.second / 3;
@@ -128,5 +128,5 @@ function ShockProjectile(weapon) {
     };
 }
 
-ShockProjectile.prototype             = Object.create(PIXI.Container.prototype);
+ShockProjectile.prototype = Object.create(Projectile.prototype);
 ShockProjectile.prototype.constructor = ShockProjectile;

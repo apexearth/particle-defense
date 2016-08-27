@@ -1,4 +1,3 @@
-var PIXI = require('pixi.js');
 var AcceleratingProjectile = require('./projectile.accelerating');
 var Explosion = require('./explosion');
 var math = require('../../util/math');
@@ -28,5 +27,5 @@ function MissileProjectile(weapon) {
     };
 }
 
-MissileProjectile.prototype             = Object.create(PIXI.Container.prototype);
+MissileProjectile.prototype = Object.create(AcceleratingProjectile.prototype);
 MissileProjectile.prototype.constructor = MissileProjectile;

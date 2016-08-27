@@ -1,5 +1,7 @@
 ﻿describe('Projectile Tests', function () {
     var Levels = require('../src/game/levels');
+    var Level = require('../src/game/levels/Level');
+    var Player = require('../src/game/Player');
     var Projectiles = require('../src/game/projectiles');
     var math = require('../src/util/math');
     var Unit = require('../src/game/units/Unit');
@@ -7,60 +9,67 @@
 
     it('should move', function () {
         var level = Levels.LevelTest();
-        var building = level.buildings[1];
+        var projectile = new Projectiles.Bullet({
+            level: level,
+            player: level.players[0],
+
+            damage: 1,
+            velocity: 10,
+            position: {x: 100, y: 100},
+            direction: math.angle(0, 0, 50, 50)
+        });
+
+        level.addProjectile(projectile);
+        level.update();
+        expect(projectile.position.x).to.be.above(100);
+        expect(projectile.position.y).to.be.above(100);
+    });
+
+    it('should die on impact, by default', function () {
+        var level = Levels.LevelTest();
         var unit = new Unit({
             level: level,
-            player: level.players[0]
+            player: level.players[0],
+            position: {
+                x: 100,
+                y: 100
+            }
         });
         level.addUnit(unit);
 
         var projectile = new Projectiles.Bullet({
             level: level,
             player: level.players[0],
-            
-            velocity: 10,
-            direction: math.angle(0, 0, 50, 50),
-
+            direction: math.angle(110, 100, unit.position.x, unit.position.y),
+            position: {
+                x: 110,
+                y: 100
+            },
+            damage: 1,
+            velocity: 10
         });
+        level.addProjectile(projectile);
 
-        level.projectiles.push(projectile);
         level.update();
-        expect(projectile.x).to.be.above(0);
-        expect(projectile.y).to.be.above(0);
-    });
-
-    it('should die on impact, by default', function () {
-        var level = Levels.LevelTest();
-        var building = level.buildings[1];
-        var unit = new Unit({x: building.position.x - 50, y: building.position.y});
-        level.addUnit(unit);
-
-        var projectile = new Projectiles.Bullet(
-            building.weapons[0],
-            math.angle(building.position.x, building.position.y, unit.x, unit.y),
-            3);
-        level.projectiles.push(projectile);
-
-        var i = 30;
-        while (i--) level.update();
         expect(level.projectiles.length).to.equal(0);
     });
 
     it('should die when outside of level', function () {
-        var level = Levels.LevelTest();
-        level.waves = [];
-        var building = level.buildings[1];
-        var projectile = new Projectiles.Bullet(building.weapons[0],
-            0,
-            5);
-        level.projectiles.push(projectile);
-    
+        var level = new Level();
+        var player = new Player();
+        level.addPlayer(player);
+        var projectile = new Projectiles.Bullet({
+            level: level,
+            player: player,
+            direction: Math.PI,
+            position: {x: 1, y: 1},
+            damage: 1,
+            velocity: 3
+        });
+        level.addProjectile(projectile);
+
         expect(level.projectiles.length).to.equal(1);
         level.update();
-        expect(level.projectiles.length).to.equal(1);
-
-        var i = 200;
-        while (i-- > 0 && level.projectiles.length > 0) level.update();
         expect(level.projectiles.length).to.equal(0);
     });
 });

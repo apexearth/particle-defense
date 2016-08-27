@@ -1,4 +1,3 @@
-var PIXI = require('pixi.js');
 var VelocityProjectile = require('./projectile.velocity');
 var Explosion = require('./explosion');
 
@@ -9,5 +8,5 @@ function CannonProjectile(weapon) {
     Explosion.addExplosiveProperties(this, weapon);
 }
 
-CannonProjectile.prototype             = Object.create(PIXI.Container.prototype);
+CannonProjectile.prototype = Object.create(VelocityProjectile.prototype);
 CannonProjectile.prototype.constructor = CannonProjectile;

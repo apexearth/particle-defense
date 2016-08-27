@@ -4,17 +4,22 @@ var Settings = require('../Settings');
 module.exports = Projectile;
 
 function Projectile(options) {
-    PIXI.Container.call(this);
     if (!options.level) throw new Error('Projectiles require a level option to be created.');
     if (!options.player) throw new Error('Projectiles require a player option to be created.');
-    if (!options.direction) throw new Error('Projectiles require a direction option to be created.');
-    if (!options.velocity) throw new Error('Projectiles require a direction option to be created.');
+    if (options.direction == null) throw new Error('Projectiles require a direction option to be created.');
+    if (options.velocity == null) throw new Error('Projectiles require a velocity option to be created.');
     if (!options.position) throw new Error('Projectiles require a position option to be created.');
-    if (!options.damage) throw new Error('Projectiles require a damage option to be created.');
+    if (options.damage == null) throw new Error('Projectiles require a damage option to be created.');
+    this.container = new PIXI.Container();
     this.level = options.level;
     this.player = options.player;
     this.direction = options.direction;
     this.initialVelocity = options.velocity;
+    Object.defineProperty(this, 'position', {
+        get: function () {
+            return this.container.position;
+        }.bind(this)
+    });
     this.position.x = options.position.x;
     this.position.y = options.position.y;
     this.damage = options.damage;
@@ -23,7 +28,7 @@ function Projectile(options) {
         y: Math.sin(this.direction) * this.initialVelocity
     };
 
-    this.level.addProjectile(this);
+
     /** @returns Number **/
     this.effectiveDamage = function (/*unit*/) {
         return this.damage;
@@ -44,16 +49,16 @@ function Projectile(options) {
         this.die();
     };
 
-    this.update       = function () {
+    this.update = function () {
         if (this.lifespanCount++ > this.lifespan) this.die();
-        if (!this.level.hitTest(this)) // Die if outside of level.
+        if (!this.level.hitTest(this.position)) // Die if outside of level.
         {
             this.onHit();
         } else {
             this.unitHitCheck();
         }
     };
-    this.hitTest      = function (unit) {
+    this.hitTest = function (unit) {
         return unit.hitTest(this);
     };
     this.unitHitCheck = function () {
@@ -67,6 +72,3 @@ function Projectile(options) {
         }
     };
 }
-
-Projectile.prototype             = Object.create(PIXI.Container.prototype);
-Projectile.prototype.constructor = Projectile;

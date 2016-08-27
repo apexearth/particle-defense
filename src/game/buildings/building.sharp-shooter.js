@@ -10,6 +10,8 @@ function SharpShooter(options) {
     this.container.addChild(Images.buildings.LargePlatform());
     this.health = 5;
     this.addWeapon(new Weapons.Gun({
+        level: this.level,
+        building: this,
         range: 200,
         fireRate: 30,
         damage: 20,
