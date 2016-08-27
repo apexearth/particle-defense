@@ -1,12 +1,12 @@
 ﻿describe('Building Tests', function () {
-    var math = require('../src/util/math');
-    var Player = require('../src/game/Player');
-    var Levels = require('../src/game/levels/');
+    var math = require('../../util/math');
+    var Player = require('../../game/Player');
+    var Levels = require('../../game/levels/');
     var Level = Levels.Level;
-    var Buildings = require('../src/game/buildings/');
-    var Building = require('../src/game/buildings/Building');
-    var Unit = require('../src/game/units/unit');
-    var PlayerCommands = require('../src/game/PlayerCommands');
+    var Buildings = require('./');
+    var Building = require('./Building');
+    var Unit = require('../units/unit');
+    var PlayerCommands = require('../PlayerCommands');
     var expect = require('chai').expect;
     var Gun = Buildings.Gun;
 
