@@ -2,8 +2,8 @@ var Unit = require('./Unit');
 
 module.exports = CircleUnit;
 
-function CircleUnit(level, templates) {
-    Unit.call(this, level, templates);
+function CircleUnit(options) {
+    Unit.call(this, options);
 
     this.graphics.clear();
     this.graphics.beginFill(0xFFFFFF, .75);
