@@ -1,8 +1,8 @@
-﻿describe('Player Tests', function () {
-    var Levels = require('../src/game/levels');
-    var Buildings = require('../src/game/buildings/');
-    var PlayerCommands = require('../src/game/PlayerCommands');
-    var Player = require('../src/game/Player');
+﻿describe('Players', function () {
+    var Levels = require('./levels');
+    var Buildings = require('./buildings');
+    var PlayerCommands = require('./PlayerCommands');
+    var Player = require('./Player');
     var expect = require('chai').expect;
     var Gun = Buildings.Gun;
 
@@ -14,7 +14,7 @@
         level.player.resources.energy = Gun.cost.energy;
         level.player.resources.metal = Gun.cost.metal;
         PlayerCommands.CreateBuilding(level.player, Gun, 2, 2);
-    
+
         expect(level.buildings.length).to.equal(buildingCount + 1);
         expect(level.player.buildings.length).to.equal(playerBuildingCount + 1);
     

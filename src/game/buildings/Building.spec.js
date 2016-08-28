@@ -1,4 +1,4 @@
-﻿describe('Building Tests', function () {
+﻿describe('Building', function () {
     var math = require('../../util/math');
     var Player = require('../Player');
     var Levels = require('../levels/');

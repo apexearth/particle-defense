@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 var Grid = require('./');
 
 describe('grid', function () {
-    it('can properly initialize', function () {
+    it('initialize', function () {
         var options = {
             bounds: {
                 left: 0,
@@ -48,5 +48,57 @@ describe('grid', function () {
         expect(grid.blockStatus(0, 0)).to.equal(Grid.BlockStatus.IsEmpty);
         grid.setBlockStatus(0, 0, 'test');
         expect(grid.blockStatus(0, 0)).to.equal('test');
+    });
+    it('.getBlock()', function () {
+        var grid = new Grid({
+            bounds: {
+                left: 0,
+                top: 0,
+                right: 10,
+                bottom: 10
+            }
+        });
+        var block = grid.getBlock(1, 1);
+        expect(block.x).to.equal(1);
+        expect(block.y).to.equal(1);
+
+        expect(function () {
+            grid.getBlock(-1, 0);
+        }).to.throw();
+        expect(function () {
+            grid.getBlock(-1, -1);
+        }).to.throw();
+        expect(function () {
+            grid.getBlock(0, -1);
+        }).to.throw();
+        expect(function () {
+            grid.getBlock(11, 10);
+        }).to.throw();
+        expect(function () {
+            grid.getBlock(11, 11);
+        }).to.throw();
+        expect(function () {
+            grid.getBlock(10, 11);
+        }).to.throw();
+    });
+    it('.getBlockOrNull()', function () {
+        var grid = new Grid({
+            bounds: {
+                left: 0,
+                top: 0,
+                right: 10,
+                bottom: 10
+            }
+        });
+        var block = grid.getBlockOrNull(1, 1);
+        expect(block.x).to.equal(1);
+        expect(block.y).to.equal(1);
+
+        expect(grid.getBlockOrNull(-1, 0)).to.equal(null);
+        expect(grid.getBlockOrNull(0, -1)).to.equal(null);
+        expect(grid.getBlockOrNull(0, 11)).to.equal(null);
+        expect(grid.getBlockOrNull(11, 0)).to.equal(null);
+        expect(grid.getBlockOrNull(0, 0)).to.not.equal(null);
+        expect(grid.getBlockOrNull(10, 10)).to.not.equal(null);
     });
 });

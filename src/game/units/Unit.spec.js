@@ -1,8 +1,8 @@
-﻿describe('Unit Tests', function () {
-    var Levels = require('../src/game/levels');
-    var math = require('../src/util/math');
-    var Units = require('../src/game/units');
-    var Unit = require('../src/game/units/Unit');
+﻿describe('Unit', function () {
+    var Levels = require('../levels');
+    var math = require('../../util/math');
+    var Units = require('./');
+    var Unit = require('./Unit');
     var expect = require('chai').expect;
 
     it('should move towards the target move location', function () {
