@@ -1,6 +1,6 @@
 ﻿var Level = require('./Level');
 var Settings = require('../Settings');
-var Player = require('../Player');
+var Player = require('../player');
 var Buildings = require('../buildings');
 var SpawnPoint = require('../SpawnPoint');
 var BlockStatus = require('../../util/grid/block-status');

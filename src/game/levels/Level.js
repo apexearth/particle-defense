@@ -1,7 +1,6 @@
 ﻿var PIXI = require('pixi.js');
 var renderer = require('../renderer');
 var Map = require('../Map');
-var PlayerCommands = require('../PlayerCommands');
 var General = require('../../util/General');
 var CommandQueue = require('../CommandQueue');
 var BlockStatus = require('../../util/grid/block-status');
@@ -92,7 +91,7 @@ function Level(options) {
         this.container.addChild(building.container);
         this.buildings.push(building);
         if (building.player) {
-            building.player.buildings.push(building);
+            building.player.addBuilding(building);
             building.addStorageToPlayer();
         }
         return building;
@@ -106,8 +105,7 @@ function Level(options) {
             this.buildings.splice(index, 1);
         }
         if (building.player) {
-            index = building.player.buildings.indexOf(building);
-            building.player.buildings.splice(index, 1);
+            building.player.removeBuilding(building);
             building.removeStorageFromPlayer();
         }
         return building;
@@ -154,7 +152,7 @@ function Level(options) {
     };
     this.finalizeBuildingPlacement = function (block) {
         if (block != null) {
-            var buildResult = PlayerCommands.CreateBuilding(this.player, this.getPlacementBuilding.constructor, block.x, block.y);
+            var buildResult = this.player.createBuilding(this.getPlacementBuilding.constructor, block.x, block.y);
             if (buildResult != null) {
                 this.resetBuildableBlocks();
                 var i = this.units.length;
@@ -173,21 +171,23 @@ function Level(options) {
     var _notBuildableBlocks = [];
     /** @returns bool **/
     this.isBlockCoordBuildable = function (blockX, blockY) {
-        return this.isBlockBuilding(_map.getBlock(blockX, blockY));
+        return this.isBlockBuildable(_map.getBlock(blockX, blockY));
     };
 
     /** @summary The idea behind this is to check if a block is buildable when placing a building. **/
-    /** @returns bool **/
-    this.isBlockBuilding = function (block) {
+    /** @returns boolean **/
+    this.isBlockBuildable = function (block) {
         if (block.status >= BlockStatus.OnlyPassable) return false;       // It's blocked
         if (block.objects.length > 0) return false;                         // The block has an object in it.
         if (_buildableBlocks.indexOf(block) >= 0) return true;              // Is within list of buildable blocks.
         if (_notBuildableBlocks.indexOf(block) >= 0) return false;          // Is within list of not buildable blocks.
-        return this.willBuildingBlockPath(block);                    // Since last two didn't show, we find out.
+        return !this.willBuildingBlockPath(block);                    // Since last two didn't show, we find out.
     };
 
-    /** @returns bool **/
+    /** @returns boolean **/
     this.willBuildingBlockPath = function (block) {
+        if (this.spawnPoints.length === 0) return false;
+        if (!this.player || !this.player.homeBase) return false;
         var prevStatus = block.status;
         block.status = BlockStatus.NotPassable;
         var i = this.spawnPoints.length;
@@ -200,11 +200,11 @@ function Level(options) {
             } else {
                 _notBuildableBlocks.push(block);
                 block.status = prevStatus;
-                return false;
+                return true;
             }
         }
         block.status = prevStatus;
-        return true;
+        return false;
     };
     /** @summary Should be called whenever block BlockStatus changes. **/
     this.resetBuildableBlocks = function () {

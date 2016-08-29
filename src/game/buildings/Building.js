@@ -171,10 +171,6 @@ function Building(options) {
 
 
     this.updateAttributes();
-
-    if (this.player) {
-        this.player.addBuildingCost(this.Name);
-    }
 }
 
 Building.prototype.addStorageToPlayer = function () {

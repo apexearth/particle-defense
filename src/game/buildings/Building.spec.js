@@ -7,7 +7,6 @@
     var Building = require('./Building');
     var weapons = require('../weapons');
     var Unit = require('../units/unit');
-    var PlayerCommands = require('../PlayerCommands');
     var expect = require('chai').expect;
     var Gun = Buildings.Gun;
 
@@ -163,8 +162,8 @@
                 level.player.resources[resource] += Gun.cost[resource];
             }
         }
-        var building = PlayerCommands.CreateBuilding(level.player, Gun, 1, 1);
-        PlayerCommands.SellBuilding(building);
+        var building = level.player.commands.createBuilding(Gun, 1, 1);
+        level.player.commands.sellBuilding(building);
         expect(level.player.resources.metal).to.be.above(0);
     });
 
