@@ -4,6 +4,7 @@
     var Buildings = require('../buildings');
     var Building = require('../buildings/Building');
     var Player = require('./Player');
+    var coverage = require('../../../tests/check-coverage');
     var expect = require('chai').expect;
     var Gun = Buildings.Gun;
 
@@ -145,5 +146,9 @@
             level.player.commands.sellBuilding(building);
             expect(level.player.resources.metal).to.be.above(0);
         });
+
+        coverage(this, new Player().commands);
     });
+
+    coverage(this, new Player());
 });

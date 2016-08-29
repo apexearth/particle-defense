@@ -5,6 +5,16 @@ var Pathfind = require('./Pathfind');
 module.exports = Grid;
 
 function Grid(options) {
+    options = options
+        || {
+            bounds: {
+                left: 0,
+                right: 10,
+                top: 0,
+                bottom: 10
+            },
+            blockSize: 25
+        };
     var blocks = [];
 
     var bounds = Object.assign({}, options.bounds);

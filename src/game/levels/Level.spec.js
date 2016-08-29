@@ -1,20 +1,26 @@
-﻿describe('Level', function () {
+﻿var UnitSpec = require('../units/Unit.spec');
+
+describe('Level', function () {
     var Level = require('./Level');
     var Player = require('../Player');
     var Building = require('../buildings/Building');
     var Settings = require('../Settings');
+    var coverage = require('../../../tests/check-coverage');
     var expect = require('chai').expect;
-    var UnitSpec = require('../units/Unit.spec');
     var width = 10;
     var height = 10;
     var level;
 
-    beforeEach(function () {
-        level = new Level({
+    function createLevel() {
+        return new Level({
             width: width,
             height: height,
             player: new Player()
         });
+    }
+
+    beforeEach(function () {
+        level = createLevel();
     });
 
     it('new', function () {
@@ -75,4 +81,6 @@
         var unit = UnitSpec.addUnit(level);
         UnitSpec.removeUnit(level, unit);
     });
+
+    coverage(this, createLevel());
 });

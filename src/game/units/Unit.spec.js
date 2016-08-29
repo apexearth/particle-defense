@@ -2,6 +2,7 @@
     var Levels = require('../levels');
     var math = require('../../util/math');
     var Unit = require('./Unit');
+    var coverage = require('../../../tests/check-coverage');
     var expect = require('chai').expect;
 
     module.exports = {
@@ -109,5 +110,11 @@
         expect(unit.player.score).to.be.greaterThan(0);
         expect(unit.block.contains(unit)).to.equal(false);
         expect(level.containsUnit(unit)).to.equal(false);
+    });
+
+    coverage(this, function (done) {
+        createLevel();
+        var unit = addUnit(level);
+        done(unit);
     });
 });

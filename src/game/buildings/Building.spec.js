@@ -7,6 +7,7 @@
     var Building = require('./Building');
     var weapons = require('../weapons');
     var Unit = require('../units/unit');
+    var coverage = require('../../../tests/check-coverage');
     var expect = require('chai').expect;
     var Gun = Buildings.Gun;
 
@@ -206,5 +207,14 @@
         expect(building.abilities).to.equal(null);
         building.selected = true;
         expect(building.abilities).to.not.equal(null);
+    });
+
+    coverage(this, function (done) {
+        var options = {
+            level: new Level(),
+            player: new Player()
+        };
+        var building = new Building(options);
+        done(building);
     });
 });

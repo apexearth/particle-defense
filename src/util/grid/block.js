@@ -55,4 +55,7 @@ function Block(x, y) {
         return this.building === object
             || this.objects.indexOf(object) >= 0;
     };
+    this.toString = function () {
+        return 'Block(' + this.x + ',' + this.y + ')';
+    };
 }
