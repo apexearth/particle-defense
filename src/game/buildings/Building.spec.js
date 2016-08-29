@@ -10,7 +10,7 @@
     var expect = require('chai').expect;
     var Gun = Buildings.Gun;
 
-    it('initialization', function () {
+    it('new', function () {
         var options = {
             level: new Level(),
             player: new Player(),

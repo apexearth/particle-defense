@@ -24,7 +24,7 @@ describe('units', function () {
         expect(units[0].constructor).to.equal(Unit);
     });
 
-    it('initialization: UnitCircle', function () {
+    it('new: UnitCircle', function () {
         createLevel();
 
         var unit = new Units.UnitCircle({

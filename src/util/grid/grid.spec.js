@@ -1,8 +1,8 @@
 var expect = require('chai').expect;
 var Grid = require('./');
 
-describe('grid', function () {
-    it('initialize', function () {
+describe('Grid', function () {
+    it('new', function () {
         var options = {
             bounds: {
                 left: 0,

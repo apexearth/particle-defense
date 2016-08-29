@@ -1,4 +1,4 @@
-﻿describe('level', function () {
+﻿describe('Level', function () {
     var Level = require('./Level');
     var Player = require('../Player');
     var Building = require('../buildings/Building');
@@ -16,7 +16,7 @@
         });
     });
 
-    it('initialization', function () {
+    it('new', function () {
         expect(level.width).to.equal(width * Settings.BlockSize);
         expect(level.height).to.equal(height * Settings.BlockSize);
         expect(level.bounds.left).to.equal(0);
@@ -45,7 +45,7 @@
         expect(level.lossConditions.length).to.equal(1);
     });
 
-    it('addBuilding', addBuilding);
+    it('.addBuilding()', addBuilding);
     function addBuilding() {
         expect(level.buildings.length).to.equal(0);
         expect(level.container.children.length).to.equal(1);
@@ -61,7 +61,7 @@
         return level;
     }
 
-    it('removeBuilding', function () {
+    it('.removeBuilding()', function () {
         var level = addBuilding();
         var building = level.buildings[0];
         var removedBuilding = level.removeBuilding(level.buildings[0]);

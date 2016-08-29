@@ -20,6 +20,7 @@
             }
         });
         expect(level.addUnit.bind(level, unit)).to.increase(level.units, 'length');
+        return unit;
     }
 
     it('.move()', function () {
@@ -36,33 +37,30 @@
     });
     it('.damage()', function () {
         createLevel();
-        addUnit();
+        var unit = addUnit();
 
         expect(level.addUnit.bind(level, unit)).to.increase(level.units, 'length');
         expect(unit.damage.bind(unit, 1)).to.decrease(unit, 'health');
-        expect(unit.damage.bind(unit, unit.health)).to.decrease(level.units, 'length');
-    });
-    it('should increase player score when dying', function () {
-        createLevel();
-        addUnit();
 
-        level.addUnit(unit);
-        unit.setDestination(level.player.homeBase);
-        level.units.push(unit);
-        level.player.buildings = [];
+        // Damage can cause unit death.
         expect(level.player.score).to.equal(0);
-        unit.damage(unit.health);
+        expect(unit.damage.bind(unit, unit.health)).to.decrease(level.units, 'length');
         expect(level.player.score).to.be.above(0);
     });
-    it('should have no velocity when it is not moving', function () {
+    it('.velocity', function () {
         createLevel();
-        addUnit();
+        var unit = addUnit();
 
+        unit.clearDestination();
         unit.velocity.x = 10;
         unit.velocity.y = 10;
         unit.update();
-
         expect(unit.velocity.x).to.equal(0);
         expect(unit.velocity.y).to.equal(0);
+
+        unit.setDestination(level.buildings[0]);
+        unit.update();
+        expect(unit.velocity.x).to.not.equal(0);
+        expect(unit.velocity.y).to.not.equal(0);
     });
 });

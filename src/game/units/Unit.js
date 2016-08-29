@@ -123,6 +123,10 @@ function Unit(options) {
         this.target = target;
         this.findPath();
     };
+    this.clearDestination = function () {
+        this.target = null;
+        this.path = null;
+    };
     this.findPath = function () {
         this.path = this.level.getPathForUnit(this);
     };

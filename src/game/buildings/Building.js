@@ -11,7 +11,7 @@ function Building(options) {
     this.player = options.player;
     options.blockX = options.blockX || 0;
     options.blockY = options.blockY || 0;
-    this.blockX = options.blockX;
+    this.blockX = options.blockX; 
     this.blockY = options.blockY;
 
     this.container = new PIXI.Container();

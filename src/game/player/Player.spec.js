@@ -27,7 +27,7 @@
         player.removeBuilding(building);
     }
 
-    it('initialization', function () {
+    it('new', function () {
         var player = new Player();
         expect(player.buildings).to.be.an('array');
         expect(player.color).to.be.a('number');

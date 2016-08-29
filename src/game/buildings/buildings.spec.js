@@ -6,7 +6,7 @@ var expect = require('chai').expect;
 
 describe('buildings', function () {
     for (var name in buildings) {
-        it('instantiation: ' + name, function () {
+        it('new: ' + name, function () {
             var options = {
                 level: new Level(),
                 player: new Player()
