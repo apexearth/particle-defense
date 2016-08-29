@@ -13,7 +13,17 @@
     it('initialization', function () {
         var options = {
             level: new Level(),
-            player: new Player()
+            player: new Player(),
+            resourceGeneration: {
+                energy: 1,
+                metal: 1,
+                ammo: 1
+            },
+            resourceStorage: {
+                energy: 1,
+                metal: 1,
+                ammo: 1
+            }
         };
         var building = new Building(options);
 
@@ -27,7 +37,14 @@
         expect(building.abilities).to.not.exist;
 
         expect(building.resourceGeneration).to.exist;
+        expect(building.resourceGeneration.energy).to.equal(1);
+        expect(building.resourceGeneration.metal).to.equal(1);
+        expect(building.resourceGeneration.ammo).to.equal(1);
+        
         expect(building.resourceStorage).to.exist;
+        expect(building.resourceStorage.energy).to.equal(1);
+        expect(building.resourceStorage.metal).to.equal(1);
+        expect(building.resourceStorage.ammo).to.equal(1);
 
         expect(building.weapons).to.be.an('array');
         expect(building.updates).to.be.an('array');
@@ -41,7 +58,6 @@
         expect(building.block.x).to.equal(0);
         expect(building.block.y).to.equal(0);
     });
-
     it('.addWeapon()', function () {
         var options = {
             level: new Level(),
@@ -53,7 +69,6 @@
         building.addWeapon(weapon);
         expect(building.weapons.length).to.equal(1);
     });
-
     it('.removeWeapon()', function () {
         var options = {
             level: new Level(),
@@ -67,7 +82,6 @@
         building.removeWeapon(weapon);
         expect(building.weapons.length).to.equal(0);
     });
-
     it('should attack units in range of any of it\'s weapons', function () {
         var level = new Level();
         var player1 = new Player();
@@ -107,7 +121,6 @@
         level.update();
         expect(unit.health).to.be.below(initialHealth);
     });
-
     it('should not attack units out of range', function () {
         var level = Levels.LevelTest();
         var unit = new Unit({
@@ -133,41 +146,44 @@
         level.update();
         expect(initialHealth).to.equal(unit.health);
     });
-
-    it('can provide energy and metal', function () {
+    it('.resourceGeneration', function () {
         var level = new Level();
         var player = new Player();
+        player.resourceStorage.energy = 1;
+        player.resourceStorage.metal = 1;
+        player.resourceStorage.ammo = 1;
         level.addPlayer(player);
-        var building = new Buildings.HomeBase({
+        var building = new Building({
             level: level,
-            player: player
+            player: player,
+            resourceGeneration: {
+                energy: 1,
+                metal: 1,
+                ammo: 1
+            }
         });
         level.addBuilding(building);
 
         var energy = level.player.resources.energy;
         var metal = level.player.resources.metal;
+        var ammo = level.player.resources.ammo;
         level.update();
         level.update();
         level.update();
         level.update();
         expect(energy).to.be.below(level.player.resources.energy);
         expect(metal).to.be.below(level.player.resources.metal);
+        expect(ammo).to.be.below(level.player.resources.ammo);
     });
-
-    it('can be sold', function () {
-        var level = new Level();
-        level.addPlayer(new Player());
-        for (var resource in Gun.cost) {
-            if (Gun.cost.hasOwnProperty(resource)) {
-                level.player.resources[resource] += Gun.cost[resource];
-            }
-        }
-        var building = level.player.commands.createBuilding(Gun, 1, 1);
-        level.player.commands.sellBuilding(building);
-        expect(level.player.resources.metal).to.be.above(0);
+    it('.selectBuildingAt()', function () {
+        var level = Levels.LevelTest();
+        var block = level.getBlock(5, 5);
+        expect(block.building).to.not.equal(null);
+        level.selectBuildingAt(block);
+        expect(level.selection).to.equal(block.building);
+        expect(block.building.selected).to.equal(true);
     });
-
-    it('buildings can be selected and deselected', function () {
+    it('.deselect()', function () {
         var level = Levels.LevelTest();
         var block = level.getBlock(5, 5);
         expect(block.building).to.not.equal(null);
@@ -179,8 +195,7 @@
         expect(level.selection).to.equal(null);
         expect(block.building.selected).to.equal(false);
     });
-
-    it('when selected, it\'s menu is available', function () {
+    it('.abilities', function () {
         var building = new Buildings.Gun({
             level: new Level(),
             player: new Player()

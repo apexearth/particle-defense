@@ -29,12 +29,9 @@ function Building(options) {
     this.width = Settings.BlockSize;
     this.height = Settings.BlockSize;
     this.abilities = null;
-    this.resourceGeneration = {};
-    this.resourceStorage = {
-        energy: 0,
-        metal: 0,
-        ammo: 0
-    };
+    this.resourceGeneration = Object.assign({}, options.resourceGeneration);
+    this.resourceStorage = Object.assign({}, options.resourceGeneration);
+
     this.weapons = [];
     this.updates = [];
 
@@ -62,7 +59,7 @@ function Building(options) {
             }.bind(this)
         }
     });
-    
+
     this.position.x = this.blockX * Settings.BlockSize + Settings.BlockSize / 2;
     this.position.y = this.blockY * Settings.BlockSize + Settings.BlockSize / 2;
 
