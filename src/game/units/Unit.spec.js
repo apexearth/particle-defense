@@ -63,4 +63,29 @@
         expect(unit.velocity.x).to.not.equal(0);
         expect(unit.velocity.y).to.not.equal(0);
     });
+    it('.findPath()', function () {
+        var unit = addUnit();
+        unit.setDestination(level.buildings[0]);
+        var path = unit.findPath();
+        expect(path).to.be.an('array');
+        expect(path.length).to.be.greaterThan(0);
+    });
+    it('.setDestination()', function () {
+        var unit = addUnit();
+        unit.setDestination(level.buildings[0]);
+        expect(unit.path).to.be.an('array');
+        expect(unit.path.length).to.be.greaterThan(0);
+        expect(unit.target).to.equal(level.buildings[0]);
+    });
+    it('.clearDestination()', function () {
+        var unit = addUnit();
+        unit.setDestination(level.buildings[0]);
+        expect(unit.path).to.be.an('array');
+        expect(unit.path.length).to.be.greaterThan(0);
+        expect(unit.target).to.equal(level.buildings[0]);
+
+        unit.clearDestination();
+        expect(unit.path).to.equal(null);
+        expect(unit.target).to.equal(null);
+    });
 });

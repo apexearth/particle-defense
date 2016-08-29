@@ -121,14 +121,14 @@ function Unit(options) {
     };
     this.setDestination = function (target) {
         this.target = target;
-        this.findPath();
+        this.path = this.findPath();
     };
     this.clearDestination = function () {
         this.target = null;
         this.path = null;
     };
     this.findPath = function () {
-        this.path = this.level.getPathForUnit(this);
+        return this.level.getPathForUnit(this);
     };
 }
 
