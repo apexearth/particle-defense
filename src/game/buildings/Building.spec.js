@@ -40,7 +40,7 @@
         expect(building.resourceGeneration.energy).to.equal(1);
         expect(building.resourceGeneration.metal).to.equal(1);
         expect(building.resourceGeneration.ammo).to.equal(1);
-        
+
         expect(building.resourceStorage).to.exist;
         expect(building.resourceStorage.energy).to.equal(1);
         expect(building.resourceStorage.metal).to.equal(1);
@@ -82,69 +82,71 @@
         building.removeWeapon(weapon);
         expect(building.weapons.length).to.equal(0);
     });
-    it('should attack units in range of any of it\'s weapons', function () {
-        var level = new Level();
-        var player1 = new Player();
-        var player2 = new Player();
-        level.addPlayer(player1);
-        level.addPlayer(player2);
-        level.player = player1;
-        level.player.resources.ammo = 10;
-        var turret = new Gun({
-            level: level,
-            player: level.player,
-            blockX: 3,
-            blockY: 5
+    describe('.update()', function () {
+        it('should attack units in range of any of it\'s weapons', function () {
+            var level = new Level();
+            var player1 = new Player();
+            var player2 = new Player();
+            level.addPlayer(player1);
+            level.addPlayer(player2);
+            level.player = player1;
+            level.player.resources.ammo = 10;
+            var turret = new Gun({
+                level: level,
+                player: level.player,
+                blockX: 3,
+                blockY: 5
+            });
+            turret.weapons[0].range = 1000;
+            level.addBuilding(turret);
+
+            var unit = new Unit({
+                level: level,
+                player: level.players[1],
+                position: {
+                    x: turret.position.x + 15,
+                    y: turret.position.y
+                }
+            });
+            level.addUnit(unit);
+
+            turret.rotation = math.angle(turret.position.x, turret.position.y, unit.position.x, unit.position.y);
+
+            var initialHealth = unit.health;
+
+            level.update();
+            expect(turret.weapons[0].target).not.to.equal(null);
+            expect(level.projectiles.length).to.be.above(0);
+
+            // Unit is placed close enough that after the second update it should be hit.
+            level.update();
+            expect(unit.health).to.be.below(initialHealth);
         });
-        turret.weapons[0].range = 1000;
-        level.addBuilding(turret);
+        it('should not attack units out of range', function () {
+            var level = Levels.LevelTest();
+            var unit = new Unit({
+                level: level,
+                player: level.players[1],
+                position: {
+                    x: level.player.homeBase.position.x,
+                    y: level.player.homeBase.position.y
+                }
+            });
+            level.addUnit(unit);
 
-        var unit = new Unit({
-            level: level,
-            player: level.players[1],
-            position: {
-                x: turret.position.x + 15,
-                y: turret.position.y
-            }
+            var turret = new Gun({
+                level: level,
+                player: level.player,
+                blockX: 5,
+                blockY: 9
+            });
+            turret.weapons[0].range = 10;
+            level.buildings.push(turret);
+
+            var initialHealth = unit.health;
+            level.update();
+            expect(initialHealth).to.equal(unit.health);
         });
-        level.addUnit(unit);
-
-        turret.rotation = math.angle(turret.position.x, turret.position.y, unit.position.x, unit.position.y);
-
-        var initialHealth = unit.health;
-
-        level.update();
-        expect(turret.weapons[0].target).not.to.equal(null);
-        expect(level.projectiles.length).to.be.above(0);
-
-        // Unit is placed close enough that after the second update it should be hit.
-        level.update();
-        expect(unit.health).to.be.below(initialHealth);
-    });
-    it('should not attack units out of range', function () {
-        var level = Levels.LevelTest();
-        var unit = new Unit({
-            level: level,
-            player: level.players[1],
-            position: {
-                x: level.player.homeBase.position.x,
-                y: level.player.homeBase.position.y
-            }
-        });
-        level.addUnit(unit);
-
-        var turret = new Gun({
-            level: level,
-            player: level.player,
-            blockX: 5,
-            blockY: 9
-        });
-        turret.weapons[0].range = 10;
-        level.buildings.push(turret);
-
-        var initialHealth = unit.health;
-        level.update();
-        expect(initialHealth).to.equal(unit.health);
     });
     it('.resourceGeneration', function () {
         var level = new Level();
