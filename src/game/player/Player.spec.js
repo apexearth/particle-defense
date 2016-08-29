@@ -32,6 +32,7 @@
         expect(player.buildings).to.be.an('array');
         expect(player.color).to.be.a('number');
         expect(player.score).to.be.a('number');
+        expect(player.commands).to.be.an('object');
         expect(player.resources).to.be.an('object')
             .and.have.keys(
             [
@@ -83,6 +84,34 @@
         expect(result).to.equal(true);
         expect(player.resources.energy).to.equal(99);
         expect(player.resources.metal).to.equal(98);
+    });
+    it('.testApplyCost()', function () {
+        player.resources.energy = 100;
+        player.resources.metal = 100;
+        var result = player.testApplyCost({
+            energy: 101,
+            metal: 50
+        });
+        expect(result).to.equal(false);
+        expect(player.resources.energy).to.equal(100);
+        expect(player.resources.metal).to.equal(100);
+
+        result = player.testApplyCost({
+            energy: 1,
+            metal: 2
+        });
+        expect(result).to.equal(true);
+        expect(player.resources.energy).to.equal(100);
+        expect(player.resources.metal).to.equal(100);
+    });
+    it('.updateResourceStorageLimits()', function () {
+        player.resourceStorage.energy = 10;
+        player.resourceStorage.metal = 10;
+        player.resources.energy = 100;
+        player.resources.metal = 100;
+        player.updateResourceStorageLimits();
+        expect(player.resources.energy).to.equal(player.resourceStorage.energy);
+        expect(player.resources.metal).to.equal(player.resourceStorage.metal);
     });
     describe('.commands', function () {
         it('.createBuilding()', function () {

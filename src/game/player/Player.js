@@ -66,7 +66,7 @@ function Player() {
         return true;
     };
 
-    this.checkResourceStorageLimit = function () {
+    this.updateResourceStorageLimits = function () {
         for (var key in this.resourceStorage) {
             if (this.resourceStorage.hasOwnProperty(key)
                 && this.resources[key] > this.resourceStorage[key]) {
@@ -75,7 +75,7 @@ function Player() {
         }
     };
     this.update = function () {
-        this.checkResourceStorageLimit();
+        this.updateResourceStorageLimits();
     };
 
     this.commands = commands(this);
