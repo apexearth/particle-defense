@@ -42,13 +42,17 @@ function Block(x, y) {
             }
         }
     });
-    this.getBuilding = function () {
-        return _building;
-    };
     this.add = function (object) {
         this.objects.push(object);
     };
     this.remove = function (object) {
-        this.objects.splice(this.objects.indexOf(object), 1);
+        var index = this.objects.indexOf(object);
+        if (index >= 0) {
+            this.objects.splice(index, 1);
+        }
+    };
+    this.contains = function (object) {
+        return this.building === object
+            || this.objects.indexOf(object) >= 0;
     };
 }

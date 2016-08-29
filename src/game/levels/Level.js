@@ -134,6 +134,9 @@ function Level(options) {
             this.units.splice(index, 1);
         }
     };
+    this.containsUnit = function (unit) {
+        return this.units.indexOf(unit) >= 0;
+    };
     this.addPlayer = function (player) {
         player.level = this;
         this.players.push(player);
@@ -360,5 +363,9 @@ function Level(options) {
 
     this.initialize = function (template) {
         General.NestedCopyTo(template, this);
+        if (options.player) {
+            this.addPlayer(options.player);
+        }
     };
+    this.initialize();
 }

@@ -4,28 +4,38 @@
     var Unit = require('./Unit');
     var expect = require('chai').expect;
 
+    module.exports = {
+        addUnit: addUnit,
+        removeUnit: removeUnit
+    };
+
     var level;
     var unit;
 
     function createLevel() {
         level = Levels.LevelTest();
     }
-    function addUnit() {
+
+    function addUnit(level) {
         unit = new Unit({
             level: level,
             player: level.players[0],
             position: {
-                x: level.player.homeBase.position.x - 100,
-                y: level.player.homeBase.position.y
+                x: level.width / 4,
+                y: level.width / 2
             }
         });
         expect(level.addUnit.bind(level, unit)).to.increase(level.units, 'length');
         return unit;
     }
 
+    function removeUnit(level, unit) {
+        expect(level.removeUnit.bind(level, unit)).to.decrease(level.units, 'length');
+    }
+
     it('.move()', function () {
         createLevel();
-        addUnit();
+        addUnit(level);
 
         unit.setDestination(level.player.homeBase);
         expect(unit.path.length).to.be.greaterThan(0);
@@ -37,7 +47,7 @@
     });
     it('.damage()', function () {
         createLevel();
-        var unit = addUnit();
+        var unit = addUnit(level);
 
         expect(level.addUnit.bind(level, unit)).to.increase(level.units, 'length');
         expect(unit.damage.bind(unit, 1)).to.decrease(unit, 'health');
@@ -49,7 +59,9 @@
     });
     it('.velocity', function () {
         createLevel();
-        var unit = addUnit();
+        var unit = addUnit(level);
+        unit.position.x = level.buildings[0].position.x - 100;
+        unit.position.y = level.buildings[0].position.y - 100;
 
         unit.clearDestination();
         unit.velocity.x = 10;
@@ -64,21 +76,21 @@
         expect(unit.velocity.y).to.not.equal(0);
     });
     it('.findPath()', function () {
-        var unit = addUnit();
+        var unit = addUnit(level);
         unit.setDestination(level.buildings[0]);
         var path = unit.findPath();
         expect(path).to.be.an('array');
         expect(path.length).to.be.greaterThan(0);
     });
     it('.setDestination()', function () {
-        var unit = addUnit();
+        var unit = addUnit(level);
         unit.setDestination(level.buildings[0]);
         expect(unit.path).to.be.an('array');
         expect(unit.path.length).to.be.greaterThan(0);
         expect(unit.target).to.equal(level.buildings[0]);
     });
     it('.clearDestination()', function () {
-        var unit = addUnit();
+        var unit = addUnit(level);
         unit.setDestination(level.buildings[0]);
         expect(unit.path).to.be.an('array');
         expect(unit.path.length).to.be.greaterThan(0);
@@ -87,5 +99,15 @@
         unit.clearDestination();
         expect(unit.path).to.equal(null);
         expect(unit.target).to.equal(null);
+    });
+    it('.die()', function () {
+        var unit = addUnit(level);
+        expect(unit.dead).to.equal(false);
+        expect(unit.player.score).to.equal(0);
+        unit.die();
+        expect(unit.dead).to.equal(true);
+        expect(unit.player.score).to.be.greaterThan(0);
+        expect(unit.block.contains(unit)).to.equal(false);
+        expect(level.containsUnit(unit)).to.equal(false);
     });
 });
