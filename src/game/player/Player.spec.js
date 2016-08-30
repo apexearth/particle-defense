@@ -33,7 +33,7 @@
         expect(player.buildings).to.be.an('array');
         expect(player.color).to.be.a('number');
         expect(player.score).to.be.a('number');
-        expect(player.commands).to.be.an('object');
+        expect(player.actions).to.be.an('object');
         expect(player.resources).to.be.an('object')
             .and.have.keys(
             [
@@ -114,7 +114,10 @@
         expect(player.resources.energy).to.equal(player.resourceStorage.energy);
         expect(player.resources.metal).to.equal(player.resourceStorage.metal);
     });
-    describe('.commands', function () {
+    it('.update()', function () {
+        player.update();
+    });
+    describe('.actions', function () {
         it('.createBuilding()', function () {
             var level = new Level();
             var player = new Player();
@@ -122,7 +125,7 @@
 
             level.player.resources.energy = Gun.cost.energy;
             level.player.resources.metal = Gun.cost.metal;
-            level.player.commands.createBuilding(Gun, 2, 2);
+            level.player.actions.createBuilding(Gun, 2, 2);
             expect(level.buildings.length).to.equal(1);
             expect(level.player.buildings.length).to.equal(1);
             expect(level.player.resources.metal).to.equal(0);
@@ -131,7 +134,7 @@
             level.player.resources.energy = Gun.cost.energy - 1;
             level.player.resources.metal = Gun.cost.metal - 1;
             expect(function () {
-                level.player.commands.createBuilding(Gun, 2, 3);
+                level.player.actions.createBuilding(Gun, 2, 3);
             }).to.throw();
             expect(level.buildings.length).to.equal(1);
             expect(level.player.buildings.length).to.equal(1);
@@ -142,12 +145,12 @@
             var level = Levels.LevelTest();
             level.player.resources.energy = Gun.cost.energy;
             level.player.resources.metal = Gun.cost.metal;
-            var building = level.player.commands.createBuilding(Gun, 2, 2);
-            level.player.commands.sellBuilding(building);
+            var building = level.player.actions.createBuilding(Gun, 2, 2);
+            level.player.actions.sellBuilding(building);
             expect(level.player.resources.metal).to.be.above(0);
         });
 
-        coverage(this, new Player().commands);
+        coverage(this, new Player().actions);
     });
 
     coverage(this, new Player());

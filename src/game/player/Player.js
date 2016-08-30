@@ -1,4 +1,4 @@
-﻿var commands = require('./commands');
+﻿var actions = require('./actions');
 
 module.exports = Player;
 
@@ -78,6 +78,6 @@ function Player() {
         this.updateResourceStorageLimits();
     };
 
-    this.commands = commands(this);
+    this.actions = actions(this);
 }
 
