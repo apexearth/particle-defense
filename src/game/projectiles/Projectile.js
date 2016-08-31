@@ -28,9 +28,11 @@ function Projectile(options) {
         y: Math.sin(this.direction) * this.initialVelocity
     };
 
-
-    /** @returns Number **/
-    this.effectiveDamage = function (/*unit*/) {
+    /**
+     * @param unit Unit
+     * @returns Number **/
+    this.effectiveDamage = function (unit) {
+        if (!unit) throw new Error('The unit parameter is required'); // For subclass overrides.
         return this.damage;
     };
     this.width = 1;
@@ -59,14 +61,14 @@ function Projectile(options) {
         }
     };
     this.hitTest = function (unit) {
-        return unit.hitTest(this);
+        return unit.hitTest(this.position, this.width);
     };
     this.unitHitCheck = function () {
         var u = this.level.units.length;
         while (u--) {
             var unit = this.level.units[u];
             if (this.hitTest(unit)) {
-                unit.damage(this.effectiveDamage());
+                unit.damage(this.effectiveDamage(unit));
                 this.onHit();
             }
         }

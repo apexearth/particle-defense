@@ -89,16 +89,15 @@ describe('Level', function () {
         expect(level.totalWaves()).to.equal(3);
     });
     it('.addProjectile()', function () {
-        level.addProjectile(ProjectileSpec.createProjectile(level));
-        expect(level.projectiles.length).to.equal(1);
+        ProjectileSpec.createProjectile(level);
     });
     it('.removeProjectile()', function () {
-        level.addProjectile(ProjectileSpec.createProjectile(level));
-        level.addProjectile(ProjectileSpec.createProjectile(level));
+        ProjectileSpec.createProjectile(level);
+        ProjectileSpec.createProjectile(level);
         expect(level.projectiles.length).to.equal(2);
         var projectileToRemove = level.projectiles[0];
         var projectileToNotRemove = level.projectiles[1];
-        level.removeProjectile(projectileToRemove);
+        expect(level.removeProjectile(projectileToRemove)).to.equal(projectileToRemove);
         expect(level.projectiles.length).to.equal(1);
         expect(level.projectiles).to.not.include(projectileToRemove);
         expect(level.projectiles).to.include(projectileToNotRemove);

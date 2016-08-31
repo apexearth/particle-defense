@@ -48,9 +48,17 @@ function Unit(options) {
     }.bind(this);
 
     this.hitTest = function (point, radius) {
+        if (!point || typeof point.x !== 'number' || typeof point.y !== 'number')
+            throw new Error('A point is required and must contain x and y.');
+        if (typeof radius !== 'number')
+            throw new Error('A radius is required and must be a number.');
         return math.distance(this.position.x - point.x, this.position.y - point.y) <= this.radius + radius;
     };
     this.hitTestLine = function (start, finish) {
+        if (!start || typeof start.x !== 'number' || typeof start.y !== 'number')
+            throw new Error('A start is required and must contain x and y.');
+        if (!finish || typeof finish.x !== 'number' || typeof finish.y !== 'number')
+            throw new Error('A finish is required and must contain x and y.');
         return collision.lineCircle(start, finish, this.position, this.radius).result === collision.INTERSECT;
     };
     this.move = function () {

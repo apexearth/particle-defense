@@ -113,6 +113,7 @@ function Level(options) {
     this.addProjectile = function (projectile) {
         this.container.addChild(projectile.container);
         this.projectiles.push(projectile);
+        return projectile;
     };
     this.removeProjectile = function (projectile) {
         var index = this.projectiles.indexOf(projectile);
@@ -120,6 +121,7 @@ function Level(options) {
             this.container.removeChild(projectile.container);
             this.projectiles.splice(index, 1);
         }
+        return projectile;
     };
     this.addUnit = function (unit) {
         this.container.addChild(unit);
