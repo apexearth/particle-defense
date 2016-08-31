@@ -1,6 +1,7 @@
 ﻿var PIXI = require('pixi.js');
 var math = require('../../util/math');
 var Settings = require('../Settings');
+var collision = require('geom-collision');
 
 module.exports = Unit;
 
@@ -34,30 +35,23 @@ function Unit(options) {
     this.graphics.endFill();
 
 
-    this.updateBlockLocation = function () {
+    var updateBlockLocation = function () {
         var blockX = Math.floor(this.position.x / Settings.BlockSize);
         var blockY = Math.floor(this.position.y / Settings.BlockSize);
         if (!this.block || this.block.x !== blockX || this.block.y !== blockY) {
             if (this.block) {
                 this.block.remove(this);
-            } else {
-                this.block = this.level.getBlock(blockX, blockY);
-                this.block.add(this);
             }
+            this.block = this.level.getBlock(blockX, blockY);
+            this.block.add(this);
         }
-    };
+    }.bind(this);
 
     this.hitTest = function (point, radius) {
-        return math.distance(this.position.x - point.x, this.position.y - point.y) < this.radius + radius;
+        return math.distance(this.position.x - point.x, this.position.y - point.y) <= this.radius + radius;
     };
-    this.hitTestLine = function (start, finish, width) {
-        if (width === undefined) width = 1;
-        var area2 = Math.abs((finish.x - start.x) * (this.position.y - start.y) - (this.position.x - start.x) * (finish.y - start.y));
-        var lab = Math.sqrt(Math.pow(finish.x - start.x, 2) + Math.pow(finish.y - start.y, 2));
-        var h = area2 / lab;
-        return h < this.radius
-            && this.position.x >= Math.min(start.x, finish.x) - this.radius - width && this.position.x <= Math.max(start.x, finish.x) + this.radius + width
-            && this.position.y >= Math.min(start.y, finish.y) - this.radius - width && this.position.y <= Math.max(start.y, finish.y) + this.radius + width;
+    this.hitTestLine = function (start, finish) {
+        return collision.lineCircle(start, finish, this.position, this.radius).result === collision.INTERSECT;
     };
     this.move = function () {
         if (this.path == null || this.path.length == 0) {
@@ -95,7 +89,7 @@ function Unit(options) {
         if (this.score === 0) this.calculateScore();
 
         this.move();
-        this.updateBlockLocation();
+        updateBlockLocation();
 
         // Check if reached the target
         if (this.target != null

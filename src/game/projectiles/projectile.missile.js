@@ -12,7 +12,7 @@ function MissileProjectile(weapon) {
     this.width = Math.sqrt(this.damage);
     this.explodeRange = this.width * 3;
     this.hitTest                          = function (unit) {
-        return unit.hitTestLine(this.position, this.lastPosition, this.explodeRange);
+        return unit.hitTestLine(this.position, this.lastPosition);
     };
     this.inheritedUpdateMissileProjectile = this.update;
     this.update                           = function () {

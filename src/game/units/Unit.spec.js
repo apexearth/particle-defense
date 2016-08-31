@@ -111,6 +111,44 @@
         expect(unit.block.contains(unit)).to.equal(false);
         expect(level.containsUnit(unit)).to.equal(false);
     });
+    it('.hitTest()', function () {
+        createLevel();
+        var unit = addUnit(level);
+        expect(unit.hitTest(unit.position, 0)).to.equal(true);
+        expect(unit.hitTest({x: unit.position.x, y: unit.position.y + unit.radius + 1}, 0)).to.equal(false);
+        expect(unit.hitTest({x: unit.position.x + unit.radius + 1, y: unit.position.y}, 0)).to.equal(false);
+        expect(unit.hitTest({x: unit.position.x, y: unit.position.y + unit.radius + 1}, 1)).to.equal(true);
+        expect(unit.hitTest({x: unit.position.x, y: unit.position.y + unit.radius + 2}, 1)).to.equal(false);
+    });
+    it('.hitTestLine()', function () {
+        createLevel();
+        var unit = addUnit(level);
+        expect(unit.hitTestLine(
+            {x: unit.position.x, y: unit.position.y - 100},
+            unit.position
+        )).to.equal(true);
+        expect(unit.hitTestLine(
+            {x: unit.position.x, y: unit.position.y - 100},
+            {x: unit.position.x, y: unit.position.y - unit.radius - 1}
+        )).to.equal(false);
+        expect(unit.hitTestLine(
+            {x: unit.position.x - 100, y: unit.position.y},
+            {x: unit.position.x - unit.radius - 1, y: unit.position.y}
+        )).to.equal(false);
+    });
+    it('.draw()', function () {
+        // TODO: Test drawing?
+    });
+    describe('.update()', function () {
+        it('updateBlockLocation()', function () {
+            createLevel();
+            var unit = addUnit(level);
+            var block = unit.block;
+            unit.position.x += level.blockSize;
+            unit.update();
+            expect(unit.block).to.not.equal(block);
+        });
+    });
 
     coverage(this, function (done) {
         createLevel();

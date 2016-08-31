@@ -1,15 +1,14 @@
 ﻿var PIXI = require('pixi.js');
 var Grid = require('../util/grid');
-var Settings = require('./Settings');
 var Pathfind = require('../util/grid/Pathfind');
 var BlockStatus = require('../util/grid/block-status');
 
 module.exports = Map;
 
-function Map(level, width, height, template) {
+function Map(level, width, height, blockSize, template) {
     this.level = level;
     this.container = new PIXI.Container();
-    this.blockSize = Settings.BlockSize;
+    this.blockSize = blockSize;
     this.width = width;
     this.height = height;
     this.pixelWidth = width * this.blockSize;

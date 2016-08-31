@@ -24,7 +24,7 @@ function VelocityProjectile(options) {
         this.graphics.lineTo(0, 0);
     };
     this.hitTest = function (unit) {
-        return unit.hitTestLine(this.position, this.lastPosition, this.width);
+        return unit.hitTestLine(this.position, this.lastPosition);
     };
 }
 

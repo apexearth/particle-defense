@@ -40,7 +40,7 @@ function ThrownProjectile(weapon) {
     };
     this.hitTest              = function (unit) {
         if (this.position.x - this.lastPosition.x > 1 && this.position.y - this.lastPosition.y > 1) {
-            return unit.hitTestLine(this.position, this.lastPosition, this.width);
+            return unit.hitTestLine(this.position, this.lastPosition);
         } else {
             return unit.hitTest(this, this.width);
         }

@@ -22,12 +22,12 @@ function Level(options) {
 
     this.container = new PIXI.Container();
     renderer.addChild(this.container);
+    this.blockSize = Settings.BlockSize;
     this.position = this.container.position;
-    this.position.x = -options.width * Settings.BlockSize / 2;
-    this.position.y = -options.height * Settings.BlockSize / 2;
+    this.position.x = -options.width * this.blockSize / 2;
+    this.position.y = -options.height * this.blockSize / 2;
 
-
-    var _map = new Map(this, options.width, options.height, options.mapTemplate);
+    var _map = new Map(this, options.width, options.height, this.blockSize, options.mapTemplate);
     this.container.addChild(_map.container);
     this.spawnPoints = [];
 
@@ -122,7 +122,6 @@ function Level(options) {
         }
     };
     this.addUnit = function (unit) {
-        unit.updateBlockLocation();
         this.container.addChild(unit);
         this.units.push(unit);
     };
