@@ -48,8 +48,26 @@ function Weapon(options) {
     var weapon = this;
     var me = this;
 
-    this.upgradeCount = 0;
-    this.attributes = {};
+    var createProperty = function (parent, key, options) {
+        return new Attribute(Object.assign({
+            parent: parent,
+            key: key,
+            upgrade: {
+                factor: 1.1,
+                costMultiplier: 1.25,
+                cost: {
+                    energy: 10,
+                    metal: 5
+                }
+            }
+        }, options));
+    };
+    this.attributes = {
+        range: createProperty(this, 'range'),
+        damage: createProperty(this, 'damage'),
+        fireRate: createProperty(this, 'fireRate'),
+        accuracy: createProperty(this, 'accuracy', {upgrade: {factor: .9}})
+    };
     /** @returns Number */
     this.attributeCost = function () {
         return (10 * weapon.damage / weapon.fireRate + weapon.range / 10)

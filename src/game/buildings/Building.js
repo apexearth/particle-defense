@@ -11,7 +11,7 @@ function Building(options) {
     this.player = options.player;
     options.blockX = options.blockX || 0;
     options.blockY = options.blockY || 0;
-    this.blockX = options.blockX; 
+    this.blockX = options.blockX;
     this.blockY = options.blockY;
 
     this.container = new PIXI.Container();
@@ -36,7 +36,29 @@ function Building(options) {
     this.updates = [];
 
     this.upgradeCount = 0;
-    this.Attributes = {};
+    this.attributes = {
+        resourceGeneration: createAttributes(this.resourceGeneration),
+        resourceStorage: createAttributes(this.resourceStorage)
+    };
+
+    function createAttributes(object) {
+        var attributes = {};
+        for (var key in object) {
+            attributes[key] = new Attribute({
+                parent: object,
+                key: key,
+                upgrade: {
+                    factor: 1.1,
+                    costMultiplier: 1.25,
+                    cost: {
+                        energy: object[key] * 10
+                    }
+                }
+            });
+        }
+        return attributes;
+    }
+
 
     Object.defineProperties(this, {
         selected: {
@@ -74,63 +96,6 @@ function Building(options) {
         }
     };
 
-    this.updateAttributes = function () {
-        var createAttributeForStorage = function (resourceName, energyFactor, metalFactor) {
-            if (this.resourceStorage[resourceName] > 0) {
-                this.Attributes[resourceName + 'Storage'] = new Attribute(this,
-                    function () {
-                        return this.resourceStorage[resourceName];
-                    }.bind(this),
-                    function () {
-                        this.resourceStorage[resourceName] += 25;
-                    }.bind(this),
-                    null,
-                    {
-                        /** @returns Number **/
-                        energy: function () {
-                            return this.resourceStorage[resourceName] * energyFactor;
-                        }.bind(this),
-                        /** @returns Number **/
-                        metal: function () {
-                            return this.resourceStorage[resourceName] * metalFactor;
-                        }.bind(this)
-                    }
-                );
-            }
-        }.bind(this);
-        var createAttributeForGeneration = function (resourceName, energyFactor, metalFactor) {
-            if (this.resourceGeneration[resourceName] > 0) {
-                this.Attributes[resourceName + 'Generation'] = new Attribute(this,
-                    function () {
-                        return this.resourceGeneration[resourceName];
-                    }.bind(this),
-                    function () {
-                        this.resourceGeneration[resourceName] *= 1.25;
-                    }.bind(this),
-                    null,
-                    {
-                        /** @returns Number **/
-                        energy: function () {
-                            return this.resourceGeneration[resourceName] * energyFactor;
-                        }.bind(this),
-                        /** @returns Number **/
-                        metal: function () {
-                            return this.resourceGeneration[resourceName] * metalFactor;
-                        }.bind(this)
-                    }
-                );
-            }
-        }.bind(this);
-
-        createAttributeForStorage('ammo', .5, .25);
-        createAttributeForStorage('energy', .5, .25);
-        createAttributeForStorage('metal', 1, .5);
-
-        createAttributeForGeneration('ammo', 2, 4);
-        createAttributeForGeneration('energy', 8, 3);
-        createAttributeForGeneration('metal', 8, 13);
-    };
-
     this.update = function () {
         if (this.health <= 0) {
             this.level.removeBuilding(this);
@@ -166,8 +131,6 @@ function Building(options) {
         }
     };
 
-
-    this.updateAttributes();
 }
 
 Building.prototype.addStorageToPlayer = function () {

@@ -47,6 +47,19 @@
         expect(building.resourceStorage.metal).to.equal(1);
         expect(building.resourceStorage.ammo).to.equal(1);
 
+        // The attributes object will contain Attribute instances which can upgrade properties on the object.
+        expect(building.attributes).to.be.an('object');
+        // Has attributes for resource generation.
+        for (var key in options.resourceGeneration) {
+            expect(building.attributes.resourceGeneration[key]).to.exist;
+            expect(building.attributes.resourceGeneration[key].constructor.name).to.equal('Attribute');
+        }
+        // Has attributes for resource storage.
+        for (key in options.resourceStorage) {
+            expect(building.attributes.resourceStorage[key]).to.exist;
+            expect(building.attributes.resourceStorage[key].constructor.name).to.equal('Attribute');
+        }
+
         expect(building.weapons).to.be.an('array');
         expect(building.updates).to.be.an('array');
 

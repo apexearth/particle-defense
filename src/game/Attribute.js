@@ -9,15 +9,14 @@ function Attribute(options) {
         throw new Error('options.key is required.');
     if (!options.parent[options.key])
         throw new Error('Key: ' + options.key + ' is not found.');
-    options.upgrade = options.upgrade
-        || {
-            factor: 1.1,
-            costMultiplier: 1.1,
-            cost: {
-                energy: 10,
-                metal: 5
-            }
-        };
+    options.upgrade = Object.assign({
+        factor: 1.1,
+        costMultiplier: 1.1,
+        cost: {
+            energy: 10,
+            metal: 5
+        }
+    }, options.upgrade);
 
     var key = options.key;
     this.parent = options.parent;
