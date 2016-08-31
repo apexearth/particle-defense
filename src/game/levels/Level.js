@@ -60,7 +60,7 @@ function Level(options) {
         var waveCount = 0;
         while (i--) {
             waveCount = Math.max(this.spawnPoints[i].waves.length, waveCount);
-            if (this.spawnPoints[i].currentWave !== null) waveCount++;
+            if (this.spawnPoints[i].currentWave) waveCount++;
         }
         return waveCount;
     };
@@ -271,7 +271,7 @@ function Level(options) {
     this.processMouseInput = function () {
         if (Mouse.LeftButton) {
             Mouse.LeftButton = false;
-            var clickedBlock = this.getBlockOrNullFromCoords(this.Mouse.x, this.Mouse.y);
+            var clickedBlock = this.getBlockOrNullFromCoords(this.mouse.x, this.mouse.y);
             if (this.getPlacementBuilding != null) {
                 this.finalizeBuildingPlacement(clickedBlock);
                 return;

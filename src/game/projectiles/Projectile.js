@@ -36,7 +36,7 @@ function Projectile(options) {
     this.width = 1;
     this.radius = this.width;
     this.lifespan = Settings.second * 5;
-    this.lifespanCount = 0;
+    var lifespanCount = 0;
     this.dead = false;
 
     this.die = function () {
@@ -50,7 +50,7 @@ function Projectile(options) {
     };
 
     this.update = function () {
-        if (this.lifespanCount++ > this.lifespan) this.die();
+        if (lifespanCount++ > this.lifespan) this.die();
         if (!this.level.hitTest(this.position)) // Die if outside of level.
         {
             this.onHit();
@@ -66,7 +66,7 @@ function Projectile(options) {
         while (u--) {
             var unit = this.level.units[u];
             if (this.hitTest(unit)) {
-                unit.damage(this.effectiveDamage(unit));
+                unit.damage(this.effectiveDamage());
                 this.onHit();
             }
         }
