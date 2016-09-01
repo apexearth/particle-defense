@@ -130,6 +130,7 @@ function Unit(options) {
         this.path = null;
     };
     this.findPath = function () {
+        if (!this.target) return null;
         return this.level.getPathForUnit(this);
     };
 }

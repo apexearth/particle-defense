@@ -18,10 +18,16 @@ function Level(options) {
     options.width = options.width || 10;
     options.height = options.height || 10;
 
-    this.container = new PIXI.Container();
-    renderer.addChild(this.container);
+    Object.defineProperties(this, {
+        position: {
+            get: function () {
+                return this.container.position;
+            }.bind(this)
+        }
+    });
+
+    this.container = renderer.addChild(new PIXI.Container());
     this.blockSize = Settings.BlockSize;
-    this.position = this.container.position;
     this.position.x = -options.width * this.blockSize / 2;
     this.position.y = -options.height * this.blockSize / 2;
 
@@ -166,7 +172,6 @@ function Level(options) {
     this.finalizeBuildingPlacement = function (block) {
         var building = this.player.actions.createBuilding(this.placementBuilding.constructor, block.x, block.y);
         this.cancelBuildingPlacement();
-        this.resetBuildableBlocks();
         this.updatePaths();
         if (this.inputs.keyboard('<shift>')) {
             this.beginBuildingPlacement(building.constructor);
@@ -181,8 +186,6 @@ function Level(options) {
         this.container.removeChild(this.placementBuilding.container);
         this.placementBuilding = null;
     };
-    var _buildableBlocks = [];
-    var _notBuildableBlocks = [];
     /** @returns bool **/
     this.isBlockCoordBuildable = function (blockX, blockY) {
         return this.isBlockBuildable(_map.getBlock(blockX, blockY));
@@ -191,39 +194,9 @@ function Level(options) {
     /** @summary The idea behind this is to check if a block is buildable when placing a building. **/
     /** @returns boolean **/
     this.isBlockBuildable = function (block) {
-        if (block.status >= BlockStatus.OnlyPassable) return false;       // It's blocked
-        if (block.objects.length > 0) return false;                         // The block has an object in it.
-        if (_buildableBlocks.indexOf(block) >= 0) return true;              // Is within list of buildable blocks.
-        if (_notBuildableBlocks.indexOf(block) >= 0) return false;          // Is within list of not buildable blocks.
-        return !this.willBuildingBlockPath(block);                    // Since last two didn't show, we find out.
-    };
-
-    /** @returns boolean **/
-    this.willBuildingBlockPath = function (block) {
-        if (this.spawnPoints.length === 0) return false;
-        if (!this.player || !this.player.homeBase) return false;
-        var prevStatus = block.status;
-        block.status = BlockStatus.NotPassable;
-        var i = this.spawnPoints.length;
-        while (i--) {
-            var spawnPoint = this.spawnPoints[i];
-            var spawnPointBlock = this.getBlock(spawnPoint.block.x, spawnPoint.block.y);
-            var path = this.getPath(spawnPointBlock, this.player.homeBase.block);
-            if (path.length > 0) {
-                _buildableBlocks.push(block);
-            } else {
-                _notBuildableBlocks.push(block);
-                block.status = prevStatus;
-                return true;
-            }
-        }
-        block.status = prevStatus;
-        return false;
-    };
-    /** @summary Should be called whenever block BlockStatus changes. **/
-    this.resetBuildableBlocks = function () {
-        _buildableBlocks = [];
-        _notBuildableBlocks = [];
+        if (block.status >= BlockStatus.OnlyPassable) return false; // It's blocked
+        if (block.objects.length > 0) return false;                 // The block has an object in it.
+        return true;                                                // Since last two didn't show, we find out.
     };
 
     this.selection = null;

@@ -27,6 +27,7 @@
     "angular-mocks": "^1.5.8",
     "browserify": "^13.1.0",
     "chai": "^3.5.0",
+    "chai-spies": "^0.7.1",
     "color": "^0.11.3",
     "eslint": "^3.3.1",
     "geom-collision": "^0.2.5",

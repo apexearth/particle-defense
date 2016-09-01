@@ -1,4 +1,8 @@
-﻿var ProjectileSpec = require('../projectiles/Projectile.spec');
+﻿var chai = require('chai');
+var expect = chai.expect;
+chai.use(require('chai-spies'));
+
+var ProjectileSpec = require('../projectiles/Projectile.spec');
 var UnitSpec = require('../units/Unit.spec');
 var BuildingSpec = require('../buildings/Building.spec');
 
@@ -9,7 +13,7 @@ describe('Level', function () {
     var Settings = require('../Settings');
     var BlockStatus = require('../../util/grid').BlockStatus;
     var coverage = require('../../../tests/check-coverage');
-    var expect = require('chai').expect;
+
     var width = 10;
     var height = 10;
     var level;
@@ -176,6 +180,17 @@ describe('Level', function () {
         block.objects.push({});
         expect(level.isBlockBuildable(block)).to.equal(false);
     });
+    it('.isBlockCoordBuildable()', function () {
+        var block = level.getBlock(0, 0);
+        block.status = BlockStatus.IsEmpty;
+        expect(level.isBlockCoordBuildable(block.x, block.y)).to.equal(true);
+        block.status = BlockStatus.OnlyPassable;
+        expect(level.isBlockCoordBuildable(block.x, block.y)).to.equal(false);
+        block.status = BlockStatus.IsEmpty;
+        expect(level.isBlockCoordBuildable(block.x, block.y)).to.equal(true);
+        block.objects.push({});
+        expect(level.isBlockCoordBuildable(block.x, block.y)).to.equal(false);
+    });
     it('.hitTest()', function () {
         expect(level.hitTest({x: level.width, y: level.height})).to.equal(true);
         expect(level.hitTest({x: 0, y: 0})).to.equal(true);
@@ -240,5 +255,34 @@ describe('Level', function () {
         expect(level.buildings).to.include(finalBuilding);
         expect(finalBuilding.player.buildings).to.include(finalBuilding);
     });
+    it('.cancelBuildingPlacement()', function () {
+        var placementBuilding = beginBuildingPlacement();
+        level.cancelBuildingPlacement();
+        expect(level.placementBuilding).to.equal(null);
+        expect(level.container.children).to.not.include(placementBuilding.container);
+    });
+    it('.updatePaths()', function () {
+        var unit = UnitSpec.addUnit(level);
+        unit.findPath = chai.spy(unit.findPath);
+        level.updatePaths();
+        expect(unit.findPath).to.have.been.called();
+    });
+    it('.selectBuildingAt()', selectBuildingAt);
+    function selectBuildingAt() {
+        var building = BuildingSpec.createBuilding(level, level.players[0]);
+        level.addBuilding(building);
+        expect(level.selectBuildingAt(level.getBlock(0, 0))).to.equal(building);
+        expect(level.selection).to.equal(building);
+        expect(building.selected).to.equal(true);
+        return building;
+    }
+
+    it('.deselect()', function () {
+        var building = selectBuildingAt();
+        level.deselect();
+        expect(level.selection).to.equal(null);
+        expect(building.selected).to.equal(false);
+    });
+
     coverage(this, createLevel());
 });
