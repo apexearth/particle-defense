@@ -1,5 +1,6 @@
 ﻿var ProjectileSpec = require('../projectiles/Projectile.spec');
 var UnitSpec = require('../units/Unit.spec');
+var BuildingSpec = require('../buildings/Building.spec');
 
 describe('Level', function () {
     var Level = require('./Level');
@@ -66,6 +67,7 @@ describe('Level', function () {
         expect(addedBuilding).to.equal(building);
         expect(level.buildings.length).to.equal(1);
         expect(level.container.children.length).to.equal(2);
+        expect(addedBuilding.block.building).to.equal(addedBuilding);
     }
 
     it('.removeBuilding()', function () {
@@ -182,6 +184,61 @@ describe('Level', function () {
         expect(level.hitTest({x: level.width + 1, y: 0})).to.equal(false);
         expect(level.hitTest({x: 0, y: level.height + 1})).to.equal(false);
     });
+    it('.getPath()', function () {
+        var path = level.getPath(
+            level.getBlock(0, 0),
+            level.getBlock(5, 3)
+        );
+        expect(path).to.exist;
+        expect(path.length).to.equal(5);
+    });
+    it('.getPathForUnit()', function () {
+        var mockUnit = {
+            position: {x: 0, y: 0},
+            target: {position: {x: 5 * level.blockSize, y: 3 * level.blockSize}}
+        };
+        var path = level.getPathForUnit(mockUnit);
+        expect(path).to.exist;
+        expect(path.length).to.equal(5);
+    });
+    describe('.processKeyboardInput()', function () {
+        it('escape, stop building placement', function () {
+            level.inputs.keyboard('<escape>', 1);
+            level.placementBuilding = {};
+            level.processKeyboardInput();
+            expect(level.placementBuilding).to.equal(null);
+        });
+    });
+    it('.beginBuildingPlacement()', beginBuildingPlacement);
+    function beginBuildingPlacement() {
+        var building = level.beginBuildingPlacement(Building);
+        expect(level.placementBuilding.constructor).to.equal(Building);
+        expect(level.placementBuilding).to.equal(building);
+        // We'll want it to be visible during placement.
+        expect(level.container.children).to.include(building.container);
+        // We don't want it to do anything during placement.
+        expect(level.buildings).to.not.include(building);
+        expect(building.player.buildings).to.not.include(building);
+        return building;
+    }
 
+    it('.finalizeBuildingPlacement()', function () {
+        var placementBuilding = beginBuildingPlacement();
+        var block = level.getBlock(0, 1);
+        var finalBuilding;
+        expect(function () {
+            finalBuilding = level.finalizeBuildingPlacement(block);
+        }).to.throw();
+        level.player.resources.energy = Building.cost.energy;
+        level.player.resources.metal = Building.cost.metal;
+        finalBuilding = level.finalizeBuildingPlacement(block);
+        expect(placementBuilding).to.not.equal(finalBuilding);
+        // Building is fully added to the level & player.
+        expect(finalBuilding.block).to.equal(block);
+        expect(finalBuilding.block.building).to.equal(finalBuilding);
+        expect(level.container.children).to.include(finalBuilding.container);
+        expect(level.buildings).to.include(finalBuilding);
+        expect(finalBuilding.player.buildings).to.include(finalBuilding);
+    });
     coverage(this, createLevel());
 });

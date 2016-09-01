@@ -11,6 +11,8 @@ function Building(options) {
     this.player = options.player;
     options.blockX = options.blockX || 0;
     options.blockY = options.blockY || 0;
+
+    this.block = null;
     this.blockX = options.blockX;
     this.blockY = options.blockY;
 
@@ -115,7 +117,7 @@ function Building(options) {
 
         // Graphics
         this.overlayGraphics.clear();
-        if (selected || this.level.getPlacementBuilding === this) {
+        if (selected || this.level.placementBuilding === this) {
             this.overlayGraphics.lineStyle(2, 0x7799FF, .2);
             i = this.weapons.length;
             var weaponRadius = 0;
@@ -132,6 +134,11 @@ function Building(options) {
     };
 
 }
+
+Building.cost = {
+    energy: 1,
+    metal: 1
+};
 
 Building.prototype.addStorageToPlayer = function () {
     if (!this.player) return;

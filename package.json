@@ -32,6 +32,7 @@
     "geom-collision": "^0.2.5",
     "ng-grid": "^2.0.1",
     "pixi.js": "git+https://github.com/apexearth/pixi.js.git",
-    "raf": "^3.2.0"
+    "raf": "^3.2.0",
+    "user-input": "^1.2.1"
   }
 }

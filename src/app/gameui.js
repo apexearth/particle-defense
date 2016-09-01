@@ -15,8 +15,8 @@ function GameUi($scope) {
         $scope.cost = cost;
     };
     $scope.hideCost  = function () {
-        $scope.cost = $scope.getPlacementBuilding() != null
-            ? $scope.getPlacementBuilding().cost
+        $scope.cost = $scope.placementBuilding() != null
+            ? $scope.placementBuilding().cost
             : null;
     };
     /** @returns String, Number */
@@ -27,9 +27,9 @@ function GameUi($scope) {
     };
 
 
-    $scope.getPlacementBuilding = function () {
-        return $scope.level.getPlacementBuilding != null
-            ? $scope.level.getPlacementBuilding.constructor
+    $scope.placementBuilding = function () {
+        return $scope.level.placementBuilding != null
+            ? $scope.level.placementBuilding.constructor
             : null;
     };
 

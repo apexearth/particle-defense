@@ -5,9 +5,7 @@ var General = require('../../util/General');
 var CommandQueue = require('../CommandQueue');
 var BlockStatus = require('../../util/grid/block-status');
 
-var input = require('../../util/input');
-var Mouse = input.Mouse;
-var Keyboard = input.Keyboard;
+var userInput = require('user-input');
 
 var common = require('../common');
 var Settings = common.Settings;
@@ -49,9 +47,13 @@ function Level(options) {
     this.buildings = [];
     this.objects = [];
 
+    this.inputs = userInput()
+        .withMouse()
+        .withKeyboard();
+
     this.mouse = {
-        x: Mouse.x - renderer.position.x,
-        y: Mouse.y - renderer.position.y
+        x: this.inputs.mouse('x') - renderer.position.x,
+        y: this.inputs.mouse('y') - renderer.position.y
     };
 
     /** @returns Number **/
@@ -85,9 +87,9 @@ function Level(options) {
 
     this.addBuilding = function (building) {
         var block = this.getBlock(building.blockX, building.blockY);
-        if (block.building !== null) throw new Error('A building already exists at ' + building.blockX + ', ' + building.blockY);
+        if (block.building) throw new Error('A building already exists at ' + building.blockX + ', ' + building.blockY);
         building.block = block;
-        building.block.building = this;
+        building.block.building = building;
         this.container.addChild(building.container);
         this.buildings.push(building);
         if (building.player) {
@@ -150,26 +152,34 @@ function Level(options) {
         return vector.x >= this.bounds.left && vector.x <= this.bounds.right && vector.y >= this.bounds.top && vector.y <= this.bounds.bottom;
     };
 
-    this.beginBuildingPlacement = function (building) {
-        if (this.getPlacementBuilding) this.endBuildingPlacement();
-        this.getPlacementBuilding = new building(this, null);
+    this.beginBuildingPlacement = function (constructor) {
+        if (this.placementBuilding) this.cancelBuildingPlacement();
+        this.placementBuilding = new constructor({
+            level: this,
+            player: this.player,
+            blockX: 0,
+            blockY: 0
+        });
+        this.container.addChild(this.placementBuilding.container);
+        return this.placementBuilding;
     };
     this.finalizeBuildingPlacement = function (block) {
-        if (block != null) {
-            var buildResult = this.player.createBuilding(this.getPlacementBuilding.constructor, block.x, block.y);
-            if (buildResult != null) {
-                this.resetBuildableBlocks();
-                var i = this.units.length;
-                while (i--) this.units[i].findPath();
-                if (!Keyboard.CheckKey(Keyboard.Keys.shift)) {
-                    this.endBuildingPlacement();
-                }
-            }
+        var building = this.player.actions.createBuilding(this.placementBuilding.constructor, block.x, block.y);
+        this.cancelBuildingPlacement();
+        this.resetBuildableBlocks();
+        this.updatePaths();
+        if (this.inputs.keyboard('<shift>')) {
+            this.beginBuildingPlacement(building.constructor);
         }
+        return building;
     };
-    this.endBuildingPlacement = function () {
-        this.removeChild(this.getPlacementBuilding);
-        this.getPlacementBuilding = null;
+    this.updatePaths = function () {
+        var i = this.units.length;
+        while (i--) this.units[i].findPath();
+    };
+    this.cancelBuildingPlacement = function () {
+        this.container.removeChild(this.placementBuilding.container);
+        this.placementBuilding = null;
     };
     var _buildableBlocks = [];
     var _notBuildableBlocks = [];
@@ -264,17 +274,17 @@ function Level(options) {
         return _map.getBlockOrNullFromCoords(x, y);
     };
     this.processKeyboardInput = function () {
-        if (Keyboard.CheckKey(Keyboard.Keys.escape)) {
-            if (this.getPlacementBuilding != null) {
-                this.endBuildingPlacement();
+        if (this.inputs.keyboard('<escape>')) {
+            if (this.placementBuilding != null) {
+                this.cancelBuildingPlacement();
             }
         }
     };
     this.processMouseInput = function () {
-        if (Mouse.LeftButton) {
-            Mouse.LeftButton = false;
+        if (this.inputs.mouse('mouse0')) {
+            this.inputs.mouse('mouse0', 0);
             var clickedBlock = this.getBlockOrNullFromCoords(this.mouse.x, this.mouse.y);
-            if (this.getPlacementBuilding != null) {
+            if (this.placementBuilding != null) {
                 this.finalizeBuildingPlacement(clickedBlock);
                 return;
             }
@@ -286,10 +296,10 @@ function Level(options) {
             }
         }
 
-        if (Mouse.RightButton) {
-            if (this.getPlacementBuilding != null) {
-                Mouse.RightButton = false;
-                this.endBuildingPlacement();
+        if (this.inputs.mouse('mouse0')) {
+            if (this.placementBuilding != null) {
+                this.inputs.mouse('mouse0', 0);
+                this.cancelBuildingPlacement();
             }
         }
     };
@@ -298,8 +308,8 @@ function Level(options) {
         this.frameCount++;
 
         this.mouse = {
-            x: (Mouse.x - renderer.position.x) / renderer.scale.x + this.width / 2,
-            y: (Mouse.y - renderer.position.y) / renderer.scale.y + this.height / 2
+            x: (this.inputs.mouse('x') - renderer.position.x) / renderer.scale.x + this.width / 2,
+            y: (this.inputs.mouse('y') - renderer.position.y) / renderer.scale.y + this.height / 2
         };
 
 
@@ -340,9 +350,9 @@ function Level(options) {
         }
 
 
-        if (this.getPlacementBuilding != null) {
-            this.getPlacementBuilding.position.x = this.mouse.x - (this.mouse.x % Settings.BlockSize) + Settings.BlockSize / 2;
-            this.getPlacementBuilding.position.y = this.mouse.y - (this.mouse.y % Settings.BlockSize) + Settings.BlockSize / 2;
+        if (this.placementBuilding != null) {
+            this.placementBuilding.position.x = this.mouse.x - (this.mouse.x % Settings.BlockSize) + Settings.BlockSize / 2;
+            this.placementBuilding.position.y = this.mouse.y - (this.mouse.y % Settings.BlockSize) + Settings.BlockSize / 2;
         }
 
 

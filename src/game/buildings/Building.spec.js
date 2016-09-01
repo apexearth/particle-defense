@@ -11,10 +11,16 @@
     var expect = require('chai').expect;
     var Gun = Buildings.Gun;
 
-    it('new', function () {
+    module.exports = {
+        createBuilding
+    };
+
+    function createBuilding(level, player) {
+        level = level || new Level();
+        player = level.player || level.addPlayer(new Player());
         var options = {
-            level: new Level(),
-            player: new Player(),
+            level: level,
+            player: player,
             resourceGeneration: {
                 energy: 1,
                 metal: 1,
@@ -26,10 +32,13 @@
                 ammo: 1
             }
         };
-        var building = new Building(options);
+        return new Building(options);
+    }
 
-        expect(building.level).to.equal(options.level);
-        expect(building.player).to.equal(options.player);
+    it('new', function () {
+        var building = createBuilding();
+        expect(building.level).to.exist;
+        expect(building.player).to.exist;
         expect(building.container).to.exist;
         expect(building.width).to.be.greaterThan(0);
         expect(building.height).to.be.greaterThan(0);
@@ -50,12 +59,12 @@
         // The attributes object will contain Attribute instances which can upgrade properties on the object.
         expect(building.attributes).to.be.an('object');
         // Has attributes for resource generation.
-        for (var key in options.resourceGeneration) {
+        for (var key in building.resourceGeneration) {
             expect(building.attributes.resourceGeneration[key]).to.exist;
             expect(building.attributes.resourceGeneration[key].constructor.name).to.equal('Attribute');
         }
         // Has attributes for resource storage.
-        for (key in options.resourceStorage) {
+        for (key in building.resourceStorage) {
             expect(building.attributes.resourceStorage[key]).to.exist;
             expect(building.attributes.resourceStorage[key].constructor.name).to.equal('Attribute');
         }
@@ -67,7 +76,7 @@
         expect(building.position.x).to.equal(building.width / 2);
         expect(building.position.y).to.equal(building.height / 2);
 
-        options.level.addBuilding(building);
+        building.level.addBuilding(building);
         expect(building.block).to.exist;
         expect(building.block.x).to.equal(0);
         expect(building.block.y).to.equal(0);
