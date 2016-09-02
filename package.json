@@ -7,8 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha ./tests/*.js",
-    "eslint": "eslint src/**/*.js tests/**/*.js Gruntfile.js",
+    "test": "mocha ./test/*.js",
+    "eslint": "eslint src/**/*.js test/**/*.js Gruntfile.js",
     "browserify": "browserify src/index.js build/particle-defense.js",
     "dev": "npm-run-all eslint test browserify"
   },

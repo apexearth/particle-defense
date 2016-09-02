@@ -1,6 +1,6 @@
 var Attribute = require('./Attribute');
 
-var coverage = require('../../tests/check-coverage');
+var coverage = require('../../test/check-coverage');
 var expect = require('chai').expect;
 
 describe('Attribute', function () {

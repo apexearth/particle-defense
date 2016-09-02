@@ -12,7 +12,7 @@ describe('Level', function () {
     var Building = require('../buildings/Building');
     var Settings = require('../Settings');
     var BlockStatus = require('../../util/grid').BlockStatus;
-    var coverage = require('../../../tests/check-coverage');
+    var coverage = require('../../../test/check-coverage');
 
     var width = 10;
     var height = 10;

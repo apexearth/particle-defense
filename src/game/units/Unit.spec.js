@@ -2,7 +2,7 @@
     var Levels = require('../levels');
     var math = require('../../util/math');
     var Unit = require('./Unit');
-    var coverage = require('../../../tests/check-coverage');
+    var coverage = require('../../../test/check-coverage');
     var expect = require('chai').expect;
 
     module.exports = {

@@ -2,7 +2,7 @@ var Level = require('../levels/Level');
 var Player = require('../Player');
 var Projectile = require('../projectiles/Projectile');
 var UnitSpec = require('../units/Unit.spec');
-var coverage = require('../../../tests/check-coverage');
+var coverage = require('../../../test/check-coverage');
 var expect = require('chai').expect;
 
 module.exports = {

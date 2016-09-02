@@ -7,7 +7,7 @@
     var Building = require('./Building');
     var weapons = require('../weapons');
     var Unit = require('../units/unit');
-    var coverage = require('../../../tests/check-coverage');
+    var coverage = require('../../../test/check-coverage');
     var expect = require('chai').expect;
     var Gun = Buildings.Gun;
 

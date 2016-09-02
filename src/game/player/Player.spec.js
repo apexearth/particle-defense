@@ -4,7 +4,7 @@
     var Buildings = require('../buildings');
     var Building = require('../buildings/Building');
     var Player = require('./Player');
-    var coverage = require('../../../tests/check-coverage');
+    var coverage = require('../../../test/check-coverage');
     var expect = require('chai').expect;
     var Gun = Buildings.Gun;
 
