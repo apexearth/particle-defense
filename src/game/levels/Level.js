@@ -33,7 +33,6 @@ function Level(options) {
 
     var _map = new Map(this, options.width, options.height, this.blockSize, options.mapTemplate);
     this.container.addChild(_map.container);
-    this.spawnPoints = [];
 
     this.frameCount = 0;
     this.width = _map.pixelWidth;
@@ -62,26 +61,15 @@ function Level(options) {
         y: this.inputs.mouse('y') - renderer.position.y
     };
 
-    /** @returns Number **/
-    this.totalWaves = function () {
-        var i = this.spawnPoints.length;
-        var waveCount = 0;
-        while (i--) {
-            waveCount = Math.max(this.spawnPoints[i].waves.length, waveCount);
-            if (this.spawnPoints[i].currentWave) waveCount++;
-        }
-        return waveCount;
-    };
     this.winConditions = [function () {
-        if (this.units.length > 0) return false;
-        var i = this.spawnPoints.length;
-        while (i--) {
-            if (this.spawnPoints[i].hasWaves() === true) return false;
+        for (var player of this.players) {
+            if (player.buildings.length > 0)
+                return false;
         }
         return true;
     }.bind(this)];
     this.lossConditions = [function () {
-        return this.player.homeBase.health <= 0;
+        return this.player.buildings.length === 0;
     }.bind(this)];
 
     if (typeof document !== 'undefined') {
@@ -223,11 +211,13 @@ function Level(options) {
         return _map.getPathByBlock(blockStart, blockTarget);
     };
 
+    // Returns true if all win conditions are true.
     this.checkWinConditions = function () {
         var i = this.winConditions.length;
         while (i--) if (!this.winConditions[i]()) return false;
         return true;
     };
+    // Returns true if all loss conditions are true.
     this.checkLossConditions = function () {
         var i = this.lossConditions.length;
         while (i--) if (!this.lossConditions[i]()) return false;
@@ -269,7 +259,7 @@ function Level(options) {
             }
         }
 
-        if (this.inputs.mouse('mouse0')) {
+        if (this.inputs.mouse('mouse2')) {
             if (this.placementBuilding != null) {
                 this.inputs.mouse('mouse0', 0);
                 this.cancelBuildingPlacement();
@@ -285,13 +275,7 @@ function Level(options) {
             y: (this.inputs.mouse('y') - renderer.position.y) / renderer.scale.y + this.height / 2
         };
 
-
-        var i = this.spawnPoints.length;
-        while (i--) {
-            var spawnPoint = this.spawnPoints[i];
-            spawnPoint.update(this);
-        }
-
+        var i;
         i = this.units.length;
         while (i-- > 0) {
             var unit = this.units[i];
@@ -332,7 +316,7 @@ function Level(options) {
         this.processMouseInput();
         this.processKeyboardInput();
 
-        if (this.checkCount++ > Settings.second) {
+        if (++this.checkCount >= Settings.second) {
             var win = this.checkWinConditions();
             var loss = this.checkLossConditions();
             if (win || loss) {
@@ -347,9 +331,9 @@ function Level(options) {
 
     this.initialize = function (template) {
         General.NestedCopyTo(template, this);
-        if (options.player) {
-            this.addPlayer(options.player);
-        }
     };
-    this.initialize();
+
+    if (options.player) {
+        this.addPlayer(options.player);
+    }
 }

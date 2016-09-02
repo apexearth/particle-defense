@@ -50,7 +50,6 @@ describe('Level', function () {
 
         expect(level.mouse.x).to.equal(0);
         expect(level.mouse.y).to.equal(0);
-        expect(level.totalWaves()).to.equal(0);
 
         expect(level.winConditions).to.be.an('array');
         expect(level.winConditions.length).to.equal(1);
@@ -88,11 +87,6 @@ describe('Level', function () {
     it('.removeUnit()', function () {
         var unit = UnitSpec.addUnit(level);
         UnitSpec.removeUnit(level, unit);
-    });
-    it('.totalWaves()', function () {
-        expect(level.totalWaves()).to.equal(0);
-        level.spawnPoints.push({waves: [0, 1, 2]});
-        expect(level.totalWaves()).to.equal(3);
     });
     it('.addProjectile()', function () {
         ProjectileSpec.createProjectile(level);
@@ -224,6 +218,40 @@ describe('Level', function () {
             expect(level.placementBuilding).to.equal(null);
         });
     });
+    describe('.processMouseInput()', function () {
+        it('mouse0, Select Building', function () {
+            var building = BuildingSpec.createBuilding(level, level.players[0]);
+            level.addBuilding(building);
+            level.inputs.mouse('x', 1);
+            level.inputs.mouse('y', 1);
+            level.inputs.mouse('mouse0', 1);
+            level.processMouseInput();
+            expect(level.selection).to.equal(building);
+            expect(building.selected).to.equal(true);
+        });
+        it('mouse0, Place Building', function () {
+            level.beginBuildingPlacement(Building);
+            level.player.resources.energy = Building.cost.energy;
+            level.player.resources.metal = Building.cost.metal;
+            expect(level.getBlock(0, 0).building).to.equal(null);
+            level.inputs.mouse('x', 1);
+            level.inputs.mouse('y', 1);
+            level.inputs.mouse('mouse0', 1);
+            level.processMouseInput();
+            expect(level.placementBuilding).to.equal(null);
+            expect(level.getBlock(0, 0).building.constructor).to.equal(Building);
+        });
+        it('mouse2, Cancel Place Building', function () {
+            level.beginBuildingPlacement(Building);
+            expect(level.getBlock(0, 0).building).to.equal(null);
+            level.inputs.mouse('x', 1);
+            level.inputs.mouse('y', 1);
+            level.inputs.mouse('mouse2', 1);
+            level.processMouseInput();
+            expect(level.placementBuilding).to.equal(null);
+            expect(level.getBlock(0, 0).building).to.equal(null);
+        });
+    });
     it('.beginBuildingPlacement()', beginBuildingPlacement);
     function beginBuildingPlacement() {
         var building = level.beginBuildingPlacement(Building);
@@ -282,6 +310,83 @@ describe('Level', function () {
         level.deselect();
         expect(level.selection).to.equal(null);
         expect(building.selected).to.equal(false);
+    });
+    it('.checkWinConditions()', function () {
+        level.winConditions = [
+            () => true
+        ];
+        expect(level.checkWinConditions()).to.equal(true);
+        level.winConditions = [
+            () => true,
+            () => false
+        ];
+        expect(level.checkWinConditions()).to.equal(false);
+    });
+    it('.checkLossConditions()', function () {
+        level.lossConditions = [
+            () => true
+        ];
+        expect(level.checkLossConditions()).to.equal(true);
+        level.lossConditions = [
+            () => true,
+            () => false
+        ];
+        expect(level.checkLossConditions()).to.equal(false);
+    });
+    it('.initialize()', function () {
+        level.initialize({
+            testField: true
+        });
+    });
+    describe('.update()', function () {
+        it('.frameCount', function () {
+            expect(level.update.bind(level)).to.increase(level, 'frameCount');
+        });
+        it('.mouse', function () {
+            level.mouse = null;
+            level.update();
+            expect(level.mouse).to.include.keys('x', 'y');
+        });
+        it('.placementBuilding', function () {
+            level.placementBuilding = {position: {}};
+            level.update();
+            expect(level.placementBuilding.position).to.include.keys('x', 'y');
+        });
+        it('.processMouseInput()', function () {
+            level.processMouseInput = chai.spy(level.processMouseInput);
+            level.update();
+            expect(level.processMouseInput).to.have.been.called();
+        });
+        it('.processKeyboardInput()', function () {
+            level.processKeyboardInput = chai.spy(level.processKeyboardInput);
+            level.update();
+            expect(level.processKeyboardInput).to.have.been.called();
+        });
+        it('.checkCount, check win or loss', function () {
+            level.checkWinConditions = chai.spy(level.checkWinConditions);
+            level.checkLossConditions = chai.spy(level.checkLossConditions);
+            level.update();
+            expect(level.checkWinConditions).to.have.not.been.called();
+            expect(level.checkLossConditions).to.have.not.been.called();
+            level.checkCount = Settings.second;
+            level.update();
+            expect(level.checkWinConditions).to.have.been.called();
+            expect(level.checkLossConditions).to.have.been.called();
+        });
+        function assureIteratedAndUpdated(key) {
+            it('.' + key + ' > .update', function () {
+                level[key] = [];
+                level[key].push({update: chai.spy()});
+                level.update();
+                expect(level[key][0].update).to.have.been.called();
+            });
+        }
+
+        assureIteratedAndUpdated('units');
+        assureIteratedAndUpdated('buildings');
+        assureIteratedAndUpdated('projectiles');
+        assureIteratedAndUpdated('objects');
+        assureIteratedAndUpdated('players');
     });
 
     coverage(this, createLevel());
