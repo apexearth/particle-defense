@@ -320,7 +320,7 @@ function Level(options) {
             var win = this.checkWinConditions();
             var loss = this.checkLossConditions();
             if (win || loss) {
-                this.Result = {
+                this.result = {
                     Victory: win
                 };
                 CommandQueue.unshift(CommandQueue.StopGame);

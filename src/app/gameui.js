@@ -1,15 +1,12 @@
 ﻿var app = require('./app');
-var ParticleDefense = require('../game/ParticleDefense');
-var Buildings = require('../game/buildings');
-var input = require('../util/input');
+var game = require('../game');
 
-var Mouse = input.Mouse;
-return app.controller('GameUi', ['$scope', GameUi]);
+module.exports = app.controller('GameUi', ['$scope', GameUi]);
 
 function GameUi($scope) {
-    $scope.level = ParticleDefense.level;
-    $scope.player = ParticleDefense.level.player;
-    $scope.buildings = Buildings;
+    $scope.level = game.level;
+    $scope.player = game.player;
+    $scope.buildings = game.buildings;
     $scope.cost = null;
     $scope.setCost   = function (cost) {
         $scope.cost = cost;
@@ -26,7 +23,6 @@ function GameUi($scope) {
         if (cost[key] > 0) return -Math.round(cost[key]);
     };
 
-
     $scope.placementBuilding = function () {
         return $scope.level.placementBuilding != null
             ? $scope.level.placementBuilding.constructor
@@ -42,9 +38,6 @@ function GameUi($scope) {
         return s.replace(/([a-z])([A-Z0-9])/g, '$1 $2');
     };
 
-    var eventCatcher = document.getElementById('event-catcher');
-    Mouse.AddEvents(eventCatcher);
-    
-    ParticleDefense.uiScope = $scope;
-    setTimeout(ParticleDefense.updateUi, 100);
+    game.uiScope = $scope;
+    setTimeout(game.updateUi, 100);
 }

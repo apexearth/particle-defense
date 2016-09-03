@@ -1,5 +1,5 @@
 ﻿describe('Unit', function () {
-    var Levels = require('../levels');
+    var levels = require('../levels');
     var math = require('../../util/math');
     var Unit = require('./Unit');
     var coverage = require('../../../test/check-coverage');
@@ -14,7 +14,7 @@
     var unit;
 
     function createLevel() {
-        level = Levels.LevelTest();
+        level = levels.list.Test();
     }
 
     function addUnit(level) {

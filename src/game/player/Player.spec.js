@@ -142,7 +142,7 @@
             expect(level.player.resources.metal).to.equal(Gun.cost.metal - 1);
         });
         it('.sellBuilding()', function () {
-            var level = Levels.LevelTest();
+            var level = Levels.list.Test();
             level.player.resources.energy = Gun.cost.energy;
             level.player.resources.metal = Gun.cost.metal;
             var building = level.player.actions.createBuilding(Gun, 2, 2);

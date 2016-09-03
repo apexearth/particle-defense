@@ -1,15 +1,14 @@
 ﻿var app = require('./app.js');
-var ParticleDefense = require('../game/ParticleDefense');
+var game = require('../game');
 
 module.exports = app.controller('GameOver', ['$scope', GameOver]);
 
 function GameOver($scope) {
-    $scope.level = ParticleDefense.level;
-    $scope.player = ParticleDefense.level.player;
-    $scope.Result = ParticleDefense.level.result;
-    $scope.Title = ($scope.Result.Victory ? 'Victory!' : 'Failure!');
+    $scope.level = game.level;
+    $scope.player = game.player;
+    $scope.result = game.result;
+    $scope.title = ($scope.result.Victory ? 'Victory!' : 'Failure!');
     $scope.MainMenu = function () {
-        ParticleDefense.view = ParticleDefense.Views.MainMenu;
-        //ParticleDefense.IndexScope.$apply();
+        game.view = './mainmenu.html';
     };
 }

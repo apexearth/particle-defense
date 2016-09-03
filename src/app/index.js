@@ -1,15 +1,16 @@
-﻿require('./app.core');
-var app = require('./app');
-require('./gameover');
-require('./gameui');
-require('./index');
-require('./mainmenu');
+﻿import React from 'react';
+import ReactDOM from 'react-dom';
+import {Router, Route, browserHistory} from 'react-router';
 
-var ParticleDefense = require('../game/ParticleDefense');
+import App from './components/App';
+import Start from './components/Start';
+import End from './components/End';
 
-module.exports = app.controller('Index', ['$scope', Index]);
-
-function Index($scope) {
-    $scope.ParticleDefense     = ParticleDefense;
-    ParticleDefense.indexScope = $scope;
-}
+ReactDOM.render((
+    <Router history={browserHistory}>
+        <Route path="particle-defense/" component={App}>
+            <Route path="start" component={Start}/>
+            <Route path="end" component={End}/>
+        </Route>
+    </Router>
+), document.getElementById('root'));

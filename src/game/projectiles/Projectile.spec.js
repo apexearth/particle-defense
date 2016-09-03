@@ -115,7 +115,7 @@ describe('Projectile', function () {
         var Projectiles = require('../projectiles');
         var math = require('../../util/math');
         it('should move', function () {
-            var level = Levels.LevelTest();
+            var level = Levels.list.Test();
             var projectile = new Projectiles.Bullet({
                 level: level,
                 player: level.players[0],
@@ -132,7 +132,7 @@ describe('Projectile', function () {
             expect(projectile.position.y).to.be.above(100);
         });
         it('should die on impact, by default', function () {
-            var level = Levels.LevelTest();
+            var level = Levels.list.Test();
             var unit = new Unit({
                 level: level,
                 player: level.players[0],

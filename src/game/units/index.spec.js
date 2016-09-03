@@ -7,7 +7,7 @@ describe('units', function () {
     var level;
 
     function createLevel() {
-        level = Levels.LevelTest();
+        level = Levels.list.Test();
     }
 
     it('Units.Array()', function () {

@@ -146,7 +146,7 @@
             expect(unit.health).to.be.below(initialHealth);
         });
         it('should not attack units out of range', function () {
-            var level = Levels.LevelTest();
+            var level = Levels.list.Test();
             var unit = new Unit({
                 level: level,
                 player: level.players[1],
@@ -201,7 +201,7 @@
         expect(ammo).to.be.below(level.player.resources.ammo);
     });
     it('.selectBuildingAt()', function () {
-        var level = Levels.LevelTest();
+        var level = Levels.list.Test();
         var block = level.getBlock(5, 5);
         expect(block.building).to.not.equal(null);
         level.selectBuildingAt(block);
@@ -209,7 +209,7 @@
         expect(block.building.selected).to.equal(true);
     });
     it('.deselect()', function () {
-        var level = Levels.LevelTest();
+        var level = Levels.list.Test();
         var block = level.getBlock(5, 5);
         expect(block.building).to.not.equal(null);
         level.selectBuildingAt(block);
