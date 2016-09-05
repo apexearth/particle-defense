@@ -1,12 +1,5 @@
 ﻿<style>
-    #title {
-        margin: 0;
-        font-size: 64px;
-        height: 100px;
-        position: fixed;
-        left: 350px;
-        top: 50px;
-    }
+
 
 
 </style>
@@ -14,7 +7,7 @@
     <div id="bg"></div>
     <div id="title">{{title}}</div>
     <br/>
-    <ul class="list right-border10" style="position: fixed; left: 0; top: 0; bottom: 0; width: 200px; margin: 0;">
+    <ul id="levelList" class="list right-border10" style="">
         <li class="title">Choose Level</li>
         <li class="button right" ng-repeat="level in levels" ng-click="start(level)">{{level.Name}}</li>
     </ul>

@@ -1,4 +1,4 @@
-module.exports = {};
+module.exports = [];
 
 [
     require('./building.ammo-fab'),
@@ -21,5 +21,6 @@ module.exports = {};
     require('./building.wall')
 ]
     .forEach(function (building) {
+        module.exports.push(building);
         module.exports[building.name] = building;
     });
