@@ -215,6 +215,7 @@ describe('Level', function () {
             level.inputs.keyboard('<escape>', 1);
             level.placementBuilding = {};
             level.processKeyboardInput();
+            expect(level.inputs.keyboard('<escape>')).to.equal(0); // Resets key after processing the input.
             expect(level.placementBuilding).to.equal(null);
         });
     });
@@ -226,6 +227,7 @@ describe('Level', function () {
             level.inputs.mouse('y', 1);
             level.inputs.mouse('mouse0', 1);
             level.processMouseInput();
+            expect(level.inputs.mouse('mouse0')).to.equal(0); // Resets mouse button after processing the input.
             expect(level.selection).to.equal(building);
             expect(building.selected).to.equal(true);
         });
@@ -238,6 +240,7 @@ describe('Level', function () {
             level.inputs.mouse('y', 1);
             level.inputs.mouse('mouse0', 1);
             level.processMouseInput();
+            expect(level.inputs.mouse('mouse0')).to.equal(0); // Resets mouse button after processing the input.
             expect(level.placementBuilding).to.equal(null);
             expect(level.getBlock(0, 0).building.constructor).to.equal(Building);
         });
@@ -248,6 +251,7 @@ describe('Level', function () {
             level.inputs.mouse('y', 1);
             level.inputs.mouse('mouse2', 1);
             level.processMouseInput();
+            expect(level.inputs.mouse('mouse2')).to.equal(0); // Resets mouse button after processing the input.
             expect(level.placementBuilding).to.equal(null);
             expect(level.getBlock(0, 0).building).to.equal(null);
         });

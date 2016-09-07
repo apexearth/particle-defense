@@ -15,8 +15,9 @@ describe('end2end', function () {
         app.state.Screen.chooseLevel(app.state.levels[0]);
         expect(app.state.Screen).to.equal(GameUI);
 
-        var screen = new app.state.Screen();
-        screen.startBuildingPlacement(app.state.buildings[0]);
+        var gameUI = new app.state.Screen();
+        gameUI.startBuildingPlacement(app.state.buildings[0]);
+
 
     });
 });

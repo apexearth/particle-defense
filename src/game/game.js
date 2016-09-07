@@ -14,6 +14,8 @@ var game = {
     timeoutId: null,
     level: null,
 
+    inputs: require('./inputs'),
+
     levels: require('./levels'),
     buildings: require('./buildings'),
 

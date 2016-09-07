@@ -4,9 +4,7 @@ var Map = require('../Map');
 var General = require('../../util/General');
 var CommandQueue = require('../CommandQueue');
 var BlockStatus = require('../../util/grid/block-status');
-
-var userInput = require('user-input');
-
+var inputs = require('../inputs');
 var common = require('../common');
 var Settings = common.Settings;
 
@@ -52,10 +50,7 @@ function Level(options) {
     this.buildings = [];
     this.objects = [];
 
-    this.inputs = userInput()
-        .withMouse()
-        .withKeyboard();
-
+    this.inputs = inputs;
     this.mouse = {
         x: this.inputs.mouse('x') - renderer.position.x,
         y: this.inputs.mouse('y') - renderer.position.y
@@ -239,6 +234,7 @@ function Level(options) {
     this.processKeyboardInput = function () {
         if (this.inputs.keyboard('<escape>')) {
             if (this.placementBuilding != null) {
+                this.inputs.keyboard('<escape>', 0);
                 this.cancelBuildingPlacement();
             }
         }
@@ -261,7 +257,7 @@ function Level(options) {
 
         if (this.inputs.mouse('mouse2')) {
             if (this.placementBuilding != null) {
-                this.inputs.mouse('mouse0', 0);
+                this.inputs.mouse('mouse2', 0);
                 this.cancelBuildingPlacement();
             }
         }
