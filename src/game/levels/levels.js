@@ -7,22 +7,32 @@ var list = {};
 var array = [
     level(function Empty() {
         return createLevel({
-            initialize: {
-                Player: {Resources: {Ammo: 0, Energy: 200, Metal: 100}}
-            },
-            buildings: [
-                {constructor: 'HomeBase', template: {blockX: 5, blockY: 5}}
-            ]
+            players: [
+                {
+                    resources: {ammo: 0, energy: 200, metal: 100},
+                    buildings: [
+                        {constructor: 'HomeBase', template: {blockX: 5, blockY: 5}}
+                    ]
+                },
+                {
+                    resources: {ammo: 0, energy: 200, metal: 100}
+                }
+            ],
         });
     }),
     level(function Test() {
         return createLevel({
-            initialize: {
-                Player: {Resources: {Ammo: 0, Energy: 200, Metal: 100}}
-            },
-            buildings: [
-                {constructor: 'HomeBase', template: {blockX: 5, blockY: 5}},
-                {constructor: 'Gun', template: {blockX: 4, blockY: 5}}
+            players: [
+                {
+                    resources: {ammo: 0, energy: 200, metal: 100},
+                    buildings: [
+                        {constructor: 'HomeBase', template: {blockX: 5, blockY: 5}},
+                        {constructor: 'Gun', template: {blockX: 4, blockY: 5}}
+                    ]
+                },
+                {
+                    resources: {ammo: 0, energy: 200, metal: 100}
+                }
             ],
             mapTemplate: {
                 buildableBlocks: [
@@ -43,12 +53,16 @@ var array = [
     }),
     level(function One() {
         return createLevel({
-            initialize: {
-                Player: {Resources: {Ammo: 0, Energy: 200, Metal: 100}},
-            },
-            waveDelay: Settings.second * 10,
-            buildings: [
-                {constructor: 'HomeBase', template: {blockX: 10, blockY: 10}}
+            players: [
+                {
+                    resources: {ammo: 0, energy: 200, metal: 100},
+                    buildings: [
+                        {constructor: 'HomeBase', template: {blockX: 10, blockY: 10}}
+                    ]
+                },
+                {
+                    resources: {ammo: 0, energy: 200, metal: 100}
+                }
             ],
             mapTemplate: {
                 buildableBlocks: [
@@ -79,12 +93,16 @@ var array = [
     }),
     level(function Two() {
         return createLevel({
-            initialize: {
-                Player: {Resources: {Ammo: 0, Energy: 200, Metal: 100}},
-                waveDelay: Settings.second * 7,
-            },
-            buildings: [
-                {constructor: 'HomeBase', template: {blockX: 3, blockY: 20}}
+            players: [
+                {
+                    resources: {ammo: 0, energy: 200, metal: 100},
+                    buildings: [
+                        {constructor: 'HomeBase', template: {blockX: 3, blockY: 20}}
+                    ]
+                },
+                {
+                    resources: {ammo: 0, energy: 200, metal: 100}
+                }
             ],
             mapTemplate: {
                 buildableBlocks: [
@@ -115,12 +133,16 @@ var array = [
     }),
     level(function Three() {
         return createLevel({
-            initialize: {
-                Player: {Resources: {Ammo: 0, Energy: 200, Metal: 100}},
-                waveDelay: Settings.second * 7,
-            },
-            buildings: [
-                {constructor: 'HomeBase', template: {blockX: 10, blockY: 15}}
+            players: [
+                {
+                    resources: {ammo: 0, energy: 200, metal: 100},
+                    buildings: [
+                        {constructor: 'HomeBase', template: {blockX: 10, blockY: 15}}
+                    ]
+                },
+                {
+                    resources: {ammo: 0, energy: 200, metal: 100}
+                }
             ],
             mapTemplate: {
                 buildableBlocks: [
@@ -176,18 +198,19 @@ function createLevel(json) {
         mapTemplate: json.mapTemplate
     });
 
-    var player = new Player();
-    level.addPlayer(player);
-    level.player = player;
-    level.addPlayer(new Player());
+    for (var _p in json.players) {
+        var playerSpec = json.players[_p];
+        var player = new Player(playerSpec);
+        level.addPlayer(player);
 
-    for (var _b in json.buildings) {
-        var b = json.buildings[_b];
-        var building = new Buildings[b.constructor](Object.assign({
-            level: level,
-            player: player
-        }, b.template));
-        level.addBuilding(building);
+        for (var _b in playerSpec.buildings) {
+            var b = playerSpec.buildings[_b];
+            var building = new Buildings[b.constructor](Object.assign({
+                level: level,
+                player: player
+            }, b.template));
+            level.addBuilding(building);
+        }
     }
 
     level.initialize(json.initialize);
@@ -214,13 +237,12 @@ function createRandomLevel(json) {
         mapTemplate: template
     });
 
-    var player = new Player(level);
-    level.addPlayer(player);
-    level.player = player;
+    level.addPlayer(new Player());
+    level.addPlayer(new Player());
 
     var randomX = Math.floor(Math.random() * width);
     var randomY = Math.floor(Math.random() * height);
-    var building = new Buildings.HomeBase(level, player, {blockX: randomX, blockY: randomY});
+    var building = new Buildings.HomeBase(level, level.players[0], {blockX: randomX, blockY: randomY});
     level.addBuilding(building);
 
     level.initialize(json);

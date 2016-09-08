@@ -151,8 +151,8 @@
                 level: level,
                 player: level.players[1],
                 position: {
-                    x: level.player.homeBase.position.x,
-                    y: level.player.homeBase.position.y
+                    x: level.player.buildings[0].position.x,
+                    y: level.player.buildings[0].position.y
                 }
             });
             level.addUnit(unit);

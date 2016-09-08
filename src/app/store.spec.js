@@ -9,6 +9,14 @@ describe('store', function () {
             type: 'INITIALIZE'
         });
     });
+    it('INITIALIZE', function () {
+        expect(store.getState()).to.include.keys([
+            'Screen',
+            'game',
+            'levels',
+            'buildings'
+        ]);
+    });
     it('UI_CHANGE_SCREEN', function () {
         var initialState = store.getState();
         store.dispatch({

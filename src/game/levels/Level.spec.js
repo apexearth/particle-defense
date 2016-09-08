@@ -6,7 +6,10 @@ var ProjectileSpec = require('../projectiles/Projectile.spec');
 var UnitSpec = require('../units/Unit.spec');
 var BuildingSpec = require('../buildings/Building.spec');
 
+module.exports = {};
+
 describe('Level', function () {
+    var inputs = require('../inputs');
     var Level = require('./Level');
     var Player = require('../Player');
     var Building = require('../buildings/Building');
@@ -27,6 +30,7 @@ describe('Level', function () {
     }
 
     beforeEach(function () {
+        inputs.clear();
         level = createLevel();
     });
 
@@ -232,7 +236,7 @@ describe('Level', function () {
             expect(building.selected).to.equal(true);
         });
         it('mouse0, Place Building', function () {
-            level.beginBuildingPlacement(Building);
+            level.startBuildingPlacement(Building);
             level.player.resources.energy = Building.cost.energy;
             level.player.resources.metal = Building.cost.metal;
             expect(level.getBlock(0, 0).building).to.equal(null);
@@ -245,7 +249,7 @@ describe('Level', function () {
             expect(level.getBlock(0, 0).building.constructor).to.equal(Building);
         });
         it('mouse2, Cancel Place Building', function () {
-            level.beginBuildingPlacement(Building);
+            level.startBuildingPlacement(Building);
             expect(level.getBlock(0, 0).building).to.equal(null);
             level.inputs.mouse('x', 1);
             level.inputs.mouse('y', 1);
@@ -256,10 +260,14 @@ describe('Level', function () {
             expect(level.getBlock(0, 0).building).to.equal(null);
         });
     });
-    it('.beginBuildingPlacement()', beginBuildingPlacement);
-    function beginBuildingPlacement() {
-        var building = level.beginBuildingPlacement(Building);
-        expect(level.placementBuilding.constructor).to.equal(Building);
+    it('.startBuildingPlacement()', function () {
+        startBuildingPlacement.call(level, Building);
+    });
+    module.exports.startBuildingPlacement = startBuildingPlacement;
+    function startBuildingPlacement(buildingConstructor) {
+        var building = this.startBuildingPlacement(buildingConstructor);
+        var level = building.level;
+        expect(level.placementBuilding.constructor).to.equal(buildingConstructor);
         expect(level.placementBuilding).to.equal(building);
         // We'll want it to be visible during placement.
         expect(level.container.children).to.include(building.container);
@@ -269,16 +277,23 @@ describe('Level', function () {
         return building;
     }
 
-    it('.finalizeBuildingPlacement()', function () {
-        var placementBuilding = beginBuildingPlacement();
+    it('.finishBuildingPlacement()', function () {
+        var placementBuilding = startBuildingPlacement.call(level, Building);
+        finishBuildingPlacement.call(level, placementBuilding);
+    });
+    module.exports.finishBuildingPlacement = finishBuildingPlacement;
+    function finishBuildingPlacement(placementBuilding) {
+        var level = placementBuilding.level;
+        level.player.resources.energy = 0;
+        level.player.resources.metal = 0;
         var block = level.getBlock(0, 1);
         var finalBuilding;
         expect(function () {
-            finalBuilding = level.finalizeBuildingPlacement(block);
+            finalBuilding = level.finishBuildingPlacement(block);
         }).to.throw();
-        level.player.resources.energy = Building.cost.energy;
-        level.player.resources.metal = Building.cost.metal;
-        finalBuilding = level.finalizeBuildingPlacement(block);
+        level.player.resources.energy = placementBuilding.constructor.cost.energy;
+        level.player.resources.metal = placementBuilding.constructor.cost.metal;
+        finalBuilding = level.finishBuildingPlacement(block);
         expect(placementBuilding).to.not.equal(finalBuilding);
         // Building is fully added to the level & player.
         expect(finalBuilding.block).to.equal(block);
@@ -286,13 +301,19 @@ describe('Level', function () {
         expect(level.container.children).to.include(finalBuilding.container);
         expect(level.buildings).to.include(finalBuilding);
         expect(finalBuilding.player.buildings).to.include(finalBuilding);
-    });
+    }
+
     it('.cancelBuildingPlacement()', function () {
-        var placementBuilding = beginBuildingPlacement();
-        level.cancelBuildingPlacement();
-        expect(level.placementBuilding).to.equal(null);
-        expect(level.container.children).to.not.include(placementBuilding.container);
+        startBuildingPlacement.call(level, Building);
+        cancelBuildingPlacement.call(level);
     });
+    module.exports.cancelBuildingPlacement = cancelBuildingPlacement;
+    function cancelBuildingPlacement() {
+        var placementBuilding = this.cancelBuildingPlacement();
+        expect(placementBuilding.level.placementBuilding).to.equal(null);
+        expect(placementBuilding.level.container.children).to.not.include(placementBuilding.container);
+    }
+
     it('.updatePaths()', function () {
         var unit = UnitSpec.addUnit(level);
         unit.findPath = chai.spy(unit.findPath);

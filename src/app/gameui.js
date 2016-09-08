@@ -30,7 +30,7 @@ function GameUi($scope) {
     };
 
     $scope.createBuilding = function (building) {
-        $scope.level.beginBuildingPlacement(building);
+        $scope.level.startBuildingPlacement(building);
         $scope.cost = building.cost;
     };
 

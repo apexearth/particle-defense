@@ -1,3 +1,4 @@
+var LevelSpec = require('./levels/Level.spec');
 var coverage = require('../../test/check-coverage');
 var chai = require('chai');
 chai.use(require('chai-spies'));
@@ -59,6 +60,23 @@ describe('game', function () {
         game.update();
         expect(game.frames).to.equal(1);
         expect(game.level.update).to.have.been.called();
+    });
+    it('.startBuildingPlacement()', function () {
+        game.level.startBuildingPlacement = spy(game.level.startBuildingPlacement);
+        LevelSpec.startBuildingPlacement.call(game, game.buildings[0]);
+        expect(game.level.startBuildingPlacement).to.have.been.called();
+    });
+    it('.finishBuildingPlacement()', function () {
+        var placementBuilding = LevelSpec.startBuildingPlacement.call(game, game.buildings[0]);
+        game.level.finishBuildingPlacement = spy(game.level.finishBuildingPlacement);
+        LevelSpec.finishBuildingPlacement.call(game, placementBuilding);
+        expect(game.level.finishBuildingPlacement).to.have.been.called();
+    });
+    it('.cancelBuildingPlacement()', function () {
+        LevelSpec.startBuildingPlacement.call(game, game.buildings[0]);
+        game.level.cancelBuildingPlacement = spy(game.level.cancelBuildingPlacement);
+        LevelSpec.cancelBuildingPlacement.call(game);
+        expect(game.level.cancelBuildingPlacement).to.have.been.called();
     });
 
     coverage(this, game);

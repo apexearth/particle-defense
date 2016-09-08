@@ -38,7 +38,7 @@
         createLevel();
         addUnit(level);
 
-        unit.setDestination(level.player.homeBase);
+        unit.setDestination(level.player.buildings[0]);
         expect(unit.path.length).to.be.greaterThan(0);
 
         var initialDistance = math.distance(unit.position.x - unit.target.position.x, unit.position.y - unit.target.position.y);

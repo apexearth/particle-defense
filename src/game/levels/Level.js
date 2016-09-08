@@ -141,7 +141,7 @@ function Level(options) {
         return vector.x >= this.bounds.left && vector.x <= this.bounds.right && vector.y >= this.bounds.top && vector.y <= this.bounds.bottom;
     };
 
-    this.beginBuildingPlacement = function (constructor) {
+    this.startBuildingPlacement = function (constructor) {
         if (this.placementBuilding) this.cancelBuildingPlacement();
         this.placementBuilding = new constructor({
             level: this,
@@ -152,12 +152,13 @@ function Level(options) {
         this.container.addChild(this.placementBuilding.container);
         return this.placementBuilding;
     };
-    this.finalizeBuildingPlacement = function (block) {
+    this.finishBuildingPlacement = function (block) {
+        block = block || this.getBlockFromCoords(this.mouse.x, this.mouse.y);
         var building = this.player.actions.createBuilding(this.placementBuilding.constructor, block.x, block.y);
         this.cancelBuildingPlacement();
         this.updatePaths();
         if (this.inputs.keyboard('<shift>')) {
-            this.beginBuildingPlacement(building.constructor);
+            this.startBuildingPlacement(building.constructor);
         }
         return building;
     };
@@ -167,7 +168,9 @@ function Level(options) {
     };
     this.cancelBuildingPlacement = function () {
         this.container.removeChild(this.placementBuilding.container);
+        var placementBuilding = this.placementBuilding;
         this.placementBuilding = null;
+        return placementBuilding;
     };
     /** @returns bool **/
     this.isBlockCoordBuildable = function (blockX, blockY) {
@@ -244,7 +247,7 @@ function Level(options) {
             this.inputs.mouse('mouse0', 0);
             var clickedBlock = this.getBlockOrNullFromCoords(this.mouse.x, this.mouse.y);
             if (this.placementBuilding != null) {
-                this.finalizeBuildingPlacement(clickedBlock);
+                this.finishBuildingPlacement(clickedBlock);
                 return;
             }
 

@@ -11,15 +11,20 @@ class App extends Component {
     }
 
     render() {
-        var {
-            Screen,
-            game
-        } = this.state;
+        var Screen = this.Screen;
         return (
             <div>
-                <Screen game={game}/>
+                <Screen />
             </div>
         );
+    }
+
+    get game() {
+        return this.state.game;
+    }
+
+    get Screen() {
+        return this.state.Screen;
     }
 }
 

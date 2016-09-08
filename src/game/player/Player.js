@@ -2,16 +2,17 @@
 
 module.exports = Player;
 
-function Player() {
+function Player(options) {
+    options = options || {};
     this.homeBase = null;
     this.buildings = [];
     this.color = 0x88FF88;
     this.score = 0;
-    this.resources = {
+    this.resources = Object.assign({
         energy: 0,
         metal: 0,
         ammo: 0
-    };
+    }, options.resources);
     this.resourceStorage = {
         energy: 0,
         metal: 0,

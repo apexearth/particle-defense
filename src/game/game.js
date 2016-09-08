@@ -38,7 +38,17 @@ var game = {
     },
     stop: function () {
         this.running = false;
-    }
+    },
+
+    startBuildingPlacement: function () {
+        return this.level.startBuildingPlacement.apply(this.level, arguments);
+    },
+    finishBuildingPlacement: function () {
+        return this.level.finishBuildingPlacement.apply(this.level, arguments);
+    },
+    cancelBuildingPlacement: function () {
+        return this.level.cancelBuildingPlacement.apply(this.level, arguments);
+    },
 };
 
 Object.defineProperties(game, {
