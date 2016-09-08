@@ -1,5 +1,5 @@
 var VelocityProjectile = require('./projectile.velocity');
-var Explosion = require('./explosion');
+var Explosion = require('./Explosion');
 
 module.exports = CannonProjectile;
 

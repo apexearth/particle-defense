@@ -1,5 +1,5 @@
 var AcceleratingProjectile = require('./projectile.accelerating');
-var Explosion = require('./explosion');
+var Explosion = require('./Explosion');
 var math = require('../../util/math');
 
 module.exports = MissileProjectile;

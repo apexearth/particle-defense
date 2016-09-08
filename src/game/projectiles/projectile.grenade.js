@@ -1,5 +1,5 @@
 var ThrownProjectile = require('./projectile.thrown');
-var Explosion = require('./explosion');
+var Explosion = require('./Explosion');
 
 module.exports = GrenadeProjectile;
 
