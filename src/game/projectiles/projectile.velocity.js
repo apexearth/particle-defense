@@ -1,5 +1,5 @@
 var PIXI = require('pixi.js');
-var Projectile = require('./projectile');
+var Projectile = require('./Projectile');
 
 module.exports = VelocityProjectile;
 

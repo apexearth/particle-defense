@@ -1,5 +1,5 @@
 var Images = require('../../img');
-var Building = require('./building');
+var Building = require('./Building');
 
 module.exports = Wall;
 
