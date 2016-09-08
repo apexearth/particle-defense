@@ -3,13 +3,10 @@ var Settings = require('./Settings');
 
 var game = {
     initialize: function () {
-        this.running = false;
         this.frames = 0;
         this.level = null;
-        if (this.timeoutId)
-            clearTimeout(this.timeoutId);
+        this.unqueueUpdate();
     },
-    running: false,
     frames: 0,
     second: 1000 / Settings.second,
     timeoutId: null,
@@ -21,11 +18,17 @@ var game = {
     buildings: require('./buildings'),
 
     queueUpdate: function () {
-        setTimeout(this.update.bind(this), this.second);
+        this.timeoutId = setTimeout(function () {
+            this.update();
+        }.bind(this), this.second);
+    },
+    unqueueUpdate: function () {
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+        }
+        this.timeoutId = null;
     },
     update: function () {
-        if (!this.running) return;
-        this.queueUpdate();
         this.frames++;
         this.level.update();
         CommandQueue.process(this);
@@ -33,7 +36,6 @@ var game = {
     start: function (levelFn) {
         if (this.running) throw new Error('Game is already running.');
         this.frames = 0;
-        this.running = true;
         this.startLevel(levelFn);
         this.queueUpdate();
     },
@@ -41,9 +43,13 @@ var game = {
         this.level = levelFn();
     },
     stop: function () {
-        this.running = false;
+        this.unqueueUpdate();
     },
-
+    fastForward: function (iterations) {
+        while (iterations--) {
+            this.update();
+        }
+    },
     startBuildingPlacement: function () {
         return this.level.startBuildingPlacement.apply(this.level, arguments);
     },
@@ -56,6 +62,11 @@ var game = {
 };
 
 Object.defineProperties(game, {
+    running: {
+        get: function () {
+            return this.timeoutId !== null;
+        }.bind(game)
+    },
     player: {
         get: function () {
             return this.level.player;

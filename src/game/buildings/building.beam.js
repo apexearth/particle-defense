@@ -9,7 +9,7 @@ function Beam(options) {
     this.name = 'Beam';
     this.container.addChild(Images.buildings.SmallPlatform());
     this.health = 5;
-    this.addWeapon(Weapons.Laser({
+    this.addWeapon(new Weapons.Laser({
         level: this.level,
         building: this,
         range: 100,
@@ -27,3 +27,7 @@ Beam.cost = {
     energy: 25,
     metal: 20
 };
+
+Beam.tags = [
+    'defense'
+];

@@ -27,3 +27,7 @@ Laser.cost = {
     energy: 50,
     metal: 25
 };
+
+Laser.tags = [
+    'defense'
+];

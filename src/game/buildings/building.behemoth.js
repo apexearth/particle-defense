@@ -9,7 +9,7 @@ function Behemoth(options) {
     this.name = 'Beam';
     this.container.addChild(Images.buildings.SmallPlatform());
     this.health = 5;
-    this.addWeapon(Weapons.Gun({
+    this.addWeapon(new Weapons.Gun({
         level: this.level,
         building: this,
         range: 300,
@@ -28,3 +28,7 @@ Behemoth.cost = {
     energy: 50,
     metal: 40
 };
+
+Behemoth.tags = [
+    'defense'
+];

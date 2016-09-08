@@ -19,3 +19,7 @@ Shocker.cost = {
     energy: 25,
     metal: 20
 };
+
+Shocker.tags = [
+    'defense'
+];

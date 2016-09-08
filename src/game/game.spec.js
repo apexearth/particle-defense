@@ -13,6 +13,10 @@ describe('game', function () {
         game.second = 0;
         game.initialize();
     });
+    after(function () {
+        game.initialize();
+    });
+
     it('.initialize()', function () {
         expect(game).to.exist;
     });
@@ -21,7 +25,6 @@ describe('game', function () {
         game.start(game.levels[0]);
         expect(game.player).to.exist;
     }
-
     it('.startLevel()', function () {
         var levelFn = chai.spy(game.levels[0]);
         expect(game.level).to.not.exist;
@@ -41,27 +44,43 @@ describe('game', function () {
             done();
         }, game.second + 1);
     }
-    it('.queueUpdate()', function (done) {
+
+    it('.fastForward()', function () {
+        start();
+        expect(game.frames).to.equal(0);
+        game.fastForward(3);
+        expect(game.frames).to.equal(3);
+    });
+    it('.queueUpdate()', queueUpdate);
+    function queueUpdate(done) {
         game.startLevel(game.levels[0]);
         game.update = spy(game.update);
         game.queueUpdate();
         expect(game.update).to.not.have.been.called();
-        expect(game.running).to.equal(false);
+        expect(game.running).to.equal(true);
         setTimeout(function () {
             expect(game.update).to.have.been.called();
-            expect(game.running).to.equal(false);
+            expect(game.running).to.equal(true);
             done();
         }, game.second + 1);
+    }
+
+    it('.unqueueUpdate()', function (done) {
+        queueUpdate(function () {
+            game.update.__spy.called = false;
+            game.unqueueUpdate();
+            expect(game.running).to.equal(false);
+            setTimeout(function () {
+                expect(game.update).to.have.not.been.called();
+                expect(game.running).to.equal(false);
+                done();
+            }, game.second + 1);
+        });
     });
     it('.update()', function () {
         game.startLevel(game.levels[0]);
         game.level.update = spy(game.level.update);
         expect(game.frames).to.equal(0);
-        game.update();
-        expect(game.frames).to.equal(0);
-        expect(game.level.update).to.have.not.been.called();
-
-        game.running = true;
         game.update();
         expect(game.frames).to.equal(1);
         expect(game.level.update).to.have.been.called();

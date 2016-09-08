@@ -31,3 +31,7 @@ MissileLauncher.cost = {
     energy: 60,
     metal: 30
 };
+
+MissileLauncher.tags = [
+    'defense'
+];

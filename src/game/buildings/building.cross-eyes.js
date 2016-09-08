@@ -28,3 +28,7 @@ CrossEyes.cost = {
     energy: 35,
     metal: 20
 };
+
+CrossEyes.tags = [
+    'defense'
+];

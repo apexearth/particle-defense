@@ -19,3 +19,7 @@ LethargicCannon.cost = {
     energy: 60,
     metal: 30
 };
+
+LethargicCannon.tags = [
+    'defense'
+];

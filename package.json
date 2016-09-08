@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "npm-run-all check build",
     "check": "npm-run-all eslint test",
-    "test": "mocha test/**/*.js src/**/*.spec.js",
+    "test": "mocha test/**/*.js src/**/*.spec.js --compilers js:babel-core/register",
     "eslint": "eslint src/**/*.js test/**/*.js",
     "build": "npm-run-all browserify uglify copyfiles",
     "browserify": "browserify src/index.js -o build/game.js -t [ babelify ]",
@@ -29,6 +29,7 @@
   "devDependencies": {
     "angular": "^1.5.8",
     "angular-mocks": "^1.5.8",
+    "async": "^2.0.1",
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-react": "^6.11.1",
     "babelify": "^7.3.0",

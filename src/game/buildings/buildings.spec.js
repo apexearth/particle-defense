@@ -11,7 +11,12 @@ describe('buildings', function () {
                 level: new Level(),
                 player: new Player()
             };
-            var building = new buildings[name](options);
+            var constructor = buildings[name];
+            expect(constructor).to.include.keys([
+                'cost',
+                'tags'
+            ]);
+            var building = new constructor(options);
             expect(building).to.exist;
         });
     }

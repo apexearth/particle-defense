@@ -28,3 +28,7 @@ Gun.cost = {
     energy: 20,
     metal: 10
 };
+
+Gun.tags = [
+    'defense'
+];

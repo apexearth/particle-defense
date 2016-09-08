@@ -20,3 +20,8 @@ AmmoFab.cost = {
     energy: 100,
     metal: 50
 };
+
+AmmoFab.tags = [
+    'resource',
+    'ammo'
+];

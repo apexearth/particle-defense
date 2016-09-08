@@ -20,3 +20,9 @@ MetalFab.cost = {
     energy: 50,
     metal: 75
 };
+
+MetalFab.tags = [
+    'resource',
+    'metal'
+];
+

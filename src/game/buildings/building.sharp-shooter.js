@@ -28,3 +28,7 @@ SharpShooter.cost = {
     energy: 40,
     metal: 20
 };
+
+SharpShooter.tags = [
+    'defense'
+];

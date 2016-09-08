@@ -19,3 +19,7 @@ GrenadeLauncher.cost = {
     energy: 60,
     metal: 30
 };
+
+GrenadeLauncher.tags = [
+    'defense'
+];

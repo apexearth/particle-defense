@@ -18,3 +18,8 @@ Wall.cost = {
     metal: 2
 };
 
+Wall.tags = [
+    'defense',
+    'wall'
+];
+

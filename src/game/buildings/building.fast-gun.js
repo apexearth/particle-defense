@@ -28,3 +28,7 @@ FastGun.cost = {
     energy: 30,
     metal: 15
 };
+
+FastGun.tags = [
+    'defense'
+];

@@ -25,3 +25,12 @@ HomeBase.cost = {
     energy: 20,
     metal: 10
 };
+
+HomeBase.tags = [
+    'base',
+    'resource',
+    'energy',
+    'metal',
+    'ammo'
+];
+

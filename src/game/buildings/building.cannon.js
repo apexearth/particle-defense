@@ -9,7 +9,7 @@ function Cannon(options) {
     this.name = 'Cannon';
     this.container.addChild(Images.buildings.SmallPlatform());
     this.health = 5;
-    this.addWeapon(Weapons.Cannon({
+    this.addWeapon(new Weapons.Cannon({
         level: this.level,
         building: this,
         range: 100,
@@ -31,3 +31,7 @@ Cannon.cost = {
     energy: 60,
     metal: 30
 };
+
+Cannon.tags = [
+    'defense'
+];
