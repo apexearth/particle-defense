@@ -5,6 +5,7 @@ var game = {
     initialize: function () {
         this.running = false;
         this.frames = 0;
+        this.level = null;
         if (this.timeoutId)
             clearTimeout(this.timeoutId);
     },
@@ -33,8 +34,11 @@ var game = {
         if (this.running) throw new Error('Game is already running.');
         this.frames = 0;
         this.running = true;
-        this.level = levelFn();
+        this.startLevel(levelFn);
         this.queueUpdate();
+    },
+    startLevel: function (levelFn) {
+        this.level = levelFn();
     },
     stop: function () {
         this.running = false;

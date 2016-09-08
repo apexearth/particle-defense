@@ -16,18 +16,22 @@ describe('game', function () {
     it('.initialize()', function () {
         expect(game).to.exist;
     });
-
     it('.start()', start);
     function start() {
-        var levels = game.levels;
-        game.start(levels[0]);
+        game.start(game.levels[0]);
         expect(game.player).to.exist;
     }
 
+    it('.startLevel()', function () {
+        var levelFn = chai.spy(game.levels[0]);
+        expect(game.level).to.not.exist;
+        game.startLevel(levelFn);
+        expect(game.level).to.exist;
+        expect(levelFn).to.have.been.called();
+    });
     it('.stop()', stop);
     function stop(done) {
-        var levels = game.levels;
-        game.start(levels[0]);
+        start();
         expect(game.frames).to.equal(0);
         expect(game.running).to.equal(true);
         setTimeout(function () {
@@ -37,8 +41,8 @@ describe('game', function () {
             done();
         }, game.second + 1);
     }
-
     it('.queueUpdate()', function (done) {
+        game.startLevel(game.levels[0]);
         game.update = spy(game.update);
         game.queueUpdate();
         expect(game.update).to.not.have.been.called();
@@ -50,6 +54,7 @@ describe('game', function () {
         }, game.second + 1);
     });
     it('.update()', function () {
+        game.startLevel(game.levels[0]);
         game.level.update = spy(game.level.update);
         expect(game.frames).to.equal(0);
         game.update();
@@ -62,17 +67,20 @@ describe('game', function () {
         expect(game.level.update).to.have.been.called();
     });
     it('.startBuildingPlacement()', function () {
+        start();
         game.level.startBuildingPlacement = spy(game.level.startBuildingPlacement);
         LevelSpec.startBuildingPlacement.call(game, game.buildings[0]);
         expect(game.level.startBuildingPlacement).to.have.been.called();
     });
     it('.finishBuildingPlacement()', function () {
+        start();
         var placementBuilding = LevelSpec.startBuildingPlacement.call(game, game.buildings[0]);
         game.level.finishBuildingPlacement = spy(game.level.finishBuildingPlacement);
         LevelSpec.finishBuildingPlacement.call(game, placementBuilding);
         expect(game.level.finishBuildingPlacement).to.have.been.called();
     });
     it('.cancelBuildingPlacement()', function () {
+        start();
         LevelSpec.startBuildingPlacement.call(game, game.buildings[0]);
         game.level.cancelBuildingPlacement = spy(game.level.cancelBuildingPlacement);
         LevelSpec.cancelBuildingPlacement.call(game);

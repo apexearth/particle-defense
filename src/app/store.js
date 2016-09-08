@@ -52,7 +52,7 @@ var gameReducer = (state, action) => {
         game.startBuildingPlacement(action.value);
         return Object.assign({}, state);
     case 'GAME_PLACE_BUILDING_FINISH':
-        game.finishBuildingPlacement(action.value);
+        game.finishBuildingPlacement();
         return Object.assign({}, state);
     default:
         throw new Error('Action ' + action + ' is undefined.');

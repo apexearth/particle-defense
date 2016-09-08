@@ -142,6 +142,7 @@ function Level(options) {
     };
 
     this.startBuildingPlacement = function (constructor) {
+        if (!constructor) throw new Error('A building constructor is required.');
         if (this.placementBuilding) this.cancelBuildingPlacement();
         this.placementBuilding = new constructor({
             level: this,
