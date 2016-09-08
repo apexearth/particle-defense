@@ -11,7 +11,7 @@ module.exports = {};
 describe('Level', function () {
     var inputs = require('../inputs');
     var Level = require('./Level');
-    var Player = require('../Player');
+    var Player = require('../player');
     var Building = require('../buildings/Building');
     var Settings = require('../Settings');
     var BlockStatus = require('../../util/grid').BlockStatus;

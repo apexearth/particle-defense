@@ -1,5 +1,5 @@
 var Level = require('../levels/Level');
-var Player = require('../Player');
+var Player = require('../player');
 var Projectile = require('../projectiles/Projectile');
 var UnitSpec = require('../units/Unit.spec');
 var coverage = require('../../../test/check-coverage');

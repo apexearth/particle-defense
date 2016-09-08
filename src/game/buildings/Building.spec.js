@@ -1,6 +1,6 @@
 ﻿describe('Building', function () {
     var math = require('../../util/math');
-    var Player = require('../Player');
+    var Player = require('../player');
     var Levels = require('../levels/');
     var Level = Levels.Level;
     var Buildings = require('./');

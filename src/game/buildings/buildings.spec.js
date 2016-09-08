@@ -1,4 +1,4 @@
-var Player = require('../Player');
+var Player = require('../player');
 var Level = require('../levels/').Level;
 
 var buildings = require('./');
