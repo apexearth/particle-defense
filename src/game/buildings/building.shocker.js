@@ -9,7 +9,15 @@ function Shocker(options) {
     this.name = 'Shocker';
     this.container.addChild(Images.buildings.LargePlatform());
     this.health = 5;
-    this.addWeapon(new Weapons.Shocker(100, 30, 10, 1));
+    this.addWeapon(new Weapons.Shocker({
+        level: this.level,
+        building: this,
+        range: 100,
+        lifeSpan: 60,
+        damage: 4,
+        fireRate: 45,
+        accuracy: .95
+    }));
 }
 
 Shocker.prototype = Object.create(Building.prototype);

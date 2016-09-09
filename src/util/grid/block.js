@@ -2,9 +2,13 @@ var BlockStatus = require('./block-status');
 
 module.exports = Block;
 
-function Block(x, y) {
+function Block(x, y, size) {
     var _status = BlockStatus.IsEmpty;
     var _building = null;
+    var _position = {
+        x: x * size,
+        y: y * size
+    };
     this.objects = [];
 
     Object.defineProperties(this, {
@@ -16,6 +20,16 @@ function Block(x, y) {
         y: {
             get: function () {
                 return y;
+            }
+        },
+        size: {
+            get: function () {
+                return size;
+            }
+        },
+        position: {
+            get: function () {
+                return _position;
             }
         },
         status: {

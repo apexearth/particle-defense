@@ -15,7 +15,7 @@ function Gun(options) {
     this.shotsPerShot = options.shotsPerShot;
     this.projectileClass = Projectiles.Bullet;
     this.weaponAttributeCost = this.attributeCost;
-    this.createAttributeForStat('ProjectileSpeed', true, 10, 1.25, this.attributeCost);
+
     /** @return {number} **/
     this.attributeCost = function () {
         return me.weaponAttributeCost() * (1 + me.projectileSpeed / 5);

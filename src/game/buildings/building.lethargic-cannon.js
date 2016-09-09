@@ -9,7 +9,19 @@ function LethargicCannon(options) {
     this.name = 'LethargicCannon';
     this.container.addChild(Images.buildings.LargePlatform());
     this.health = 5;
-    this.addWeapon(new Weapons.Cannon(85, 30, 1.75, 1.75, .95, 1, .15, 4, 7));
+    this.addWeapon(new Weapons.Cannon({
+        level: this.level,
+        building: this,
+        range: 200,
+        fireRate: 60,
+        damage: 5,
+        projectileSpeed: 1.75,
+        shotsPerShot: 1,
+        accuracy: .95,
+        explosiveSpeed: .15,
+        explosiveTime: 2,
+        explosiveInitialSize: 5
+    }));
 }
 
 LethargicCannon.prototype = Object.create(Building.prototype);

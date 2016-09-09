@@ -22,15 +22,10 @@ HomeBase.prototype = Object.create(Building.prototype);
 HomeBase.prototype.constructor = HomeBase;
 
 HomeBase.cost = {
-    energy: 20,
-    metal: 10
+    energy: 200,
+    metal: 100
 };
 
 HomeBase.tags = [
     'base',
-    'resource',
-    'energy',
-    'metal',
-    'ammo'
 ];
-

@@ -36,7 +36,7 @@ function Grid(options) {
     for (var x = bounds.left; x <= bounds.right; x++) {
         blocks[x] = [];
         for (var y = bounds.top; y <= bounds.bottom; y++) {
-            var block = new Block(x, y);
+            var block = new Block(x, y, blockSize);
             blocks[x][y] = block;
             if (x + 1 < blocks.length && blocks[x + 1].indexOf(y)) {
                 block.rightBlock = blocks[x + 1][y];

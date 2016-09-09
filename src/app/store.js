@@ -1,5 +1,5 @@
 import {createStore} from 'redux';
-import game, {levels, buildings} from '../game';
+import game, {renderer, levels, buildings} from '../game';
 import MainMenu from './components/MainMenu';
 import GameUI from './components/GameUI';
 
@@ -7,6 +7,7 @@ function createInitialState() {
     return {
         Screen: MainMenu,
         game,
+        renderer,
         levels,
         buildings
     };
@@ -52,8 +53,10 @@ var gameReducer = (state, action) => {
         game.startBuildingPlacement(action.value);
         return Object.assign({}, state);
     case 'GAME_PLACE_BUILDING_FINISH':
-        game.finishBuildingPlacement();
-        return Object.assign({}, state);
+        var building = game.finishBuildingPlacement();
+        return Object.assign({}, state, {
+            building
+        });
     default:
         throw new Error('Action ' + action + ' is undefined.');
     }

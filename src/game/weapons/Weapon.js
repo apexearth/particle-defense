@@ -45,9 +45,6 @@ function Weapon(options) {
     this.shotsPerShot = 1;
     this.accuracy = .05;
 
-    var weapon = this;
-    var me = this;
-
     var createProperty = function (parent, key, options) {
         return new Attribute(Object.assign({
             parent: parent,
@@ -70,43 +67,8 @@ function Weapon(options) {
     };
     /** @returns Number */
     this.attributeCost = function () {
-        return (10 * weapon.damage / weapon.fireRate + weapon.range / 10)
-            * (1 + 10 * weapon.accuracy);
+        return (10 * this.damage / this.fireRate + this.range / 10) * (1 + 10 * this.accuracy);
     };
-
-    this.createAttributeForStat = function (name, upperLimit, limit, upgradeFactor, cost) {
-        if (weapon[name] != null) {
-            me.Attributes[name] = new Attribute(me,
-                function () {
-                    return weapon[name];
-                },
-                function () {
-                    weapon[name] *= upgradeFactor;
-                },
-                function () {
-                    if (upperLimit) return weapon[name] <= limit;
-                    return weapon[name] >= limit;
-                },
-                {
-                    /** @returns Number **/
-                    energy: function () {
-                        if (typeof cost == 'function') return cost();
-                        return cost;
-                    },
-                    /** @returns Number **/
-                    metal: function () {
-                        if (typeof cost == 'function') return cost();
-                        return cost;
-                    }
-                }
-            );
-        }
-    };
-    this.createAttributeForStat('Range', true, 250, 1.15, this.attributeCost);
-    this.createAttributeForStat('FireRate', false, 1, .85, this.attributeCost);
-    this.createAttributeForStat('Damage', true, 30, 1.15, this.attributeCost);
-    this.createAttributeForStat('Accuracy', false, .01, .5, this.attributeCost);
-
     this.resetTarget = function () {
         this.target = null;
     };

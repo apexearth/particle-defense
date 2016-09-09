@@ -27,6 +27,9 @@ function Map(level, width, height, blockSize, template) {
     this.blockStatus = function (x, y) {
         return _grid.blockStatus(x, y);
     };
+    this.getAdjacentBlocks = function (blockX, blockY, diagonal) {
+        return _grid.getAdjacentBlocks(blockX, blockY, diagonal);
+    };
     this.getBlock = function (x, y) {
         return _grid.getBlock(x, y);
     };

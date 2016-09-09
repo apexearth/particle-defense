@@ -19,10 +19,6 @@ function Missile(options) {
     this.getAmmoConsumption = function () {
         return this.damage / 1.5;
     };
-    this.createAttributeForStat('projectileSpeed', true, 10, 1.25, this.attributeCost);
-    this.createAttributeForStat('explosiveSpeed', true, 4, 1.1, this.attributeCost);
-    this.createAttributeForStat('explosiveTime', true, 10, 1.1, this.attributeCost);
-    this.createAttributeForStat('explosiveInitialSize', true, 30, 1.1, this.attributeCost);
     this.createProjectile = function () {
         return new Projectiles.Missile(this);
     };

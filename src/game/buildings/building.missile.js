@@ -16,7 +16,7 @@ function MissileLauncher(options) {
         explosiveSpeed: 45,
         explosiveTime: 2,
         explosiveInitialSize: .1,
-        range: 1,
+        range: 250,
         damage: .95,
         fireRate: .5,
         acceleration: 1,

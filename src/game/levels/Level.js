@@ -21,9 +21,16 @@ function Level(options) {
             get: function () {
                 return this.container.position;
             }.bind(this)
+        },
+        mouse: {
+            get: function () {
+                return {
+                    x: (this.inputs.mouse('x') - renderer.position.x) / renderer.scale.x + this.width / 2,
+                    y: (this.inputs.mouse('y') - renderer.position.y) / renderer.scale.y + this.height / 2
+                };
+            }.bind(this)
         }
     });
-
     this.container = renderer.addChild(new PIXI.Container());
     this.blockSize = Settings.BlockSize;
     this.position.x = -options.width * this.blockSize / 2;
@@ -51,10 +58,6 @@ function Level(options) {
     this.objects = [];
 
     this.inputs = inputs;
-    this.mouse = {
-        x: this.inputs.mouse('x') - renderer.position.x,
-        y: this.inputs.mouse('y') - renderer.position.y
-    };
 
     this.winConditions = [function () {
         for (var player of this.players) {
@@ -79,6 +82,7 @@ function Level(options) {
         if (block.building) throw new Error('A building already exists at ' + building.blockX + ', ' + building.blockY);
         building.block = block;
         building.block.building = building;
+        building.block.add(building);
         this.container.addChild(building.container);
         this.buildings.push(building);
         if (building.player) {
@@ -90,6 +94,7 @@ function Level(options) {
     this.removeBuilding = function (building) {
         var index = this.buildings.indexOf(building);
         if (index > -1) {
+            building.block.remove(building);
             building.block.building = null;
             building.block = null;
             this.container.removeChild(building.container);
@@ -235,6 +240,25 @@ function Level(options) {
     this.getBlockOrNullFromCoords = function (x, y) {
         return _map.getBlockOrNullFromCoords(x, y);
     };
+    this.findOpenBlockNear = function (blocks) {
+        if (blocks.block) blocks = blocks.block;
+        blocks = [].concat(blocks);
+        let rejectedBlocks = [].concat(blocks);
+        for (let block of blocks) {
+            var adjacentBlocks = _map.getAdjacentBlocks(block.x, block.y, true);
+            for (let adjacentBlock of adjacentBlocks) {
+                if (rejectedBlocks.indexOf(adjacentBlock) >= 0) continue;
+                if (this.isBlockBuildable(adjacentBlock)) {
+                    return adjacentBlock;
+                }
+                if (blocks.indexOf(adjacentBlock) === -1) {
+                    rejectedBlocks.push(adjacentBlock);
+                }
+            }
+        }
+        if (rejectedBlocks.length === 0) return null;
+        return this.findOpenBlockNear(rejectedBlocks);
+    };
     this.processKeyboardInput = function () {
         if (this.inputs.keyboard('<escape>')) {
             if (this.placementBuilding != null) {
@@ -269,11 +293,6 @@ function Level(options) {
     this.checkCount = 0;
     this.update = function () {
         this.frameCount++;
-
-        this.mouse = {
-            x: (this.inputs.mouse('x') - renderer.position.x) / renderer.scale.x + this.width / 2,
-            y: (this.inputs.mouse('y') - renderer.position.y) / renderer.scale.y + this.height / 2
-        };
 
         var i;
         i = this.units.length;

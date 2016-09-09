@@ -1,4 +1,4 @@
-import async from 'async';
+/* eslint-disable no-console */
 import {expect} from 'chai';
 import App from '../src/app/components/App';
 
@@ -6,7 +6,7 @@ import Skirmish from '../src/app/components/Skirmish';
 import GameUI from '../src/app/components/GameUI';
 
 describe('end2end', function () {
-    it('Start to Finish', function (done) {
+    it('Start to Finish', function () {
         // Initialization
         var app = new App();
         expect(app).to.exist;
@@ -21,40 +21,35 @@ describe('end2end', function () {
 
         var game = app.game;
         var level = game.level;
+        var player = game.player;
         var gameUI = new app.Screen();
 
-        // For sharing state between tasks.
-        var state = {};
+        function log(message) {
+            var frames = '00000' + game.frames.toFixed(0);
+            frames = frames.substring(frames.length - 6);
+            console.log(frames + ': ' + message);
+        }
 
-        // Set up tasks
-        var tasks = [
-            createBuilding.bind(null, findBuildingsSync('defense')[0])
-            // TODO: Choose/search a defensive building.
-            // TODO: Wait for building to be built.
+        log('Initialized');
 
-            // TODO: Pick a resource building.
-            // TODO: Wait for enough resources.
-            // TODO: Build the building.
-        ];
+        // Actions
+        action('defense', getRandomBuilding, createBuilding);
+        action('energy', getRandomBuilding, createBuilding);
+        action('metal', getRandomBuilding, createBuilding);
+        action('ammo', getRandomBuilding, createBuilding);
 
-        // Execute
-        async.waterfall(tasks, function (err) {
-            return err
-                ? done(new Error(err))
-                : done();
-        });
-
-        function findBuildingsSync(tag) {
+        // Functions
+        function getBuildings(tag) {
             return gameUI.buildings.filter(b=>b.tags.indexOf(tag) >= 0);
         }
 
         // eslint-disable-next-line
-        function findRandomBuildingSync(tag) {
-            var buildings = findBuildingsSync(tag);
+        function getRandomBuilding(tag) {
+            var buildings = getBuildings(tag);
             return buildings[(Math.random() * buildings.length) ^ 0];
         }
 
-        function createBuilding(constructor, done) {
+        function createBuilding(constructor) {
             if (typeof constructor !== 'function')
                 throw new Error('The constructor must be a function.\n' + constructor);
 
@@ -62,13 +57,37 @@ describe('end2end', function () {
             expect(level.placementBuilding).to.exist;
             expect(level.placementBuilding.constructor).to.equal(constructor);
 
-            gameUI.mouse('x', 125);
-            gameUI.mouse('y', 125);
+            var block = level.findOpenBlockNear(player.buildings[0]);
+            gameUI.mouse('x', block.position.x);
+            gameUI.mouse('y', block.position.y);
+
+            waitFor(() => player.canBuy(constructor));
 
             expect(function () {
-                state.building = gameUI.finishBuildingPlacement();
+                gameUI.finishBuildingPlacement();
             }).to.increase(level.player.buildings, 'length');
-            done();
+            log('Created building ' + constructor.name + ' at '
+                + app.state.building.block.x + ',' + app.state.building.block.y);
+        }
+
+        function waitFor(expectation, timeout = 1000) {
+            while (!expectation() && --timeout) {
+                game.update();
+            }
+            if (timeout === 0) {
+                throw new Error('.waitFor() timed out.');
+            }
         }
     });
 });
+
+function action() {
+    var previousResult = undefined;
+    for (var arg of arguments) {
+        if (typeof arg === 'function') {
+            previousResult = arg(previousResult);
+        } else {
+            previousResult = arg;
+        }
+    }
+}

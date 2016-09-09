@@ -18,9 +18,6 @@ function Cannon(options) {
     this.attributeCost = function () {
         return this.gunAttributeCost() * (1 + (this.explosiveTime + this.explosiveSpeed + this.explosiveInitialSize / 20) / 5);
     };
-    this.createAttributeForStat('explosiveSpeed', true, 4, 1.1, this.attributeCost);
-    this.createAttributeForStat('explosiveTime', true, 10, 1.1, this.attributeCost);
-    this.createAttributeForStat('explosiveInitialSize', true, 30, 1.1, this.attributeCost);
 }
 Cannon.prototype = Object.create(Gun.prototype);
 Cannon.prototype.constructor = Cannon;

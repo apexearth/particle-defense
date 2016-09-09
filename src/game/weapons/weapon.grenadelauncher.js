@@ -20,9 +20,6 @@ function GrenadeLauncher(options) {
     this.attributeCost = function () {
         return me.gunAttributeCost() * (1 + (me.explosiveTime + me.explosiveSpeed + me.explosiveInitialSize / 20) / 5);
     };
-    this.createAttributeForStat('explosiveSpeed', true, 4, 1.1, this.attributeCost);
-    this.createAttributeForStat('explosiveTime', true, 10, 1.1, this.attributeCost);
-    this.createAttributeForStat('explosiveInitialSize', true, 30, 1.1, this.attributeCost);
 }
 GrenadeLauncher.prototype = Object.create(Gun.prototype);
 GrenadeLauncher.prototype.constructor = GrenadeLauncher;

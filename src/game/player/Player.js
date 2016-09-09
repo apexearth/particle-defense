@@ -66,7 +66,9 @@ function Player(options) {
         }
         return true;
     };
-
+    this.canBuy = function (constructor) {
+        return this.testApplyCost(constructor.cost);
+    };
     this.updateResourceStorageLimits = function () {
         for (var key in this.resourceStorage) {
             if (this.resourceStorage.hasOwnProperty(key)

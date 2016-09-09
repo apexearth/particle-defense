@@ -117,6 +117,14 @@
     it('.update()', function () {
         player.update();
     });
+    it('.canBuy()', function () {
+        expect(player.canBuy({
+            cost: player.resources
+        })).to.equal(true);
+        expect(player.canBuy({
+            cost: Object.assign({}, player.resources, {energy: player.resources.energy + 1})
+        })).to.equal(false);
+    });
     describe('.actions', function () {
         it('.createBuilding()', function () {
             var level = new Level();

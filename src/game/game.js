@@ -12,6 +12,7 @@ var game = {
     timeoutId: null,
     level: null,
 
+    renderer: require('./renderer'),
     inputs: require('./inputs'),
 
     levels: require('./levels'),

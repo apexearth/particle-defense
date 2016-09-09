@@ -2,6 +2,7 @@
 var expect = chai.expect;
 chai.use(require('chai-spies'));
 
+var renderer = require('../renderer');
 var ProjectileSpec = require('../projectiles/Projectile.spec');
 var UnitSpec = require('../units/Unit.spec');
 var BuildingSpec = require('../buildings/Building.spec');
@@ -52,8 +53,8 @@ describe('Level', function () {
         expect(level.buildings).to.be.an('array');
         expect(level.objects).to.be.an('array');
 
-        expect(level.mouse.x).to.equal(0);
-        expect(level.mouse.y).to.equal(0);
+        expect(level.mouse.x).to.equal(renderer.position.x / renderer.scale.x + level.width / 2);
+        expect(level.mouse.y).to.equal(renderer.position.y / renderer.scale.y + level.height / 2);
 
         expect(level.winConditions).to.be.an('array');
         expect(level.winConditions.length).to.equal(1);
@@ -75,15 +76,18 @@ describe('Level', function () {
         expect(level.buildings.length).to.equal(1);
         expect(level.container.children.length).to.equal(2);
         expect(addedBuilding.block.building).to.equal(addedBuilding);
+        expect(addedBuilding.block.contains(building)).to.equal(true);
     }
 
     it('.removeBuilding()', function () {
         addBuilding();
         var building = level.buildings[0];
+        var block = building.block;
         var removedBuilding = level.removeBuilding(level.buildings[0]);
         expect(removedBuilding).to.equal(building);
         expect(level.buildings.length).to.equal(0);
         expect(level.container.children.length).to.equal(1);
+        expect(block.contains(building)).to.equal(false);
     });
     it('.addUnit()', function () {
         UnitSpec.addUnit(level);
@@ -224,6 +228,12 @@ describe('Level', function () {
         });
     });
     describe('.processMouseInput()', function () {
+        beforeEach(function () {
+            renderer.position.x = level.width / 2;
+            renderer.position.y = level.height / 2;
+            renderer.scale.x = 1;
+            renderer.scale.y = 1;
+        });
         it('mouse0, Select Building', function () {
             var building = BuildingSpec.createBuilding(level, level.players[0]);
             level.addBuilding(building);
@@ -363,13 +373,59 @@ describe('Level', function () {
             testField: true
         });
     });
+    it('.findOpenBlockNear()', function () {
+        var block = level.findOpenBlockNear(level.getBlock(1, 1));
+        expect(block).to.equal(level.getBlock(0, 0));
+
+        block.status = BlockStatus.NotBuildable;
+        block = level.findOpenBlockNear(level.getBlock(1, 1));
+        expect(block).to.equal(level.getBlock(0, 1));
+
+        block.status = BlockStatus.NotBuildable;
+        block = level.findOpenBlockNear(level.getBlock(1, 1));
+        expect(block).to.equal(level.getBlock(0, 2));
+
+        block.status = BlockStatus.NotBuildable;
+        block = level.findOpenBlockNear(level.getBlock(1, 1));
+        expect(block).to.equal(level.getBlock(1, 0));
+
+        block.status = BlockStatus.NotBuildable;
+        block = level.findOpenBlockNear(level.getBlock(1, 1));
+        expect(block).to.equal(level.getBlock(1, 2));
+
+        block.status = BlockStatus.NotBuildable;
+        block = level.findOpenBlockNear(level.getBlock(1, 1));
+        expect(block).to.equal(level.getBlock(2, 0));
+
+        block.status = BlockStatus.NotBuildable;
+        block = level.findOpenBlockNear(level.getBlock(1, 1));
+        expect(block).to.equal(level.getBlock(2, 1));
+
+        block.status = BlockStatus.NotBuildable;
+        block = level.findOpenBlockNear(level.getBlock(1, 1));
+        expect(block).to.equal(level.getBlock(2, 2));
+
+        block.status = BlockStatus.NotBuildable;
+        block = level.findOpenBlockNear(level.getBlock(1, 1));
+        expect(block).to.equal(level.getBlock(0, 3));
+
+        block.status = BlockStatus.NotBuildable;
+        block = level.findOpenBlockNear(level.getBlock(1, 1));
+        expect(block).to.equal(level.getBlock(1, 3));
+
+        block.status = BlockStatus.NotBuildable;
+        block = level.findOpenBlockNear(level.getBlock(1, 1));
+        expect(block).to.equal(level.getBlock(2, 3));
+
+        block.status = BlockStatus.NotBuildable;
+        block = level.findOpenBlockNear(level.getBlock(1, 1));
+        expect(block).to.equal(level.getBlock(3, 0));
+    });
     describe('.update()', function () {
         it('.frameCount', function () {
             expect(level.update.bind(level)).to.increase(level, 'frameCount');
         });
         it('.mouse', function () {
-            level.mouse = null;
-            level.update();
             expect(level.mouse).to.include.keys('x', 'y');
         });
         it('.placementBuilding', function () {
