@@ -23,6 +23,7 @@ describe('game', function () {
     it('.start()', start);
     function start() {
         game.start(game.levels[0]);
+        expect(game.timeoutId).to.exist;
         expect(game.player).to.exist;
     }
     it('.startLevel()', function () {

@@ -55,16 +55,16 @@ describe('Projectile', function () {
     it('.die()', function () {
         var projectile = createProjectile();
         var level = projectile.level;
-        expect(level.projectiles).to.include(projectile);
+        expect(level.projectiles.indexOf(projectile) >= 0).to.equal(true);
         projectile.die();
-        expect(level.projectiles).to.not.include(projectile);
+        expect(level.projectiles.indexOf(projectile) >= 0).to.equal(false);
     });
     it('.onHit()', function () {
         var projectile = createProjectile();
         var level = projectile.level;
-        expect(level.projectiles).to.include(projectile);
+        expect(level.projectiles.indexOf(projectile) >= 0).to.equal(true);
         projectile.onHit();
-        expect(level.projectiles).to.not.include(projectile);
+        expect(level.projectiles.indexOf(projectile) >= 0).to.equal(false);
     });
     it('.hitTest()', function () {
         var projectile = createProjectile();
@@ -80,7 +80,7 @@ describe('Projectile', function () {
         unit.position.y = projectile.position.y;
         var initialHealth = unit.health;
         projectile.unitHitCheck(unit);
-        expect(projectile.level.projectiles).to.not.include(projectile);
+        expect(projectile.level.projectiles.indexOf(projectile) >= 0).to.equal(false);
         expect(unit.health).to.equal(initialHealth - projectile.damage);
     });
     describe('.update()', function () {
@@ -89,14 +89,14 @@ describe('Projectile', function () {
             projectile.lifespan = -1;
             projectile.update();
             expect(projectile.dead).to.equal(true);
-            expect(projectile.level.projectiles).to.not.include(projectile);
+            expect(projectile.level.projectiles.indexOf(projectile) >= 0).to.equal(false);
         });
         it('death outside level', function () {
             var projectile = createProjectile();
             projectile.position.x = projectile.level.position.x - 100;
             projectile.update();
             expect(projectile.dead).to.equal(true);
-            expect(projectile.level.projectiles).to.not.include(projectile);
+            expect(projectile.level.projectiles.indexOf(projectile) >= 0).to.equal(false);
         });
         it('.unitHitCheck() is called', function () {
             var projectile = createProjectile();
@@ -105,7 +105,7 @@ describe('Projectile', function () {
             unit.position.y = projectile.position.y;
             var initialHealth = unit.health;
             projectile.update();
-            expect(projectile.level.projectiles).to.not.include(projectile);
+            expect(projectile.level.projectiles.indexOf(projectile) >= 0).to.equal(false);
             expect(unit.health).to.equal(initialHealth - projectile.damage);
         });
     });

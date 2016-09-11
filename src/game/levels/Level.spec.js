@@ -107,8 +107,8 @@ describe('Level', function () {
         var projectileToNotRemove = level.projectiles[1];
         expect(level.removeProjectile(projectileToRemove)).to.equal(projectileToRemove);
         expect(level.projectiles.length).to.equal(1);
-        expect(level.projectiles).to.not.include(projectileToRemove);
-        expect(level.projectiles).to.include(projectileToNotRemove);
+        expect(level.projectiles.indexOf(projectileToRemove) >= 0).to.equal(false);
+        expect(level.projectiles.indexOf(projectileToNotRemove) >= 0).to.equal(true);
     });
     it('.containsUnit()', function () {
         var unit = UnitSpec.addUnit(level);
@@ -280,10 +280,10 @@ describe('Level', function () {
         expect(level.placementBuilding.constructor).to.equal(buildingConstructor);
         expect(level.placementBuilding).to.equal(building);
         // We'll want it to be visible during placement.
-        expect(level.container.children).to.include(building.container);
+        expect(level.container.children.indexOf(building.container) >= 0).to.equal(true);
         // We don't want it to do anything during placement.
-        expect(level.buildings).to.not.include(building);
-        expect(building.player.buildings).to.not.include(building);
+        expect(level.buildings.indexOf(building) >= 0).to.equal(false);
+        expect(building.player.buildings.indexOf(building) >= 0).to.equal(false);
         return building;
     }
 
@@ -308,9 +308,9 @@ describe('Level', function () {
         // Building is fully added to the level & player.
         expect(finalBuilding.block).to.equal(block);
         expect(finalBuilding.block.building).to.equal(finalBuilding);
-        expect(level.container.children).to.include(finalBuilding.container);
-        expect(level.buildings).to.include(finalBuilding);
-        expect(finalBuilding.player.buildings).to.include(finalBuilding);
+        expect(level.container.children.indexOf(finalBuilding.container) >= 0).to.equal(true);
+        expect(level.buildings.indexOf(finalBuilding) >= 0).to.equal(true);
+        expect(finalBuilding.player.buildings.indexOf(finalBuilding) >= 0).to.equal(true);
     }
 
     it('.cancelBuildingPlacement()', function () {
@@ -321,7 +321,7 @@ describe('Level', function () {
     function cancelBuildingPlacement() {
         var placementBuilding = this.cancelBuildingPlacement();
         expect(placementBuilding.level.placementBuilding).to.equal(null);
-        expect(placementBuilding.level.container.children).to.not.include(placementBuilding.container);
+        expect(placementBuilding.level.container.children.indexOf(placementBuilding.container) >= 0).to.equal(false);
     }
 
     it('.updatePaths()', function () {
