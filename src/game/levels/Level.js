@@ -120,14 +120,14 @@ function Level(options) {
         return projectile;
     };
     this.addUnit = function (unit) {
-        this.container.addChild(unit);
+        this.container.addChild(unit.container);
         this.units.push(unit);
     };
     this.removeUnit = function (unit) {
         var index = this.units.indexOf(unit);
         if (index > -1) {
             unit.level = null;
-            this.container.removeChild(unit);
+            this.container.removeChild(unit.container);
             this.units.splice(index, 1);
         }
     };

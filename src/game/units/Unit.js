@@ -6,16 +6,23 @@ var collision = require('geom-collision');
 module.exports = Unit;
 
 function Unit(options) {
-    PIXI.Container.call(this);
     if (!options.level) throw new Error('A level is required to create a unit.');
     if (!options.player) throw new Error('A player is required to create a unit.');
     if (!options.position) throw new Error('A position is required to create a unit.');
+    this.container = new PIXI.Container();
     this.level = options.level;
     this.player = options.player;
 
-    this.block = this.level.getBlock((options.position.x / Settings.BlockSize) ^ 0, (options.position.y / Settings.BlockSize) ^ 0);
+    Object.defineProperties(this, {
+        position: {
+            get: function () {
+                return this.container.position;
+            }.bind(this)
+        }
+    });
     this.position.x = options.position.x;
     this.position.y = options.position.y;
+    this.block = this.level.getBlock((this.position.x / Settings.BlockSize) ^ 0, (this.position.y / Settings.BlockSize) ^ 0);
     this.velocity = {
         x: 0,
         y: 0
@@ -29,7 +36,7 @@ function Unit(options) {
     this.dead = false;
 
     this.graphics = new PIXI.Graphics();
-    this.addChild(this.graphics);
+    this.container.addChild(this.graphics);
     this.graphics.beginFill(0xFFFFFF, .75);
     this.graphics.drawCircle(0, 0, this.radius);
     this.graphics.endFill();
@@ -134,6 +141,3 @@ function Unit(options) {
         return this.level.getPathForUnit(this);
     };
 }
-
-Unit.prototype = Object.create(PIXI.Container.prototype);
-Unit.prototype.constructor = Unit;

@@ -87,7 +87,7 @@ function Weapon(options) {
         var i = this.building.level.units.length;
         while (i--) {
             var unit = this.building.level.units[i];
-            if (math.distance(unit.x - this.building.position.x, unit.y - this.building.position.y) <= this.range) {
+            if (math.distance(unit.position.x - this.building.position.x, unit.position.y - this.building.position.y) <= this.range) {
                 this.target = unit;
             }
         }

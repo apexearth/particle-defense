@@ -19,6 +19,13 @@ class App extends Component {
         );
     }
 
+    changeScreen(screen) {
+        store.dispatch({
+            type: 'UI_CHANGE_SCREEN',
+            value: screen
+        });
+    }
+
     get game() {
         return this.state.game;
     }

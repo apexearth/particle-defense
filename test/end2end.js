@@ -33,23 +33,26 @@ describe('end2end', function () {
         log('Initialized');
 
         // Actions
-        action('defense', getRandomBuilding, createBuilding);
-        action('energy', getRandomBuilding, createBuilding);
-        action('metal', getRandomBuilding, createBuilding);
-        action('ammo', getRandomBuilding, createBuilding);
+        createBuilding('defense');
+        createBuilding('energy');
+        createBuilding('metal');
+        createBuilding('ammo');
 
         // Functions
-        function getBuildings(tag) {
-            return gameUI.buildings.filter(b=>b.tags.indexOf(tag) >= 0);
-        }
+        function createBuilding(tag, random) {
+            function buildingConstructors(tag) {
+                return gameUI.buildings.filter(b=>b.tags.indexOf(tag) >= 0);
+            }
 
-        // eslint-disable-next-line
-        function getRandomBuilding(tag) {
-            var buildings = getBuildings(tag);
-            return buildings[(Math.random() * buildings.length) ^ 0];
-        }
+            function randomBuildingConstructor(tag) {
+                var buildings = buildingConstructors(tag);
+                return buildings[(Math.random() * buildings.length) ^ 0];
+            }
 
-        function createBuilding(constructor) {
+            var constructor = random ? randomBuildingConstructor(tag) : buildingConstructors(tag)[0];
+
+            if (!constructor)
+                throw new Error('No buildings found with the ' + tag + ' tag.');
             if (typeof constructor !== 'function')
                 throw new Error('The constructor must be a function.\n' + constructor);
 
@@ -80,14 +83,3 @@ describe('end2end', function () {
         }
     });
 });
-
-function action() {
-    var previousResult = undefined;
-    for (var arg of arguments) {
-        if (typeof arg === 'function') {
-            previousResult = arg(previousResult);
-        } else {
-            previousResult = arg;
-        }
-    }
-}

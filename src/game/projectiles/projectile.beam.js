@@ -25,7 +25,7 @@ function BeamProjectile(weapon) {
 
     /** @returns Number */
     this.effectiveDamage = function (unit) {
-        return this.damage * math.distance(this.position.x - unit.x, this.position.y - unit.y) / this.weapon.range;
+        return this.damage * math.distance(this.position.x - unit.position.x, this.position.y - unit.position.y) / this.weapon.range;
     };
 
     this.projectileUpdate = this.update;

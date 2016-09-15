@@ -138,7 +138,7 @@
             var initialHealth = unit.health;
 
             level.update();
-            expect(turret.weapons[0].target).not.to.equal(null);
+            expect(turret.weapons[0].target).to.not.equal(null);
             expect(level.projectiles.length).to.be.above(0);
 
             // Unit is placed close enough that after the second update it should be hit.
@@ -229,6 +229,21 @@
         expect(building.abilities).to.equal(null);
         building.selected = true;
         expect(building.abilities).to.not.equal(null);
+    });
+    it('.addStorageToPlayer()', function () {
+        var building = createBuilding();
+        building.resourceStorage.energy = 10;
+        expect(function () {
+            building.addStorageToPlayer();
+        }).to.increase(building.player.resourceStorage, 'energy');
+    });
+    it('.removeStorageFromPlayer()', function () {
+        var building = createBuilding();
+        building.player.resourceStorage.energy = 10;
+        building.resourceStorage.energy = 10;
+        expect(function () {
+            building.removeStorageFromPlayer();
+        }).to.decrease(building.player.resourceStorage, 'energy');
     });
 
     coverage(this, function (done) {

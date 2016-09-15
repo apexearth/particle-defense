@@ -1,10 +1,11 @@
 import App from './App';
 import {expect} from 'chai';
+import coverage from '../../../test/check-coverage';
 
 import store from '../store';
 import MainMenu from './MainMenu';
+import GameUI from './GameUI';
 
-var coverage = require('../../../test/check-coverage');
 describe('App', function () {
     beforeEach(function () {
         store.dispatch({
@@ -13,18 +14,15 @@ describe('App', function () {
     });
     it('new', function () {
         var app = new App();
-        var state = app.state;
-        expect(state.Screen).to.equal(MainMenu);
+        expect(app.state).to.exist;
+        expect(app.game).to.exist;
+        expect(app.Screen).to.equal(MainMenu);
     });
-    it('state changes', function () {
+    it('.changeScreen()', function () {
         var app = new App();
-        var initialState = app.state;
-        expect(initialState).to.equal(store.getState());
-        store.dispatch({
-            type: 'UI_CHANGE_SCREEN',
-            value: null
-        });
-        expect(initialState).to.not.equal(store.getState());
+        expect(app.Screen).to.equal(MainMenu);
+        app.changeScreen(GameUI);
+        expect(app.Screen).to.equal(GameUI);
     });
-    coverage(this, new App());
+    coverage(this, new App(), ['setState', 'forceUpdate']);
 });

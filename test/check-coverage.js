@@ -1,6 +1,7 @@
-module.exports = function (suite, obj) {
+module.exports = function (suite, obj, ignores) {
     if (typeof suite !== 'object') throw new Error('suite is required');
     if (typeof obj === 'undefined') throw new Error('obj cannot be undefined');
+    ignores = ignores || [];
     if (typeof obj === 'function') {
         obj(check);
     } else {
@@ -8,8 +9,8 @@ module.exports = function (suite, obj) {
     }
     function check(object) {
         for (var key in object) {
-            if (object.hasOwnProperty(key)
-                && typeof object[key] === 'function') {
+            if (ignores.indexOf(key) >= 0) continue;
+            if (typeof object[key] === 'function') {
                 if (!hasTest(suite, key)) {
                     it('.' + key + '()', function () {
                         throw new Error('.' + this + '() is not implemented.');
