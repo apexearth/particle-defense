@@ -2,13 +2,19 @@ module.exports = function (suite, obj, ignores) {
     if (typeof suite !== 'object') throw new Error('suite is required');
     if (typeof obj === 'undefined') throw new Error('obj cannot be undefined');
     ignores = ignores || [];
+    ignores = ignores.concat(Object.getOwnPropertyNames(Object.prototype));
     if (typeof obj === 'function') {
-        obj(check);
+        obj(start);
     } else {
-        check(obj);
+        start(obj);
     }
-    function check(object) {
-        for (var key in object) {
+    function start(object) {
+        check(object, Object.getOwnPropertyNames(object.constructor.prototype));
+        check(object, Object.keys(object));
+    }
+
+    function check(object, keys) {
+        for (var key of keys) {
             if (ignores.indexOf(key) >= 0) continue;
             if (typeof object[key] === 'function') {
                 if (!hasTest(suite, key)) {
