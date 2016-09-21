@@ -31,7 +31,7 @@ function Level(options) {
             }.bind(this)
         }
     });
-    this.container = renderer.addChild(new PIXI.Container());
+    this.container = new PIXI.Container();
     this.blockSize = Settings.BlockSize;
     this.position.x = -options.width * this.blockSize / 2;
     this.position.y = -options.height * this.blockSize / 2;

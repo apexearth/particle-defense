@@ -22,17 +22,6 @@ class GameUI extends Component {
         return this.state.game.inputs;
     }
 
-    mouse(key, value) {
-        if (key === 'x') value = (value - this.state.renderer.position.x) / this.state.renderer.scale.x - this.state.game.level.width / 2;
-        if (key === 'y') value = (value - this.state.renderer.position.y) / this.state.renderer.scale.y - this.state.game.level.height / 2;
-        return this.inputs.mouse(key, value);
-    }
-
-    keyboard(key, value) {
-        return this.inputs.keyboard(key, value);
-    }
-
-
     get buildings() {
         return this.game.buildings;
     }

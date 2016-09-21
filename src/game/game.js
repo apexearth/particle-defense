@@ -18,6 +18,21 @@ var game = {
     levels: require('./levels'),
     buildings: require('./buildings'),
 
+    // Input Manipulation
+    moveMouseToCoordinate: function (x, y) {
+        x = (x - this.renderer.position.x) / this.renderer.scale.x - this.level.width / 2;
+        y = (y - this.renderer.position.y) / this.renderer.scale.y - this.level.height / 2;
+        return {
+            x: this.inputs.mouse('x', x),
+            y: this.inputs.mouse('y', y)
+        };
+    },
+    moveMouseToBlock: function (block) {
+        this.moveMouseToCoordinate(
+            block.x * this.level.blockSize,
+            block.y * this.level.blockSize
+        );
+    },
     queueUpdate: function () {
         this.timeoutId = setTimeout(function () {
             this.update();
@@ -38,12 +53,14 @@ var game = {
         if (this.running) throw new Error('Game is already running.');
         this.frames = 0;
         this.startLevel(levelFn);
+        this.renderer.start(this.level.container);
         this.queueUpdate();
     },
     startLevel: function (levelFn) {
         this.level = levelFn();
     },
     stop: function () {
+        this.renderer.stop();
         this.unqueueUpdate();
     },
     fastForward: function (iterations) {

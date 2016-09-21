@@ -2,7 +2,6 @@
 import {expect} from 'chai';
 import App from '../src/app/components/App';
 
-import Skirmish from '../src/app/components/Skirmish';
 import GameUI from '../src/app/components/GameUI';
 
 describe('end2end', function () {
@@ -10,9 +9,6 @@ describe('end2end', function () {
         // Initialization
         var app = new App();
         expect(app).to.exist;
-
-        app.Screen.menuSkirmish();
-        expect(app.state.Screen).to.equal(Skirmish);
 
         app.Screen.chooseLevel(app.state.levels[0]);
         app.game.unqueueUpdate(); // Prevent queued (async) updates.
@@ -61,8 +57,7 @@ describe('end2end', function () {
             expect(level.placementBuilding.constructor).to.equal(constructor);
 
             var block = level.findOpenBlockNear(player.buildings[0]);
-            gameUI.mouse('x', block.position.x);
-            gameUI.mouse('y', block.position.y);
+            game.moveMouseToBlock(block);
 
             waitFor(() => player.canBuy(constructor));
 

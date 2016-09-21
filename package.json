@@ -43,7 +43,7 @@
     "ng-grid": "^2.0.1",
     "pixi.js": "git+https://github.com/apexearth/pixi.js.git",
     "raf": "^3.2.0",
-    "react": "^15.3.1",
+    "react": "^15.3.2",
     "react-dom": "^15.3.1",
     "redux": "^3.6.0",
     "uglify-js": "^2.7.3",

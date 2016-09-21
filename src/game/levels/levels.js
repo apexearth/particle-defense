@@ -1,5 +1,4 @@
 ﻿var Level = require('./Level');
-var Settings = require('../Settings');
 var Player = require('../player');
 var Buildings = require('../buildings');
 

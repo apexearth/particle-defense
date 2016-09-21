@@ -5,9 +5,12 @@ class App extends Component {
     constructor() {
         super();
         this.state = store.getState();
-        store.subscribe(() => {
-            this.state = store.getState();
-        });
+        store.subscribe(this.unmountedStateUpdate.bind(this));
+    }
+
+    componentDidMount() {
+        store.unsubscribe(this.unmountedStateUpdate.bind(this));
+        store.subscribe(this.mountedStateUpdate.bind(this));
     }
 
     render() {
@@ -24,6 +27,14 @@ class App extends Component {
             type: 'UI_CHANGE_SCREEN',
             value: screen
         });
+    }
+
+    mountedStateUpdate() {
+        this.setState(store.getState());
+    }
+
+    unmountedStateUpdate() {
+        this.state = store.getState();
     }
 
     get game() {

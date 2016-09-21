@@ -24,5 +24,10 @@ describe('App', function () {
         app.changeScreen(GameUI);
         expect(app.Screen).to.equal(GameUI);
     });
-    coverage(this, new App(), ['setState', 'forceUpdate']);
+    coverage(this, new App(), ['setState', 'forceUpdate', 'render',
+        'componentDidMount',
+        'mountedStateUpdate',
+        'unmountedStateUpdate',
+        'Screen' // This is a property which returns a function. The function will not be tested here.
+    ]);
 });
