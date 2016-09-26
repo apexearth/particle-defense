@@ -24,7 +24,7 @@ var mapping = new Mapping(
             'mouseY': 'y'
         }
     },
-    true);
+    false);
 
 var value = mapping.value.bind(mapping);
 var clear = mapping.clear.bind(mapping);
