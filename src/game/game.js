@@ -23,8 +23,8 @@ var game = {
         x = (x - this.renderer.position.x) / this.renderer.scale.x - this.level.width / 2;
         y = (y - this.renderer.position.y) / this.renderer.scale.y - this.level.height / 2;
         return {
-            x: this.inputs.mouse('x', x),
-            y: this.inputs.mouse('y', y)
+            x: this.inputs('mouseX', x),
+            y: this.inputs('mouseY', y)
         };
     },
     moveMouseToBlock: function (block) {
@@ -35,6 +35,7 @@ var game = {
     },
     queueUpdate: function () {
         this.timeoutId = setTimeout(function () {
+            this.queueUpdate();
             this.update();
         }.bind(this), this.second);
     },
@@ -87,10 +88,9 @@ Object.defineProperties(game, {
     },
     player: {
         get: function () {
-            return this.level.player;
+            return this.level ? this.level.player : null;
         }.bind(game)
     }
 });
 
 module.exports = game;
-

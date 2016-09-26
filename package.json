@@ -13,6 +13,7 @@
     "eslint": "eslint src/**/*.js test/**/*.js",
     "build": "npm-run-all browserify uglify copyfiles",
     "browserify": "browserify src/index.js -o build/game.js -t [ babelify ]",
+    "watchify": "watchify src/index.js -o build/game.js -t [ babelify ] -v",
     "uglify": "uglifyjs build/game.js -o build/game.min.js",
     "copyfiles": "copyfiles -u 1 ./src/**/*.png build"
   },
@@ -47,6 +48,8 @@
     "react-dom": "^15.3.1",
     "redux": "^3.6.0",
     "uglify-js": "^2.7.3",
-    "user-input": "^1.3.0"
+    "user-input": "^1.3.0",
+    "user-input-mapping": "^1.3.0",
+    "watchify": "^3.7.0"
   }
 }

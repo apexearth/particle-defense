@@ -6,14 +6,14 @@ var raf = require('raf');
 PIXI.Point = math.Vector;
 var stage = new PIXI.Container();
 
-var lastMouseX = input.mouse('x');
-var lastMouseY = input.mouse('y');
+var lastMouseX = input('mouseX');
+var lastMouseY = input('mouseY');
 
 function width() {
     return typeof window !== 'undefined' ? window.innerWidth : 500;
 }
 function height() {
-    return typeof window !== 'undefined' ? window.innerWidth : 500;
+    return typeof window !== 'undefined' ? window.innerHeight : 500;
 }
 
 var renderer = typeof navigator !== 'undefined' && PIXI.autoDetectRenderer(width(), height(), {antialias: true});
@@ -70,8 +70,8 @@ function zoom(event) {
         stage.scale.x = stage.scale.y = Math.max(.2, stage.scale.y - change);
     }
     if (change < 0 && stage.scale.y < 4) {
-        stage.position.x += (input.mouse('x') - window.innerWidth / 2) * change;
-        stage.position.y += (input.mouse('y') - window.innerHeight / 2) * change;
+        stage.position.x += (input('mouseX') - window.innerWidth / 2) * change;
+        stage.position.y += (input('mouseY') - window.innerHeight / 2) * change;
         stage.scale.x = stage.scale.y = Math.min(4, stage.scale.y - change);
     }
 }
@@ -83,37 +83,37 @@ function animate() {
         renderer.resize(window.innerWidth, window.innerHeight);
     }
 
-    if (input.mouse('mouse2')) {
-        stage.position.x += input.mouse('x') - lastMouseX;
-        stage.position.y += input.mouse('y') - lastMouseY;
+    if (input('mouse2')) {
+        stage.position.x += input('mouseX') - lastMouseX;
+        stage.position.y += input('mouseY') - lastMouseY;
     }
 
     var scrollSpeed = 6;
-    if (input.keyboard('<up>') || input.keyboard('W')) {
+    if (input('up')) {
         stage.position.y += scrollSpeed;
     }
-    if (input.keyboard('<down>') || input.keyboard('S')) {
+    if (input('down')) {
         stage.position.y -= scrollSpeed;
     }
-    if (input.keyboard('<left>') || input.keyboard('A')) {
+    if (input('left')) {
         stage.position.x += scrollSpeed;
     }
-    if (input.keyboard('<right>') || input.keyboard('D')) {
+    if (input('right')) {
         stage.position.x -= scrollSpeed;
     }
     var zoomSpeed = .02;
-    if ((input.keyboard('-') || input.keyboard('<num-->')) && stage.scale.y > .2) {
+    if (input('zoomOut') && stage.scale.y > .2) {
         stage.position.x -= (stage.position.x - window.innerWidth / 2) * zoomSpeed / stage.scale.y;
         stage.position.y -= (stage.position.y - window.innerHeight / 2) * zoomSpeed / stage.scale.y;
         stage.scale.x = stage.scale.y = Math.max(.2, stage.scale.y - zoomSpeed);
     }
-    if ((input.keyboard('=') || input.keyboard('<num-+>')) && stage.scale.y < 4) {
+    if (input('zoomIn') && stage.scale.y < 4) {
         stage.position.x += (stage.position.x - window.innerWidth / 2) * zoomSpeed / stage.scale.y;
         stage.position.y += (stage.position.y - window.innerHeight / 2) * zoomSpeed / stage.scale.y;
         stage.scale.x = stage.scale.y = Math.min(4, stage.scale.y + zoomSpeed);
     }
 
     renderer.render(stage);
-    lastMouseX = input.mouse('x');
-    lastMouseY = input.mouse('y');
+    lastMouseX = input('mouseX');
+    lastMouseY = input('mouseY');
 }

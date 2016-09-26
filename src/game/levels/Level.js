@@ -25,8 +25,8 @@ function Level(options) {
         mouse: {
             get: function () {
                 return {
-                    x: (this.inputs.mouse('x') - renderer.position.x) / renderer.scale.x + this.width / 2,
-                    y: (this.inputs.mouse('y') - renderer.position.y) / renderer.scale.y + this.height / 2
+                    x: (this.inputs('mouseX') - renderer.position.x) / renderer.scale.x + this.width / 2,
+                    y: (this.inputs('mouseY') - renderer.position.y) / renderer.scale.y + this.height / 2
                 };
             }.bind(this)
         }
@@ -163,7 +163,7 @@ function Level(options) {
         var building = this.player.actions.createBuilding(this.placementBuilding.constructor, block.x, block.y);
         this.cancelBuildingPlacement();
         this.updatePaths();
-        if (this.inputs.keyboard('<shift>')) {
+        if (this.inputs('<shift>')) {
             this.startBuildingPlacement(building.constructor);
         }
         return building;
@@ -260,16 +260,16 @@ function Level(options) {
         return this.findOpenBlockNear(rejectedBlocks);
     };
     this.processKeyboardInput = function () {
-        if (this.inputs.keyboard('<escape>')) {
+        if (this.inputs('cancel')) {
             if (this.placementBuilding != null) {
-                this.inputs.keyboard('<escape>', 0);
+                this.inputs('cancel', 0);
                 this.cancelBuildingPlacement();
             }
         }
     };
     this.processMouseInput = function () {
-        if (this.inputs.mouse('mouse0')) {
-            this.inputs.mouse('mouse0', 0);
+        if (this.inputs('mouse0')) {
+            this.inputs('mouse0', 0);
             var clickedBlock = this.getBlockOrNullFromCoords(this.mouse.x, this.mouse.y);
             if (this.placementBuilding != null) {
                 this.finishBuildingPlacement(clickedBlock);
@@ -283,9 +283,9 @@ function Level(options) {
             }
         }
 
-        if (this.inputs.mouse('mouse2')) {
+        if (this.inputs('mouse2')) {
             if (this.placementBuilding != null) {
-                this.inputs.mouse('mouse2', 0);
+                this.inputs('mouse2', 0);
                 this.cancelBuildingPlacement();
             }
         }

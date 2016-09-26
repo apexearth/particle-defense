@@ -220,10 +220,10 @@ describe('Level', function () {
     });
     describe('.processKeyboardInput()', function () {
         it('escape, stop building placement', function () {
-            level.inputs.keyboard('<escape>', 1);
+            level.inputs('cancel', 1);
             level.placementBuilding = {};
             level.processKeyboardInput();
-            expect(level.inputs.keyboard('<escape>')).to.equal(0); // Resets key after processing the input.
+            expect(level.inputs('cancel')).to.equal(0); // Resets key after processing the input.
             expect(level.placementBuilding).to.equal(null);
         });
     });
@@ -237,11 +237,11 @@ describe('Level', function () {
         it('mouse0, Select Building', function () {
             var building = BuildingSpec.createBuilding(level, level.players[0]);
             level.addBuilding(building);
-            level.inputs.mouse('x', 1);
-            level.inputs.mouse('y', 1);
-            level.inputs.mouse('mouse0', 1);
+            level.inputs('mouseX', 1);
+            level.inputs('mouseY', 1);
+            level.inputs('mouse0', 1);
             level.processMouseInput();
-            expect(level.inputs.mouse('mouse0')).to.equal(0); // Resets mouse button after processing the input.
+            expect(level.inputs('mouse0')).to.equal(0); // Resets mouse button after processing the input.
             expect(level.selection).to.equal(building);
             expect(building.selected).to.equal(true);
         });
@@ -250,22 +250,22 @@ describe('Level', function () {
             level.player.resources.energy = Building.cost.energy;
             level.player.resources.metal = Building.cost.metal;
             expect(level.getBlock(0, 0).building).to.equal(null);
-            level.inputs.mouse('x', 1);
-            level.inputs.mouse('y', 1);
-            level.inputs.mouse('mouse0', 1);
+            level.inputs('mouseX', 1);
+            level.inputs('mouseY', 1);
+            level.inputs('mouse0', 1);
             level.processMouseInput();
-            expect(level.inputs.mouse('mouse0')).to.equal(0); // Resets mouse button after processing the input.
+            expect(level.inputs('mouse0')).to.equal(0); // Resets mouse button after processing the input.
             expect(level.placementBuilding).to.equal(null);
             expect(level.getBlock(0, 0).building.constructor).to.equal(Building);
         });
         it('mouse2, Cancel Place Building', function () {
             level.startBuildingPlacement(Building);
             expect(level.getBlock(0, 0).building).to.equal(null);
-            level.inputs.mouse('x', 1);
-            level.inputs.mouse('y', 1);
-            level.inputs.mouse('mouse2', 1);
+            level.inputs('mouseX', 1);
+            level.inputs('mouseY', 1);
+            level.inputs('mouse2', 1);
             level.processMouseInput();
-            expect(level.inputs.mouse('mouse2')).to.equal(0); // Resets mouse button after processing the input.
+            expect(level.inputs('mouse2')).to.equal(0); // Resets mouse button after processing the input.
             expect(level.placementBuilding).to.equal(null);
             expect(level.getBlock(0, 0).building).to.equal(null);
         });
@@ -470,5 +470,7 @@ describe('Level', function () {
         assureIteratedAndUpdated('players');
     });
 
-    coverage(this, createLevel());
+    coverage(this, createLevel(), [
+        'inputs'
+    ]);
 });

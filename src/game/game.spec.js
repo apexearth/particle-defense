@@ -26,6 +26,7 @@ describe('game', function () {
         expect(game.timeoutId).to.exist;
         expect(game.player).to.exist;
     }
+
     it('.startLevel()', function () {
         var levelFn = chai.spy(game.levels[0]);
         expect(game.level).to.not.exist;
@@ -110,8 +111,8 @@ describe('game', function () {
         game.renderer.resetPosition();
         start();
         game.moveMouseToCoordinate(10, 20);
-        expect(game.inputs.mouse('x')).to.equal(-440);
-        expect(game.inputs.mouse('y')).to.equal(-430);
+        expect(game.inputs('mouseX')).to.equal(-440);
+        expect(game.inputs('mouseY')).to.equal(-430);
     });
     it('.moveMouseToBlock()', function () {
         game.renderer.resetPosition();
@@ -120,9 +121,11 @@ describe('game', function () {
             x: 1,
             y: 2
         });
-        expect(game.inputs.mouse('x')).to.equal(-410);
-        expect(game.inputs.mouse('y')).to.equal(-370);
+        expect(game.inputs('mouseX')).to.equal(-410);
+        expect(game.inputs('mouseY')).to.equal(-370);
     });
 
-    coverage(this, game);
+    coverage(this, game, [
+        'inputs'
+    ]);
 });
