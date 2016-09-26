@@ -28,6 +28,7 @@ describe('App', function () {
         'componentDidMount',
         'mountedStateUpdate',
         'unmountedStateUpdate',
+        'unsubscribe',
         'Screen' // This is a property which returns a function. The function will not be tested here.
     ]);
 });

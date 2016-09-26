@@ -5,12 +5,12 @@ class App extends Component {
     constructor() {
         super();
         this.state = store.getState();
-        store.subscribe(this.unmountedStateUpdate.bind(this));
+        this.unsubscribe = store.subscribe(this.unmountedStateUpdate.bind(this));
     }
 
     componentDidMount() {
-        store.unsubscribe(this.unmountedStateUpdate.bind(this));
-        store.subscribe(this.mountedStateUpdate.bind(this));
+        this.unsubscribe();
+        this.unsubscribe = store.subscribe(this.mountedStateUpdate.bind(this));
     }
 
     render() {
