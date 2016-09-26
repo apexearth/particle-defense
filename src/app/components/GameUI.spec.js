@@ -34,5 +34,7 @@ describe('GameUI', function () {
         expect(game.level.placementBuilding).to.equal(null);
         expect(game.player.buildings.length).to.equal(2);
     });
-    coverage(this, new GameUI(), ['setState', 'forceUpdate', 'render']);
+    coverage(this, new GameUI(), ['setState', 'forceUpdate', 'render',
+        'inputs'
+    ]);
 });

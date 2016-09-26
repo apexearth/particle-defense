@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import store from '../store';
-import GameUI from './GameUI';
 
 class MainMenu extends Component {
     constructor() {
