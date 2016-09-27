@@ -163,7 +163,7 @@ function Level(options) {
         var building = this.player.actions.createBuilding(this.placementBuilding.constructor, block.x, block.y);
         this.cancelBuildingPlacement();
         this.updatePaths();
-        if (this.inputs('<shift>')) {
+        if (this.inputs('continueBuildingPlacement')) {
             this.startBuildingPlacement(building.constructor);
         }
         return building;
@@ -268,8 +268,8 @@ function Level(options) {
         }
     };
     this.processMouseInput = function () {
-        if (this.inputs('mouse0')) {
-            this.inputs('mouse0', 0);
+        if (this.inputs('finishBuildingPlacement')) {
+            this.inputs('finishBuildingPlacement', 0);
             var clickedBlock = this.getBlockOrNullFromCoords(this.mouse.x, this.mouse.y);
             if (this.placementBuilding != null) {
                 this.finishBuildingPlacement(clickedBlock);
@@ -283,46 +283,49 @@ function Level(options) {
             }
         }
 
-        if (this.inputs('mouse2')) {
+        if (this.inputs('cancelBuildingPlacement')) {
             if (this.placementBuilding != null) {
-                this.inputs('mouse2', 0);
+                this.inputs('cancelBuildingPlacement', 0);
                 this.cancelBuildingPlacement();
             }
         }
     };
     this.checkCount = 0;
-    this.update = function () {
+    this.update = function (seconds) {
+        if (typeof seconds !== 'number') {
+            throw new Error('Argument seconds must be provided and must be a number');
+        }
         this.frameCount++;
 
         var i;
         i = this.units.length;
         while (i-- > 0) {
             var unit = this.units[i];
-            unit.update();
+            unit.update(seconds);
         }
 
         i = this.buildings.length;
         while (i-- > 0) {
             var building = this.buildings[i];
-            building.update();
+            building.update(seconds);
         }
 
         i = this.projectiles.length;
         while (i-- > 0) {
             var projectile = this.projectiles[i];
-            projectile.update();
+            projectile.update(seconds);
         }
 
         i = this.objects.length;
         while (i-- > 0) {
             var object = this.objects[i];
-            if (object.update) object.update();
+            if (object.update) object.update(seconds);
         }
 
         i = this.players.length;
         while (i-- > 0) {
             var player = this.players[i];
-            player.update();
+            player.update(seconds);
         }
 
 
@@ -335,7 +338,8 @@ function Level(options) {
         this.processMouseInput();
         this.processKeyboardInput();
 
-        if (++this.checkCount >= Settings.second) {
+        this.checkCount += seconds;
+        if (this.checkCount >= 1) {
             var win = this.checkWinConditions();
             var loss = this.checkLossConditions();
             if (win || loss) {

@@ -27,7 +27,7 @@ describe('units', function () {
     it('new: UnitCircle', function () {
         createLevel();
 
-        var unit = new Units.UnitCircle({
+        var unit = new Units.Engineer({
             level: level,
             player: level.players[0],
             position: {x: 0, y: 0}

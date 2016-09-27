@@ -12,11 +12,14 @@ function VelocityProjectile(options) {
     this.lastPosition = this.position;
     this.width = Math.sqrt(this.damage) * 2 / this.initialVelocity * 3;
     this.projectileUpdate = this.update;
-    this.update = function () {
+    this.update = function (seconds) {
+        if (typeof seconds !== 'number') {
+            throw new Error('Argument seconds must be provided and must be a number');
+        }
         this.lastPosition = this.position.clone();
-        this.position.x += this.velocity.x;
-        this.position.y += this.velocity.y;
-        this.projectileUpdate();
+        this.position.x += this.velocity.x * seconds;
+        this.position.y += this.velocity.y * seconds;
+        this.projectileUpdate(seconds);
 
         this.graphics.clear();
         this.graphics.lineStyle(this.width, 0xFFFFFF, 1);

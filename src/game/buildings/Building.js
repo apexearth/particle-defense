@@ -35,6 +35,7 @@ function Building(options) {
     this.resourceStorage = Object.assign({}, options.resourceGeneration);
 
     this.weapons = [];
+    this.builders = [];
     this.updates = [];
 
     this.upgradeCount = 0;
@@ -98,7 +99,7 @@ function Building(options) {
         }
     };
 
-    this.update = function () {
+    this.update = function (seconds) {
         if (this.health <= 0) {
             this.level.removeBuilding(this);
             return;
@@ -106,14 +107,14 @@ function Building(options) {
 
         for (var r in this.resourceGeneration) {
             if (this.resourceGeneration.hasOwnProperty(r)) {
-                this.player.resources[r] += this.resourceGeneration[r] / Settings.second;
+                this.player.resources[r] += this.resourceGeneration[r] * seconds;
             }
         }
 
         var i = this.updates.length;
-        while (i--) this.updates[i].call(this);
+        while (i--) this.updates[i].call(this, seconds);
         i = this.weapons.length;
-        while (i--) this.weapons[i].update();
+        while (i--) this.weapons[i].update(seconds);
 
         // Graphics
         this.overlayGraphics.clear();

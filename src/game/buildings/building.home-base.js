@@ -16,6 +16,7 @@ function HomeBase(options) {
     this.resourceGeneration.metal = 1.5;
     this.resourceGeneration.energy = 3;
     if (this.player) this.player.homeBase = this;
+
 }
 
 HomeBase.prototype = Object.create(Building.prototype);

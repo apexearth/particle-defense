@@ -18,16 +18,19 @@ function ThrownProjectile(weapon) {
     this.currentVelocity = weapon.projectileSpeed;
     this.projectileSlowFactor = weapon.projectileSlowFactor;
     this.projectileUpdate     = this.update;
-    this.update               = function () {
-        this.projectileUpdate();
+    this.update = function (seconds) {
+        if (typeof seconds !== 'number') {
+            throw new Error('Argument seconds must be provided and must be a number');
+        }
+        this.projectileUpdate(seconds);
         this.lastPosition = this.position.clone();
         if (this.distance == null || this.distance > this.width) {
             this.distance = math.Distance(this.position.x - this.target.position.x, this.position.y - this.target.position.y);
             this.currentVelocity = this.initialVelocity * (Math.pow(this.distance + 25, this.projectileSlowFactor) * 2 / Math.pow(this.initialDistance, this.projectileSlowFactor));
             this.velocity.x = Math.cos(this.direction) * this.currentVelocity;
             this.velocity.y = Math.sin(this.direction) * this.currentVelocity;
-            this.position.x += this.velocity.x;
-            this.position.y += this.velocity.y;
+            this.position.x += this.velocity.x * seconds;
+            this.position.y += this.velocity.y * seconds;
         }
         this.graphics.clear();
         this.graphics.lineStyle(this.width, 0xFFFFFF, .5);

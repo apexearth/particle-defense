@@ -1,5 +1,4 @@
 ﻿var CommandQueue = require('./CommandQueue');
-var Settings = require('./Settings');
 
 var game = {
     initialize: function () {
@@ -8,7 +7,7 @@ var game = {
         this.unqueueUpdate();
     },
     frames: 0,
-    second: 1000 / Settings.second,
+    lastUpdate: Date.now(),
     timeoutId: null,
     level: null,
 
@@ -37,7 +36,7 @@ var game = {
         this.timeoutId = setTimeout(function () {
             this.queueUpdate();
             this.update();
-        }.bind(this), this.second);
+        }.bind(this), 0);
     },
     unqueueUpdate: function () {
         if (this.timeoutId) {
@@ -45,10 +44,12 @@ var game = {
         }
         this.timeoutId = null;
     },
-    update: function () {
+    update: function (seconds) {
         this.frames++;
-        this.level.update();
+        var secondsSinceLastUpdate = seconds || (Date.now() - this.lastUpdate) / 1000;
+        this.level.update(secondsSinceLastUpdate);
         CommandQueue.process(this);
+        this.lastUpdate = Date.now();
     },
     start: function (levelFn) {
         if (this.running) throw new Error('Game is already running.');

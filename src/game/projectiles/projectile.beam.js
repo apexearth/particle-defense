@@ -29,10 +29,13 @@ function BeamProjectile(weapon) {
     };
 
     this.projectileUpdate = this.update;
-    this.update           = function () {
-        if (this.lifespanCount > this.lifespan - this.fadeTime) this.fadeTimeCount++;
-        this.projectileUpdate();
-        this.alpha = Math.max(1, this.fadeTime - this.fadeTimeCount) / (this.fadeTime / 2);
+    this.update = function (seconds) {
+        if (typeof seconds !== 'number') {
+            throw new Error('Argument seconds must be provided and must be a number');
+        }
+        if (this.lifespanCount > this.lifespan - this.fadeTime) this.fadeTimeCount += seconds;
+        this.projectileUpdate(seconds);
+        this.container.alpha = Math.max(1, this.fadeTime - this.fadeTimeCount) / (this.fadeTime / 2);
     };
     this.onHit            = function () {
         // Nothing

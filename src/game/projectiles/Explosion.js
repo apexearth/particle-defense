@@ -8,31 +8,34 @@ function Explosion(particle) {
     particle.level.addChild(this);
     particle.level.objects.push(this);
     this.level = particle.level;
-    this.position.x         = particle.position.x;
-    this.position.y         = particle.position.y;
+    this.position.x = particle.position.x;
+    this.position.y = particle.position.y;
     this.explosiveSpeed = particle.explosiveSpeed;
-    this.explosiveTime = particle.explosiveTime * Settings.second;
+    this.explosiveTime = particle.explosiveTime;
     this.explosiveTimeCount = 0;
-    this.damage = particle.damage / Settings.second;
+    this.damage = particle.damage;
     this.radius = particle.explosiveInitialSize;
-    
+
     // this.sprite = PIXI.createCircle('rgb(255,50,50)', 100);
     this.graphics = new PIXI.Graphics();
     this.addChild(this.graphics);
 
-    this.die    = function () {
+    this.die = function () {
         particle.level.objects.splice(particle.level.objects.indexOf(this), 1);
         this.level.removeChild(this);
     };
-    this.update = function () {
-        this.explosiveTimeCount++;
-        this.radius += this.explosiveSpeed;
-    
+    this.update = function (seconds) {
+        if (typeof seconds !== 'number') {
+            throw new Error('Argument seconds must be provided and must be a number');
+        }
+        this.explosiveTimeCount += seconds;
+        this.radius += this.explosiveSpeed * seconds;
+
         var i = this.level.units.length;
         while (i--) {
             var unit = this.level.units[i];
             if (unit.hitTest(this)) {
-                unit.damage(this.damage);
+                unit.damage(this.damage * seconds);
             }
         }
         if (this.explosiveTimeCount >= this.explosiveTime) {
@@ -45,7 +48,7 @@ function Explosion(particle) {
     };
 }
 
-Explosion.prototype             = Object.create(PIXI.Container.prototype);
+Explosion.prototype = Object.create(PIXI.Container.prototype);
 Explosion.prototype.constructor = Explosion;
 
 Explosion.addExplosiveProperties = function (projectile, weapon) {
@@ -53,7 +56,7 @@ Explosion.addExplosiveProperties = function (projectile, weapon) {
     projectile.explosiveTime = weapon.explosiveTime;
     projectile.explosiveInitialSize = weapon.explosiveInitialSize;
     projectile.inheritedOnHitExplosiveProperties = projectile.onHit;
-    projectile.onHit                             = function () {
+    projectile.onHit = function () {
         projectile.inheritedOnHitExplosiveProperties();
         new Explosion(projectile);
     };

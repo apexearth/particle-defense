@@ -38,6 +38,7 @@ describe('Projectile', function () {
             'initialVelocity',
             'level',
             'lifespan',
+            'lifespanCount',
             'onHit',
             'player',
             'radius',
@@ -87,14 +88,14 @@ describe('Projectile', function () {
         it('death from lifespan ', function () {
             var projectile = createProjectile();
             projectile.lifespan = -1;
-            projectile.update();
+            projectile.update(1);
             expect(projectile.dead).to.equal(true);
             expect(projectile.level.projectiles.indexOf(projectile) >= 0).to.equal(false);
         });
         it('death outside level', function () {
             var projectile = createProjectile();
             projectile.position.x = projectile.level.position.x - 100;
-            projectile.update();
+            projectile.update(1);
             expect(projectile.dead).to.equal(true);
             expect(projectile.level.projectiles.indexOf(projectile) >= 0).to.equal(false);
         });
@@ -104,7 +105,7 @@ describe('Projectile', function () {
             unit.position.x = projectile.position.x;
             unit.position.y = projectile.position.y;
             var initialHealth = unit.health;
-            projectile.update();
+            projectile.update(1);
             expect(projectile.level.projectiles.indexOf(projectile) >= 0).to.equal(false);
             expect(unit.health).to.equal(initialHealth - projectile.damage);
         });
@@ -127,7 +128,7 @@ describe('Projectile', function () {
             });
 
             level.addProjectile(projectile);
-            level.update();
+            level.update(1);
             expect(projectile.position.x).to.be.above(100);
             expect(projectile.position.y).to.be.above(100);
         });
@@ -156,7 +157,7 @@ describe('Projectile', function () {
             });
             level.addProjectile(projectile);
 
-            level.update();
+            level.update(1);
             expect(level.projectiles.length).to.equal(0);
         });
         it('should die when outside of level', function () {
@@ -174,7 +175,7 @@ describe('Projectile', function () {
             level.addProjectile(projectile);
 
             expect(level.projectiles.length).to.equal(1);
-            level.update();
+            level.update(1);
             expect(level.projectiles.length).to.equal(0);
         });
     });

@@ -9,8 +9,6 @@ var game = require('./game');
 describe('game', function () {
     beforeEach(function () {
         // Decrease second to cause faster updates.
-        expect(game.second).to.be.a('number');
-        game.second = 0;
         game.initialize();
     });
     after(function () {
@@ -44,7 +42,7 @@ describe('game', function () {
             expect(game.frames).to.be.greaterThan(0);
             expect(game.running).to.equal(false);
             done();
-        }, game.second + 1);
+        }, 1);
     }
 
     it('.fastForward()', function () {
@@ -64,7 +62,7 @@ describe('game', function () {
             expect(game.update).to.have.been.called();
             expect(game.running).to.equal(true);
             done();
-        }, game.second + 1);
+        }, 1);
     }
 
     it('.unqueueUpdate()', function (done) {
@@ -76,7 +74,7 @@ describe('game', function () {
                 expect(game.update).to.have.not.been.called();
                 expect(game.running).to.equal(false);
                 done();
-            }, game.second + 1);
+            }, 1);
         });
     });
     it('.update()', function () {

@@ -104,7 +104,10 @@ function Weapon(options) {
             }
         }
     };
-    this.update = function () {
+    this.update = function (seconds) {
+        if (typeof seconds !== 'number') {
+            throw new Error('Argument seconds must be provided and must be a number');
+        }
         if (this.target != null && this.target.dead) {
             this.resetTarget();
         }
@@ -114,7 +117,7 @@ function Weapon(options) {
             this.updateRotation();
         }
 
-        if (this.fireRateCount < this.fireRate) this.fireRateCount++;
+        this.fireRateCount += seconds;
         if (this.target != null && this.fireRateCount >= this.fireRate) {
             this.tryFireAtTarget();
         }

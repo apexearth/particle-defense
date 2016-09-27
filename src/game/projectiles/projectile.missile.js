@@ -15,7 +15,10 @@ function MissileProjectile(weapon) {
         return unit.hitTestLine(this.position, this.lastPosition);
     };
     this.inheritedUpdateMissileProjectile = this.update;
-    this.update                           = function () {
+    this.update = function (seconds) {
+        if (typeof seconds !== 'number') {
+            throw new Error('Argument seconds must be provided and must be a number');
+        }
         if (this.target !== null) {
             if (this.target.dead) this.target = null;
             if (this.target !== null) {
@@ -23,7 +26,7 @@ function MissileProjectile(weapon) {
                 this.direction = math.leadingAngle(this.position.x, this.position.y, expectedAverageVelocity, this.target.position.x, this.target.position.y, this.target.velocity.x, this.target.velocity.y);
             }
         }
-        this.inheritedUpdateMissileProjectile();
+        this.inheritedUpdateMissileProjectile(seconds);
     };
 }
 

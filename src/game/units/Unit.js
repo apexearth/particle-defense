@@ -68,7 +68,7 @@ function Unit(options) {
             throw new Error('A finish is required and must contain x and y.');
         return collision.lineCircle(start, finish, this.position, this.radius).result === collision.INTERSECT;
     };
-    this.move = function () {
+    this.move = function (seconds) {
         if (this.path == null || this.path.length == 0) {
             this.velocity.x = 0;
             this.velocity.y = 0;
@@ -76,31 +76,35 @@ function Unit(options) {
         }
         var moveTarget = this.path[0];
         var moveAmount = math.normalize(this.position.x, this.position.y, moveTarget.x, moveTarget.y);
-        moveAmount.x *= this.moveSpeed;
-        moveAmount.y *= this.moveSpeed;
 
-        this.velocity.x = moveAmount.x;
-        this.velocity.y = moveAmount.y;
+        this.velocity.x += moveAmount.x * this.moveSpeed * seconds;
+        this.velocity.y += moveAmount.y * this.moveSpeed * seconds;
 
-        if (Math.abs(this.position.x - moveTarget.x) > Math.abs(moveAmount.x))
-            this.position.x += moveAmount.x;
+        var finalMoveAmount = {
+            x: this.velocity.x * seconds,
+            y: this.velocity.x * seconds
+        };
+        if (Math.abs(this.position.x - moveTarget.x) > Math.abs(finalMoveAmount.x))
+            this.position.x += finalMoveAmount.x;
         else
             this.position.x = moveTarget.x;
 
-        if (Math.abs(this.position.y - moveTarget.y) > Math.abs(moveAmount.y))
-            this.position.y += moveAmount.y;
+        if (Math.abs(this.position.y - moveTarget.y) > Math.abs(finalMoveAmount.y))
+            this.position.y += finalMoveAmount.y;
         else
             this.position.y = moveTarget.y;
 
         if (this.position.x == moveTarget.x && this.position.y == moveTarget.y)
             this.path.splice(0, 1);
-
     };
     this.damage = function (amount) {
         this.health -= amount;
         if (this.health <= 0) this.die();
     };
-    this.update = function () {
+    this.update = function (seconds) {
+        if (typeof seconds !== 'number') {
+            throw new Error('Argument seconds must be provided and must be a number');
+        }
         if (this.score === 0) this.calculateScore();
 
         this.move();
@@ -141,3 +145,9 @@ function Unit(options) {
         return this.level.getPathForUnit(this);
     };
 }
+
+Unit.buildTime = 100;
+Unit.cost = {
+    energy: 0,
+    metal: 0
+};

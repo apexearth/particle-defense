@@ -6,10 +6,13 @@ function AcceleratingProjectile(weapon) {
     VelocityProjectile.call(this, weapon);
     this.acceleration = weapon.acceleration;
     this.velocityProjectileUpdate = this.update;
-    this.update                   = function () {
-        this.velocityProjectileUpdate();
-        this.velocity.x += Math.cos(this.direction) * this.acceleration;
-        this.velocity.y += Math.sin(this.direction) * this.acceleration;
+    this.update = function (seconds) {
+        if (typeof seconds !== 'number') {
+            throw new Error('Argument seconds must be provided and must be a number');
+        }
+        this.velocityProjectileUpdate(seconds);
+        this.velocity.x += Math.cos(this.direction) * this.acceleration * seconds;
+        this.velocity.y += Math.sin(this.direction) * this.acceleration * seconds;
     };
 }
 

@@ -239,9 +239,9 @@ describe('Level', function () {
             level.addBuilding(building);
             level.inputs('mouseX', 1);
             level.inputs('mouseY', 1);
-            level.inputs('mouse0', 1);
+            level.inputs('finishBuildingPlacement', 1);
             level.processMouseInput();
-            expect(level.inputs('mouse0')).to.equal(0); // Resets mouse button after processing the input.
+            expect(level.inputs('finishBuildingPlacement')).to.equal(0); // Resets mouse button after processing the input.
             expect(level.selection).to.equal(building);
             expect(building.selected).to.equal(true);
         });
@@ -252,9 +252,9 @@ describe('Level', function () {
             expect(level.getBlock(0, 0).building).to.equal(null);
             level.inputs('mouseX', 1);
             level.inputs('mouseY', 1);
-            level.inputs('mouse0', 1);
+            level.inputs('finishBuildingPlacement', 1);
             level.processMouseInput();
-            expect(level.inputs('mouse0')).to.equal(0); // Resets mouse button after processing the input.
+            expect(level.inputs('finishBuildingPlacement')).to.equal(0); // Resets mouse button after processing the input.
             expect(level.placementBuilding).to.equal(null);
             expect(level.getBlock(0, 0).building.constructor).to.equal(Building);
         });
@@ -263,9 +263,9 @@ describe('Level', function () {
             expect(level.getBlock(0, 0).building).to.equal(null);
             level.inputs('mouseX', 1);
             level.inputs('mouseY', 1);
-            level.inputs('mouse2', 1);
+            level.inputs('cancelBuildingPlacement', 1);
             level.processMouseInput();
-            expect(level.inputs('mouse2')).to.equal(0); // Resets mouse button after processing the input.
+            expect(level.inputs('cancelBuildingPlacement')).to.equal(0); // Resets mouse button after processing the input.
             expect(level.placementBuilding).to.equal(null);
             expect(level.getBlock(0, 0).building).to.equal(null);
         });
@@ -423,34 +423,33 @@ describe('Level', function () {
     });
     describe('.update()', function () {
         it('.frameCount', function () {
-            expect(level.update.bind(level)).to.increase(level, 'frameCount');
+            expect(level.update.bind(level, 1)).to.increase(level, 'frameCount');
         });
         it('.mouse', function () {
             expect(level.mouse).to.include.keys('x', 'y');
         });
         it('.placementBuilding', function () {
             level.placementBuilding = {position: {}};
-            level.update();
+            level.update(1);
             expect(level.placementBuilding.position).to.include.keys('x', 'y');
         });
         it('.processMouseInput()', function () {
             level.processMouseInput = chai.spy(level.processMouseInput);
-            level.update();
+            level.update(1);
             expect(level.processMouseInput).to.have.been.called();
         });
         it('.processKeyboardInput()', function () {
             level.processKeyboardInput = chai.spy(level.processKeyboardInput);
-            level.update();
+            level.update(1);
             expect(level.processKeyboardInput).to.have.been.called();
         });
         it('.checkCount, check win or loss', function () {
             level.checkWinConditions = chai.spy(level.checkWinConditions);
             level.checkLossConditions = chai.spy(level.checkLossConditions);
-            level.update();
+            level.update(.5);
             expect(level.checkWinConditions).to.have.not.been.called();
             expect(level.checkLossConditions).to.have.not.been.called();
-            level.checkCount = Settings.second;
-            level.update();
+            level.update(.5);
             expect(level.checkWinConditions).to.have.been.called();
             expect(level.checkLossConditions).to.have.been.called();
         });
@@ -458,7 +457,7 @@ describe('Level', function () {
             it('.' + key + ' > .update', function () {
                 level[key] = [];
                 level[key].push({update: chai.spy()});
-                level.update();
+                level.update(.5);
                 expect(level[key][0].update).to.have.been.called();
             });
         }

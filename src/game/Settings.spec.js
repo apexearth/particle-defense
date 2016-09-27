@@ -4,8 +4,7 @@ describe('Settings', function () {
     var expect = require('chai').expect;
     it('default', function () {
         expect(Settings).to.include.keys([
-            'BlockSize',
-            'second'
+            'BlockSize'
         ]);
     });
 

@@ -1,13 +1,15 @@
 var userInput = require('user-input');
 var Mapping = require('user-input-mapping');
 
+var inputs = userInput()
+    .withMouse()
+    .withKeyboard();
+
 var mapping = new Mapping(
-    userInput()
-        .withMouse()
-        .withKeyboard(),
+    inputs,
     {
         keyboard: {
-            '<shift>': '<shift>',
+            'continueBuildingPlacement': '<shift>',
             'cancel': '<escape>',
             'up': ['<up>', 'W'],
             'down': ['<down>', 'S'],
@@ -21,12 +23,17 @@ var mapping = new Mapping(
             'mouse1': 'mouse1',
             'mouse2': 'mouse2',
             'mouseX': 'x',
-            'mouseY': 'y'
+            'mouseY': 'y',
+
+            'finishBuildingPlacement': 'mouse0',
+            'cancelBuildingPlacement': 'mouse2',
         }
-    },
-    false);
+    }, false);
 
 var value = mapping.value.bind(mapping);
 var clear = mapping.clear.bind(mapping);
+var update = mapping.update.bind(mapping);
 value.clear = clear;
+value.update = update;
+value.mapping = mapping;
 module.exports = value;

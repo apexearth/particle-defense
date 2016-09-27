@@ -137,12 +137,12 @@
 
             var initialHealth = unit.health;
 
-            level.update();
+            level.update(1);
             expect(turret.weapons[0].target).to.not.equal(null);
             expect(level.projectiles.length).to.be.above(0);
 
             // Unit is placed close enough that after the second update it should be hit.
-            level.update();
+            level.update(1);
             expect(unit.health).to.be.below(initialHealth);
         });
         it('should not attack units out of range', function () {
@@ -167,7 +167,7 @@
             level.buildings.push(turret);
 
             var initialHealth = unit.health;
-            level.update();
+            level.update(1);
             expect(initialHealth).to.equal(unit.health);
         });
     });
@@ -192,10 +192,10 @@
         var energy = level.player.resources.energy;
         var metal = level.player.resources.metal;
         var ammo = level.player.resources.ammo;
-        level.update();
-        level.update();
-        level.update();
-        level.update();
+        level.update(1);
+        level.update(1);
+        level.update(1);
+        level.update(1);
         expect(energy).to.be.below(level.player.resources.energy);
         expect(metal).to.be.below(level.player.resources.metal);
         expect(ammo).to.be.below(level.player.resources.ammo);

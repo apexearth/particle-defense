@@ -1,6 +1,5 @@
 var PIXI = require('pixi.js');
 var Projectile = require('./Projectile');
-var Settings = require('../Settings');
 var math = require('../../util/math');
 
 module.exports = ShockProjectile;
@@ -12,15 +11,15 @@ function ShockProjectile(weapon) {
     this.container.addChild(this.graphics);
 
     // Vars
-    this.lifespan = Settings.second / 3;
-    this.width = this.damage * 5 / this.lifespan;
+    this.lifespan = 3;
+    this.width = this.damage / this.lifespan;
     this.range = weapon.range;
     this.connectedUnits = [];
     this.connection = {
         array: [],
-        unit:  null,
-        x:     this.position.x,
-        y:     this.position.y,
+        unit: null,
+        x: this.position.x,
+        y: this.position.y,
         depth: 0
     };
 
@@ -31,7 +30,7 @@ function ShockProjectile(weapon) {
     this.getDepthDecay = function (depth) {
         return 1 + depth / 3;
     };
-    this.unitHitCheck  = function (connection) {
+    this.unitHitCheck = function (connection) {
         if (connection == null) connection = this.connection;
         if (connection.unit !== null) connection.unit.damage(this.effectiveDamage(connection.depth));
         var i = connection.array.length;
@@ -46,14 +45,14 @@ function ShockProjectile(weapon) {
             connection.y = this.position.y;
         } else {
             if (connection.unit.dead) {
-                connection.unit  = null;
+                connection.unit = null;
                 connection.array = [];
             } else {
                 connection.x = connection.unit.position.x;
                 connection.y = connection.unit.position.y;
             }
         }
-    
+
         var i = this.level.units.length;
         while (i--) {
             var unit = this.level.units[i];
@@ -63,9 +62,9 @@ function ShockProjectile(weapon) {
                 if (distance < range) {
                     connection.array.push({
                         array: [],
-                        unit:  unit,
-                        x:     unit.position.x,
-                        y:     unit.position.y,
+                        unit: unit,
+                        x: unit.position.x,
+                        y: unit.position.y,
                         depth: depth
                     });
                     this.connectedUnits.push(unit);
@@ -78,8 +77,11 @@ function ShockProjectile(weapon) {
     };
 
     this.projectileUpdate = this.update;
-    this.update           = function () {
-        this.projectileUpdate();
+    this.update = function (seconds) {
+        if (typeof seconds !== 'number') {
+            throw new Error('Argument seconds must be provided and must be a number');
+        }
+        this.projectileUpdate(seconds);
         this.updateConnections();
 
         this.graphics.clear();
@@ -94,13 +96,13 @@ function ShockProjectile(weapon) {
         while (i--) this.drawConnection(connection.array[i], connection);
         if (parentConnection !== null && !isNaN(connection.x) && !isNaN(connection.y) && !isNaN(parentConnection.x) && !isNaN(parentConnection.y)) {
 
-            var px               = parentConnection.x,
-                py               = parentConnection.y,
-                x                = parentConnection.x,
-                y                = parentConnection.y,
+            var px = parentConnection.x,
+                py = parentConnection.y,
+                x = parentConnection.x,
+                y = parentConnection.y,
                 distance = math.distance(connection.x - parentConnection.x, connection.y - parentConnection.y),
-                iteration        = 0,
-                iterationLimit   = Math.ceil(distance / 15),
+                iteration = 0,
+                iterationLimit = Math.ceil(distance / 15),
                 distPerIteration = 1 / iterationLimit;
 
             this.graphics.moveTo(px - this.position.x, py - this.position.y);
@@ -108,9 +110,9 @@ function ShockProjectile(weapon) {
             while (iteration++ < iterationLimit && (x != connection.x || y != connection.y)) {
 
                 var direction = math.angle(x, y, connection.x, connection.y),
-                    rand      = Math.PI * .2 * Math.random() - Math.PI * .1,
-                    xMove     = distance * distPerIteration * Math.cos(direction + rand),
-                    yMove     = distance * distPerIteration * Math.sin(direction + rand);
+                    rand = Math.PI * .2 * Math.random() - Math.PI * .1,
+                    xMove = distance * distPerIteration * Math.cos(direction + rand),
+                    yMove = distance * distPerIteration * Math.sin(direction + rand);
 
                 x += xMove;
                 y += yMove;

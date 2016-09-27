@@ -42,7 +42,7 @@
         expect(unit.path.length).to.be.greaterThan(0);
 
         var initialDistance = math.distance(unit.position.x - unit.target.position.x, unit.position.y - unit.target.position.y);
-        unit.update();
+        unit.update(1);
         var distanceAfterUpdate = math.distance(unit.position.x - unit.target.position.x, unit.position.y - unit.target.position.y);
         expect(initialDistance).to.be.above(distanceAfterUpdate);
     });
@@ -67,12 +67,12 @@
         unit.clearDestination();
         unit.velocity.x = 10;
         unit.velocity.y = 10;
-        unit.update();
+        unit.update(1);
         expect(unit.velocity.x).to.equal(0);
         expect(unit.velocity.y).to.equal(0);
 
         unit.setDestination(level.buildings[0]);
-        unit.update();
+        unit.update(1);
         expect(unit.velocity.x).to.not.equal(0);
         expect(unit.velocity.y).to.not.equal(0);
     });
@@ -145,7 +145,7 @@
             var unit = addUnit(level);
             var block = unit.block;
             unit.position.x += level.blockSize;
-            unit.update();
+            unit.update(1);
             expect(unit.block).to.not.equal(block);
         });
     });
