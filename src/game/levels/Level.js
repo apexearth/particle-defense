@@ -39,6 +39,9 @@ function Level(options) {
     var _map = new Map(this, options.width, options.height, this.blockSize, options.mapTemplate);
     this.container.addChild(_map.container);
 
+    this.graphics = new PIXI.Graphics();
+    this.container.addChild(this.graphics);
+
     this.frameCount = 0;
     this.width = _map.pixelWidth;
     this.height = _map.pixelHeight;

@@ -1,16 +1,17 @@
 ﻿var Level = require('./Level');
 var Player = require('../player');
 var Buildings = require('../buildings');
+var Units = require('../units');
 
 var list = {};
 var array = [
-    level(function Empty() {
+    addToList(function Empty() {
         return createLevel({
             players: [
                 {
                     resources: {ammo: 0, energy: 200, metal: 100},
                     buildings: [
-                        {constructor: 'HomeBase', template: {blockX: 5, blockY: 5}}
+                        {constructor: Buildings.HomeBase, template: {blockX: 5, blockY: 5}}
                     ]
                 },
                 {
@@ -19,14 +20,17 @@ var array = [
             ],
         });
     }),
-    level(function Test() {
+    addToList(function Test() {
         return createLevel({
             players: [
                 {
                     resources: {ammo: 0, energy: 200, metal: 100},
                     buildings: [
-                        {constructor: 'HomeBase', template: {blockX: 5, blockY: 5}},
-                        {constructor: 'Gun', template: {blockX: 4, blockY: 5}}
+                        {constructor: Buildings.HomeBase, template: {blockX: 5, blockY: 5}},
+                        {constructor: Buildings.Gun, template: {blockX: 4, blockY: 5}}
+                    ],
+                    units: [
+                        {constructor: Units.Engineer, template: {position: {x: 100, y: 100}}}
                     ]
                 },
                 {
@@ -50,13 +54,13 @@ var array = [
             }
         });
     }),
-    level(function One() {
+    addToList(function One() {
         return createLevel({
             players: [
                 {
                     resources: {ammo: 0, energy: 200, metal: 100},
                     buildings: [
-                        {constructor: 'HomeBase', template: {blockX: 10, blockY: 10}}
+                        {constructor: Buildings.HomeBase, template: {blockX: 10, blockY: 10}}
                     ]
                 },
                 {
@@ -90,13 +94,13 @@ var array = [
             }
         });
     }),
-    level(function Two() {
+    addToList(function Two() {
         return createLevel({
             players: [
                 {
                     resources: {ammo: 0, energy: 200, metal: 100},
                     buildings: [
-                        {constructor: 'HomeBase', template: {blockX: 3, blockY: 20}}
+                        {constructor: Buildings.HomeBase, template: {blockX: 3, blockY: 20}}
                     ]
                 },
                 {
@@ -130,13 +134,13 @@ var array = [
             }
         });
     }),
-    level(function Three() {
+    addToList(function Three() {
         return createLevel({
             players: [
                 {
                     resources: {ammo: 0, energy: 200, metal: 100},
                     buildings: [
-                        {constructor: 'HomeBase', template: {blockX: 10, blockY: 15}}
+                        {constructor: Buildings.HomeBase, template: {blockX: 10, blockY: 15}}
                     ]
                 },
                 {
@@ -170,7 +174,7 @@ var array = [
             }
         });
     }),
-    level(function Random() {
+    addToList(function Random() {
         return createRandomLevel({});
     })
 ];
@@ -178,7 +182,7 @@ array.Level = Level;
 array.list = list;
 module.exports = array;
 
-function level(fn) {
+function addToList(fn) {
     list[fn.name] = fn;
     return fn;
 }
@@ -204,11 +208,20 @@ function createLevel(json) {
 
         for (var _b in playerSpec.buildings) {
             var b = playerSpec.buildings[_b];
-            var building = new Buildings[b.constructor](Object.assign({
+            var building = new b.constructor(Object.assign({
                 level: level,
                 player: player
             }, b.template));
             level.addBuilding(building);
+        }
+
+        for (var _u in playerSpec.units) {
+            var u = playerSpec.units[_u];
+            var unit = new u.constructor(Object.assign({
+                level: level,
+                player: player
+            }, u.template));
+            level.addUnit(unit);
         }
     }
 

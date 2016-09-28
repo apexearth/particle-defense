@@ -65,7 +65,7 @@ describe('Level', function () {
     it('.addBuilding()', addBuilding);
     function addBuilding() {
         expect(level.buildings.length).to.equal(0);
-        expect(level.container.children.length).to.equal(1);
+        expect(level.container.children.length).to.equal(2);
 
         var building = new Building({
             level: level,
@@ -74,7 +74,7 @@ describe('Level', function () {
         var addedBuilding = level.addBuilding(building);
         expect(addedBuilding).to.equal(building);
         expect(level.buildings.length).to.equal(1);
-        expect(level.container.children.length).to.equal(2);
+        expect(level.container.children.length).to.equal(3);
         expect(addedBuilding.block.building).to.equal(addedBuilding);
         expect(addedBuilding.block.contains(building)).to.equal(true);
     }
@@ -86,7 +86,7 @@ describe('Level', function () {
         var removedBuilding = level.removeBuilding(level.buildings[0]);
         expect(removedBuilding).to.equal(building);
         expect(level.buildings.length).to.equal(0);
-        expect(level.container.children.length).to.equal(1);
+        expect(level.container.children.length).to.equal(2);
         expect(block.contains(building)).to.equal(false);
     });
     it('.addUnit()', function () {
