@@ -66,7 +66,7 @@ describe('Level', function () {
     it('.addBuilding()', addBuilding);
     function addBuilding() {
         expect(level.buildings.length).to.equal(0);
-        expect(level.container.children.length).to.equal(2);
+        expect(level.container.children.length).to.equal(1);
 
         var building = new Building({
             level: level,
@@ -75,7 +75,7 @@ describe('Level', function () {
         var addedBuilding = level.addBuilding(building);
         expect(addedBuilding).to.equal(building);
         expect(level.buildings.length).to.equal(1);
-        expect(level.container.children.length).to.equal(3);
+        expect(level.container.children.length).to.equal(2);
         expect(addedBuilding.block.building).to.equal(addedBuilding);
         expect(addedBuilding.block.contains(building)).to.equal(true);
     }
@@ -87,7 +87,7 @@ describe('Level', function () {
         var removedBuilding = level.removeBuilding(level.buildings[0]);
         expect(removedBuilding).to.equal(building);
         expect(level.buildings.length).to.equal(0);
-        expect(level.container.children.length).to.equal(2);
+        expect(level.container.children.length).to.equal(1);
         expect(block.contains(building)).to.equal(false);
     });
     it('.addUnit()', function () {
@@ -238,10 +238,12 @@ describe('Level', function () {
         it('mouse0, Select Building', function () {
             var building = BuildingSpec.createBuilding(level, level.players[0]);
             level.addBuilding(building);
-            level.inputs('mouseX', 1);
-            level.inputs('mouseY', 1);
+            level.inputs('mouseX', -100);
+            level.inputs('mouseY', -100);
             level.inputs('mouseSelection', 1);
             level.processMouseInput();
+            level.inputs('mouseX', 100);
+            level.inputs('mouseY', 100);
             level.inputs('mouseSelection', 0);
             level.processMouseInput();
             expect(level.selections[0]).to.equal(building);
@@ -497,6 +499,7 @@ describe('Level', function () {
     });
 
     coverage(this, createLevel(), [
-        'inputs'
+        'inputs',
+        'drawSelectorGraphic'
     ]);
 });
