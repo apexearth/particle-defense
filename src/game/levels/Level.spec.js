@@ -2,6 +2,8 @@
 var expect = chai.expect;
 chai.use(require('chai-spies'));
 
+var inputs = require('../../../test/inputs');
+
 var renderer = require('../renderer');
 var ProjectileSpec = require('../projectiles/Projectile.spec');
 var UnitSpec = require('../units/Unit.spec');
@@ -10,7 +12,6 @@ var BuildingSpec = require('../buildings/Building.spec');
 module.exports = {};
 
 describe('Level', function () {
-    var inputs = require('../inputs');
     var Level = require('./Level');
     var Player = require('../player');
     var Building = require('../buildings/Building');
@@ -239,10 +240,11 @@ describe('Level', function () {
             level.addBuilding(building);
             level.inputs('mouseX', 1);
             level.inputs('mouseY', 1);
-            level.inputs('finishBuildingPlacement', 1);
+            level.inputs('mouseSelection', 1);
             level.processMouseInput();
-            expect(level.inputs('finishBuildingPlacement')).to.equal(0); // Resets mouse button after processing the input.
-            expect(level.selection).to.equal(building);
+            level.inputs('mouseSelection', 0);
+            level.processMouseInput();
+            expect(level.selections[0]).to.equal(building);
             expect(building.selected).to.equal(true);
         });
         it('mouse0, Place Building', function () {
@@ -330,20 +332,21 @@ describe('Level', function () {
         level.updatePaths();
         expect(unit.findPath).to.have.been.called();
     });
-    it('.selectBuildingAt()', selectBuildingAt);
-    function selectBuildingAt() {
+    it('.select()', select);
+    function select() {
         var building = BuildingSpec.createBuilding(level, level.players[0]);
         level.addBuilding(building);
-        expect(level.selectBuildingAt(level.getBlock(0, 0))).to.equal(building);
-        expect(level.selection).to.equal(building);
+        expect(level.select(building)).to.equal(building);
+        expect(level.selections[0]).to.equal(building);
+        expect(level.selections.length).to.equal(1);
         expect(building.selected).to.equal(true);
         return building;
     }
 
     it('.deselect()', function () {
-        var building = selectBuildingAt();
+        var building = select();
         level.deselect();
-        expect(level.selection).to.equal(null);
+        expect(level.selections.length).to.equal(0);
         expect(building.selected).to.equal(false);
     });
     it('.checkWinConditions()', function () {
@@ -453,6 +456,30 @@ describe('Level', function () {
             expect(level.checkWinConditions).to.have.been.called();
             expect(level.checkLossConditions).to.have.been.called();
         });
+        it('selection', function () {
+            addBuilding();
+            UnitSpec.addUnit(level);
+
+            inputs('mouseX', -10000);
+            inputs('mouseY', -10000);
+            inputs('mouseSelection', 1);
+            level.update(.1);
+            expect(level.selector.started).to.equal(true);
+            expect(level.selections.length).to.equal(0);
+
+            inputs('mouseX', 10000);
+            inputs('mouseY', 10000);
+            inputs('mouseSelection', 1);
+            level.update(.1);
+            expect(level.selector.started).to.equal(true);
+            expect(level.selections.length).to.equal(0);
+
+            inputs('mouseSelection', 0);
+            level.update(.1);
+            expect(level.selector.started).to.equal(false);
+            expect(level.selections.length).to.equal(2);
+        });
+
         function assureIteratedAndUpdated(key) {
             it('.' + key + ' > .update', function () {
                 level[key] = [];

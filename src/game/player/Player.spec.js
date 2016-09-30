@@ -3,6 +3,7 @@
     var Level = require('../levels/Level');
     var Buildings = require('../buildings');
     var Building = require('../buildings/Building');
+    var Unit = require('../units/Unit');
     var Player = require('./Player');
     var coverage = require('../../../test/check-coverage');
     var expect = require('chai').expect;
@@ -66,6 +67,28 @@
         var building = addBuilding();
         expect(player.buildings.length).to.equal(1);
         expect(player.buildingCount(building)).to.equal(1);
+    });
+    it('.addUnit()', function () {
+        var unit = new Unit({
+            level: level,
+            player: player,
+            position: {x: 0, y: 0}
+        });
+        player.addUnit(unit);
+        expect(player.units.length).to.equal(1);
+        expect(player.units).to.contain(unit);
+    });
+    it('.removeUnit()', function () {
+        var unit = new Unit({
+            level: level,
+            player: player,
+            position: {x: 0, y: 0}
+        });
+        player.addUnit(unit);
+        expect(player.units.length).to.equal(1);
+        expect(player.units).to.contain(unit);
+        player.removeUnit(unit);
+        expect(player.units.length).to.equal(0);
     });
     it('.tryApplyCost()', function () {
         player.resources.energy = 100;

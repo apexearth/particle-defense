@@ -2,7 +2,6 @@ var collision = require('geom-collision');
 module.exports = Selector;
 
 function Selector() {
-    this.selection = [];
     var start = null;
     var finish = null;
     Object.defineProperties(this, {
@@ -16,11 +15,15 @@ function Selector() {
                     right: finish.x
                 };
             }.bind(this)
+        },
+        started: {
+            get: function () {
+                return start !== null;
+            }
         }
     });
 
     this.start = function (position) {
-        this.selection = [];
         start = {
             x: position.x,
             y: position.y
@@ -38,16 +41,26 @@ function Selector() {
     };
     this.finish = function (position, selectables) {
         this.move(position);
-        this.checkSelection(selectables);
+        var selection = this.checkSelection(selectables);
+        start = null;
+        finish = null;
+        return selection;
     };
-    this.checkSelection = function (selectables) {
-        this.selection = [];
-        for (var i in selectables) {
-            var selectable = selectables[i];
-            var coll = collision.rectangleCircleSimple(start, finish, selectable.position, selectable.radius || 0);
-            if (coll.result !== 'outside') {
-                this.selection.push(selectable);
+    this.checkSelection = function (multipleSelectables) {
+        if (Object.prototype.toString.call(multipleSelectables[0]) !== '[object Array]') {
+            multipleSelectables = [multipleSelectables];
+        }
+        var selection = [];
+        for (var i in multipleSelectables) {
+            var selectables = multipleSelectables[i];
+            for (var j in selectables) {
+                var selectable = selectables[j];
+                var coll = collision.pointRectangleSimple(selectable.position, start, finish);
+                if (coll.result !== 'outside') {
+                    selection.push(selectable);
+                }
             }
         }
+        return selection;
     };
 }

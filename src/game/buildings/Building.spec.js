@@ -200,24 +200,24 @@
         expect(metal).to.be.below(level.player.resources.metal);
         expect(ammo).to.be.below(level.player.resources.ammo);
     });
-    it('.selectBuildingAt()', function () {
+    it('.select()', function () {
         var level = Levels.list.Test();
         var block = level.getBlock(5, 5);
         expect(block.building).to.not.equal(null);
-        level.selectBuildingAt(block);
-        expect(level.selection).to.equal(block.building);
+        level.select(block.building);
+        expect(level.selections[0]).to.equal(block.building);
         expect(block.building.selected).to.equal(true);
     });
     it('.deselect()', function () {
         var level = Levels.list.Test();
         var block = level.getBlock(5, 5);
         expect(block.building).to.not.equal(null);
-        level.selectBuildingAt(block);
-        expect(level.selection).to.equal(block.building);
+        level.select(block.building);
+        expect(level.selections[0]).to.equal(block.building);
         expect(block.building.selected).to.equal(true);
 
         level.deselect();
-        expect(level.selection).to.equal(null);
+        expect(level.selections[0]).to.equal(undefined);
         expect(block.building.selected).to.equal(false);
     });
     it('.abilities', function () {

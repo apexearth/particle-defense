@@ -6,6 +6,7 @@ var CommandQueue = require('../CommandQueue');
 var BlockStatus = require('../../util/grid/block-status');
 var inputs = require('../inputs');
 var common = require('../common');
+var Selector = require('./Selector');
 var Settings = common.Settings;
 
 module.exports = Level;
@@ -39,9 +40,6 @@ function Level(options) {
     var _map = new Map(this, options.width, options.height, this.blockSize, options.mapTemplate);
     this.container.addChild(_map.container);
 
-    this.graphics = new PIXI.Graphics();
-    this.container.addChild(this.graphics);
-
     this.frameCount = 0;
     this.width = _map.pixelWidth;
     this.height = _map.pixelHeight;
@@ -61,6 +59,8 @@ function Level(options) {
     this.objects = [];
 
     this.inputs = inputs;
+    this.selector = new Selector();
+    this.selectorGraphic = new PIXI.Graphics();
 
     this.winConditions = [function () {
         for (var player of this.players) {
@@ -125,6 +125,9 @@ function Level(options) {
     this.addUnit = function (unit) {
         this.container.addChild(unit.container);
         this.units.push(unit);
+        if (unit.player) {
+            unit.player.addUnit(unit);
+        }
     };
     this.removeUnit = function (unit) {
         var index = this.units.indexOf(unit);
@@ -132,6 +135,9 @@ function Level(options) {
             unit.level = null;
             this.container.removeChild(unit.container);
             this.units.splice(index, 1);
+        }
+        if (unit.player) {
+            unit.player.removeUnit(unit);
         }
     };
     this.containsUnit = function (unit) {
@@ -194,17 +200,17 @@ function Level(options) {
         return true;                                                // Since last two didn't show, we find out.
     };
 
-    this.selection = null;
-    this.selectBuildingAt = function (block) {
-        this.deselect();
-        this.selection = block.building;
-        this.selection.selected = true;
-        return this.selection;
+    this.selections = [];
+    this.select = function (selectable) {
+        this.selections.push(selectable);
+        selectable.selected = true;
+        return selectable;
     };
     this.deselect = function () {
-        if (this.selection !== null) {
-            this.selection.selected = false;
-            this.selection = null;
+        var selection = this.selections.pop();
+        while (selection) {
+            selection.selected = false;
+            selection = this.selections.pop();
         }
     };
 
@@ -268,6 +274,7 @@ function Level(options) {
                 this.inputs('cancel', 0);
                 this.cancelBuildingPlacement();
             }
+            this.deselect();
         }
     };
     this.processMouseInput = function () {
@@ -278,20 +285,46 @@ function Level(options) {
                 this.finishBuildingPlacement(clickedBlock);
                 return;
             }
-
-            if (clickedBlock != null && clickedBlock.building != null) {
-                this.selectBuildingAt(clickedBlock);
-            } else {
-                this.deselect();
-            }
         }
-
         if (this.inputs('cancelBuildingPlacement')) {
             if (this.placementBuilding != null) {
                 this.inputs('cancelBuildingPlacement', 0);
                 this.cancelBuildingPlacement();
             }
         }
+        if (!this.selector.started) {
+            if (this.inputs('mouseSelection')) {
+                this.deselect();
+                this.selector.start(this.mouse);
+            }
+        } else {
+            if (this.inputs('mouseSelection')) {
+                this.selector.move(this.mouse);
+            } else {
+                var selections = this.selector.finish(this.mouse, [
+                    this.player.buildings,
+                    this.player.units
+                ]);
+                selections.forEach(function (selection) {
+                    this.select(selection);
+                }.bind(this));
+                this.container.removeChild(this.selectorGraphic);
+                this.selectorGraphic.clear();
+            }
+        }
+        if (this.selector.started) {
+            this.drawSelectorGraphic();
+        }
+    };
+    this.drawSelectorGraphic = function () {
+        // Move to front.
+        this.container.removeChild(this.selectorGraphic);
+        this.container.addChild(this.selectorGraphic);
+        // Draw
+        this.selectorGraphic.clear();
+        this.selectorGraphic.beginFill(0x9999ff, .1);
+        var bounds = this.selector.bounds;
+        this.selectorGraphic.drawRect(bounds.left, bounds.top, bounds.right - bounds.left, bounds.bottom - bounds.top);
     };
     this.checkCount = 0;
     this.update = function (seconds) {

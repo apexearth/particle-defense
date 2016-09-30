@@ -15,9 +15,10 @@ describe('Selector', function () {
         selector = new Selector();
     });
 
-    it('.start()', start);
-    function start() {
-        selector.start({x: 0, y: 2});
+    it('.start()', start.bind(null, {x: 0, y: 2}));
+    function start(position) {
+        selector.start(position);
+        expect(selector.started).to.equal(true);
         var bounds = selector.bounds;
         expect(bounds.left).to.equal(0);
         expect(bounds.top).to.equal(2);
@@ -27,8 +28,9 @@ describe('Selector', function () {
 
     it('.move()', move);
     function move() {
-        start();
-        selector.move({x: 5, y: 3});
+        start({x: 0, y: 2});
+        var move = {x: 5, y: 3};
+        selector.move(move);
         var bounds = selector.bounds;
         expect(bounds.left).to.equal(0);
         expect(bounds.top).to.equal(2);
@@ -40,30 +42,41 @@ describe('Selector', function () {
         finish();
     });
     function finish() {
-        start();
+        start({x: 0, y: 2});
         var selectables = [
             {position: {x: 10, y: 2}, radius: 4}, // Outside
-            {position: {x: 10, y: 2}, radius: 5}, // Edge collision
             {position: {x: 2, y: 2}}              // Inside, no radius provided.
         ];
-        selector.finish({x: 5, y: 3}, selectables);
-        var bounds = selector.bounds;
-        expect(bounds.left).to.equal(0);
-        expect(bounds.top).to.equal(2);
-        expect(bounds.right).to.equal(5);
-        expect(bounds.bottom).to.equal(3);
+        var finish = {x: 5, y: 3};
+        var selection = selector.finish(finish, selectables);
 
-        expect(selector.selection).to.contain(
+        expect(selector.started).to.equal(false);
+        expect(selection).to.contain(
             selectables[1],
             selectables[2]
         );
-        expect(selector.selection).to.not.contain(
+        expect(selection).to.not.contain(
             selectables[0]
         );
     }
 
     it('.checkSelection()', function () {
-        finish(); // Everything finish does adequately tests .checkSelection()
+        start({x: 0, y: 2});
+        var selectables = [
+            {position: {x: 10, y: 2}, radius: 4}, // Outside
+            {position: {x: 2, y: 2}}              // Inside, no radius provided.
+        ];
+        selector.move({x: 5, y: 3});
+        var selection = selector.checkSelection(selectables);
+
+        expect(selector.started).to.equal(true);
+        expect(selection).to.contain(
+            selectables[1],
+            selectables[2]
+        );
+        expect(selection).to.not.contain(
+            selectables[0]
+        );
     });
 
     coverage(this, new Selector());

@@ -25,6 +25,7 @@ var mapping = new Mapping(
             'mouseX': 'x',
             'mouseY': 'y',
 
+            'mouseSelection': 'mouse0',
             'finishBuildingPlacement': 'mouse0',
             'cancelBuildingPlacement': 'mouse2',
         }

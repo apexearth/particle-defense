@@ -6,6 +6,7 @@ function Player(options) {
     options = options || {};
     this.homeBase = null;
     this.buildings = [];
+    this.units = [];
     this.color = 0x88FF88;
     this.score = 0;
     this.resources = Object.assign({
@@ -35,6 +36,15 @@ function Player(options) {
             return buildingCounts[building.name] || 0;
         } else {
             return this.buildings.length;
+        }
+    };
+    this.addUnit = function (unit) {
+        this.units.push(unit);
+    };
+    this.removeUnit = function (unit) {
+        var index = this.units.indexOf(unit);
+        if (index >= 0) {
+            this.units.splice(index, 1);
         }
     };
     /** @returns boolean **/

@@ -3,9 +3,7 @@ import {expect} from 'chai';
 import App from '../src/app/components/App';
 
 import GameUI from '../src/app/components/GameUI';
-import inputs from '../src/game/inputs';
 
-inputs.mapping.requireUpdates = true; // HACK: Automatic updates in the mapping cause problems when setting custom values during testing.
 
 describe('end2end', function () {
     it('Start to Finish', function () {
