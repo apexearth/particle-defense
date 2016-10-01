@@ -204,18 +204,9 @@ describe('Level', function () {
     });
     it('.getPath()', function () {
         var path = level.getPath(
-            level.getBlock(0, 0),
-            level.getBlock(5, 3)
+            {x: 0, y: 0},
+            {x: 5 * level.blockSize, y: 3 * level.blockSize}
         );
-        expect(path).to.exist;
-        expect(path.length).to.equal(5);
-    });
-    it('.getPathForUnit()', function () {
-        var mockUnit = {
-            position: {x: 0, y: 0},
-            target: {position: {x: 5 * level.blockSize, y: 3 * level.blockSize}}
-        };
-        var path = level.getPathForUnit(mockUnit);
         expect(path).to.exist;
         expect(path.length).to.equal(5);
     });
@@ -330,9 +321,9 @@ describe('Level', function () {
 
     it('.updatePaths()', function () {
         var unit = UnitSpec.addUnit(level);
-        unit.findPath = chai.spy(unit.findPath);
+        unit.updatePath = chai.spy(unit.updatePath);
         level.updatePaths();
-        expect(unit.findPath).to.have.been.called();
+        expect(unit.updatePath).to.have.been.called();
     });
     it('.select()', select);
     function select() {

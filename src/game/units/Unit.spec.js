@@ -38,12 +38,13 @@
         createLevel();
         addUnit(level);
 
-        unit.setDestination(level.player.buildings[0]);
+        var moveTo = {x: 100, y: 100};
+        unit.moveTo(moveTo);
         expect(unit.path.length).to.be.greaterThan(0);
 
-        var initialDistance = math.distance(unit.position.x - unit.target.position.x, unit.position.y - unit.target.position.y);
+        var initialDistance = math.distance(unit.position.x - moveTo.x, unit.position.y - moveTo.y);
         unit.update(1);
-        var distanceAfterUpdate = math.distance(unit.position.x - unit.target.position.x, unit.position.y - unit.target.position.y);
+        var distanceAfterUpdate = math.distance(unit.position.x - moveTo.x, unit.position.y - moveTo.y);
         expect(initialDistance).to.be.above(distanceAfterUpdate);
     });
     it('.damage()', function () {
@@ -58,50 +59,8 @@
         expect(unit.damage.bind(unit, unit.health)).to.decrease(level.units, 'length');
         expect(level.player.score).to.be.above(0);
     });
-    it('.velocity', function () {
-        createLevel();
-        var unit = addUnit(level);
-        unit.position.x = level.buildings[0].position.x - 100;
-        unit.position.y = level.buildings[0].position.y - 100;
-
-        unit.clearDestination();
-        unit.velocity.x = 10;
-        unit.velocity.y = 10;
-        unit.update(1);
-        expect(unit.velocity.x).to.equal(0);
-        expect(unit.velocity.y).to.equal(0);
-
-        unit.setDestination(level.buildings[0]);
-        unit.update(1);
-        expect(unit.velocity.x).to.not.equal(0);
-        expect(unit.velocity.y).to.not.equal(0);
-    });
-    it('.findPath()', function () {
-        var unit = addUnit(level);
-        unit.setDestination(level.buildings[0]);
-        var path = unit.findPath();
-        expect(path).to.be.an('array');
-        expect(path.length).to.be.greaterThan(0);
-    });
-    it('.setDestination()', function () {
-        var unit = addUnit(level);
-        unit.setDestination(level.buildings[0]);
-        expect(unit.path).to.be.an('array');
-        expect(unit.path.length).to.be.greaterThan(0);
-        expect(unit.target).to.equal(level.buildings[0]);
-    });
-    it('.clearDestination()', function () {
-        var unit = addUnit(level);
-        unit.setDestination(level.buildings[0]);
-        expect(unit.path).to.be.an('array');
-        expect(unit.path.length).to.be.greaterThan(0);
-        expect(unit.target).to.equal(level.buildings[0]);
-
-        unit.clearDestination();
-        expect(unit.path).to.equal(null);
-        expect(unit.target).to.equal(null);
-    });
     it('.die()', function () {
+        createLevel();
         var unit = addUnit(level);
         expect(unit.dead).to.equal(false);
         expect(unit.player.score).to.equal(0);

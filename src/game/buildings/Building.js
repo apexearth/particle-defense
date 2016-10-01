@@ -19,8 +19,8 @@ function Building(options) {
     this.container = new PIXI.Container();
     this.graphics = new PIXI.Graphics();
     this.container.addChildAt(this.graphics, 0);
-    this.overlayGraphics = new PIXI.Graphics();
-    this.container.addChild(this.overlayGraphics);
+    this.selectionGraphics = new PIXI.Graphics();
+    this.container.addChild(this.selectionGraphics);
 
     this.graphics.beginFill(0x77FF77, .1);
     this.graphics.drawRect(-Settings.BlockSize / 2, -Settings.BlockSize / 2, Settings.BlockSize, Settings.BlockSize);
@@ -28,8 +28,9 @@ function Building(options) {
 
     var selected = false;
     this.health = 1000;
-    this.width = Settings.BlockSize;
-    this.height = Settings.BlockSize;
+    this.width = this.level.blockSize;
+    this.height = this.level.blockSize;
+    this.radius = this.level.blockSize / 2;
     this.abilities = null;
     this.resourceGeneration = Object.assign({}, options.resourceGeneration);
     this.resourceStorage = Object.assign({}, options.resourceGeneration);
@@ -117,20 +118,21 @@ function Building(options) {
         while (i--) this.weapons[i].update(seconds);
 
         // Graphics
-        this.overlayGraphics.clear();
-        if (selected || this.level.placementBuilding === this) {
-            this.overlayGraphics.lineStyle(2, 0x7799FF, .2);
+        this.selectionGraphics.clear();
+        if (
+            this.weapons.length > 0 &&
+            (selected || this.level.placementBuilding === this)
+        ) {
+            this.selectionGraphics.lineStyle(2, 0x7799FF, .2);
             i = this.weapons.length;
             var weaponRadius = 0;
             while (i--) weaponRadius = Math.max(weaponRadius, this.weapons[i].range);
-            this.overlayGraphics.beginFill(0x7799FF, .1);
-            this.overlayGraphics.drawCircle(0, 0, weaponRadius);
-            this.overlayGraphics.endFill();
+            this.selectionGraphics.lineStyle(1, 0x7799FF, .25);
+            this.selectionGraphics.drawCircle(0, 0, weaponRadius);
         }
         if (selected) {
-            this.overlayGraphics.beginFill(0x77FF77, .25);
-            this.overlayGraphics.drawRect(-Settings.BlockSize / 2, -Settings.BlockSize / 2, Settings.BlockSize, Settings.BlockSize);
-            this.overlayGraphics.endFill();
+            this.selectionGraphics.lineStyle(2, 0x77FF77, .25);
+            this.selectionGraphics.drawRect(-this.radius, -this.radius, this.width, this.height);
         }
     };
 

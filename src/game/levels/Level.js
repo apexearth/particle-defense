@@ -179,7 +179,7 @@ function Level(options) {
     };
     this.updatePaths = function () {
         var i = this.units.length;
-        while (i--) this.units[i].findPath();
+        while (i--) this.units[i].updatePath();
     };
     this.cancelBuildingPlacement = function () {
         this.container.removeChild(this.placementBuilding.container);
@@ -214,14 +214,11 @@ function Level(options) {
         }
     };
 
-    this.getPathForUnit = function (unit) {
-        return this.getPath(
-            _map.getBlockFromCoords(unit.position.x, unit.position.y),
-            _map.getBlockFromCoords(unit.target.position.x, unit.target.position.y)
+    this.getPath = function (start, finish) {
+        return _map.getPathByBlock(
+            this.getBlockFromCoords(start.x, start.y),
+            this.getBlockFromCoords(finish.x, finish.y)
         );
-    };
-    this.getPath = function (blockStart, blockTarget) {
-        return _map.getPathByBlock(blockStart, blockTarget);
     };
 
     // Returns true if all win conditions are true.

@@ -55,7 +55,20 @@ function Selector() {
             var selectables = multipleSelectables[i];
             for (var j in selectables) {
                 var selectable = selectables[j];
-                var coll = collision.pointRectangleSimple(selectable.position, start, finish);
+                var selectableStart = {
+                    x: selectable.position.x - (selectable.radius || 1),
+                    y: selectable.position.y - (selectable.radius || 1),
+                };
+                var selectableFinish = {
+                    x: selectable.position.x + (selectable.radius || 1),
+                    y: selectable.position.y + (selectable.radius || 1),
+                };
+                var coll = collision.rectangleRectangleSimple(
+                    start,
+                    finish,
+                    selectableStart,
+                    selectableFinish
+                );
                 if (coll.result !== 'outside') {
                     selection.push(selectable);
                 }

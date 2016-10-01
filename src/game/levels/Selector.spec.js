@@ -45,6 +45,7 @@ describe('Selector', function () {
         start({x: 0, y: 2});
         var selectables = [
             {position: {x: 10, y: 2}, radius: 4}, // Outside
+            {position: {x: 10, y: 2}, radius: 5}, // Edge
             {position: {x: 2, y: 2}}              // Inside, no radius provided.
         ];
         var finish = {x: 5, y: 3};
@@ -64,6 +65,7 @@ describe('Selector', function () {
         start({x: 0, y: 2});
         var selectables = [
             {position: {x: 10, y: 2}, radius: 4}, // Outside
+            {position: {x: 10, y: 2}, radius: 5}, // Edge
             {position: {x: 2, y: 2}}              // Inside, no radius provided.
         ];
         selector.move({x: 5, y: 3});

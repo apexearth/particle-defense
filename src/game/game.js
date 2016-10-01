@@ -46,7 +46,7 @@ var game = {
     },
     update: function (seconds) {
         this.frames++;
-        var secondsSinceLastUpdate = seconds || (Date.now() - this.lastUpdate) / 1000;
+        var secondsSinceLastUpdate = seconds || Math.min(.25, (Date.now() - this.lastUpdate) / 1000);
         this.level.update(secondsSinceLastUpdate);
         CommandQueue.process(this);
         this.lastUpdate = Date.now();
@@ -54,6 +54,7 @@ var game = {
     start: function (levelFn) {
         if (this.running) throw new Error('Game is already running.');
         this.frames = 0;
+        this.lastUpdate = Date.now();
         this.startLevel(levelFn);
         this.renderer.start(this.level.container);
         this.queueUpdate();

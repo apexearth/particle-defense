@@ -6,7 +6,7 @@ module.exports = HomeBase;
 function HomeBase(options) {
     Building.call(this, options);
     this.name = 'HomeBase';
-    this.container.addChild(Images.buildings.HomeBase());
+    this.container.addChildAt(Images.buildings.HomeBase(), 0);
     this.health = 5;
     this.resourceStorage.ammo = 200;
     this.resourceStorage.metal = 100;
