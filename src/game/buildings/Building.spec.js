@@ -137,7 +137,7 @@
 
             var initialHealth = unit.health;
 
-            level.update(1);
+            level.update(.1);
             expect(turret.weapons[0].target).to.not.equal(null);
             expect(level.projectiles.length).to.be.above(0);
 

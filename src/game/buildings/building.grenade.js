@@ -17,9 +17,9 @@ function GrenadeLauncher(options) {
         explosiveSpeed: 45,
         explosiveTime: 2,
         explosiveInitialSize: .1,
-        lifeSpan: 60,
+        lifespan: 60,
         damage: 4,
-        fireRate: 45,
+        fireRate: 1.25,
         accuracy: .95
     }));
 }

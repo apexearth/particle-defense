@@ -2,11 +2,11 @@
 
 ## TODO
 
-- Draw rectangle to select units and buildings.
-- Ability to select multiple units and buildings.
-- Right-click to give units a move order.
+- When ordering move to a building, have the building redirect the order to anything it creates.
+    - Should create a base class that can have orders given to it.
+- Consolidate game inputs to a single dedicated file.
+    - Things like zoom, panning, selection, move orders, attack orders, etc...
+
 
 ## Bugs
 
-- HomeBase webgl draw error when selected. 
-    - (probably trying to draw the range circle even though it has no weapons and thus no range)

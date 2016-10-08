@@ -28,6 +28,7 @@ var mapping = new Mapping(
             'mouseSelection': 'mouse0',
             'finishBuildingPlacement': 'mouse0',
             'cancelBuildingPlacement': 'mouse2',
+            'moveSelection': 'mouse2'
         }
     }, false);
 

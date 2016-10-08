@@ -13,7 +13,7 @@ function MachineGun(options) {
         level: this.level,
         building: this,
         range: 100,
-        fireRate: 5,
+        fireRate: .15,
         damage: 2,
         projectileSpeed: 6,
         shotsPerShot: 1,

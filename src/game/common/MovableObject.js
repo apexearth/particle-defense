@@ -8,12 +8,14 @@ function MovableObject(options) {
     this.level = options.level;
     this.container = new PIXI.Container();
 
-    this.moveSpeed = 1;
-    this.moveFriction = .25;
+    this.moveSpeed = 10;
+    this.moveFriction = .2;
+
     var velocity = {
         x: 0,
         y: 0
     };
+    this.path = [];
     this.moveTarget = null;
 
     Object.defineProperties(this, {
@@ -36,7 +38,7 @@ MovableObject.prototype.moveTo = function (position) {
 };
 
 MovableObject.prototype.clearMove = function () {
-    this.path = null;
+    this.path = [];
     this.moveTarget = null;
 };
 
@@ -48,7 +50,7 @@ MovableObject.prototype.updatePath = function () {
     if (this.moveTarget) {
         this.path = this.findPath(this.moveTarget);
     } else {
-        this.path = null;
+        this.path = [];
     }
 };
 
@@ -56,24 +58,27 @@ MovableObject.prototype.update = function (seconds) {
     if (typeof seconds !== 'number') {
         throw new Error('Argument seconds must be provided and must be a number');
     }
-    if (this.path != null && this.path.length > 0) {
+    if (this.path.length > 0) {
         if (Math.abs(this.position.x - this.path[0].x) < this.level.blockSize / 2 &&
             Math.abs(this.position.y - this.path[0].y) < this.level.blockSize / 2) {
             this.path.splice(0, 1);
         }
+    }
 
+    if (this.moveTarget) {
+        var moveAmount;
         if (this.path.length > 0) {
-            var moveTarget = this.path[0];
-            var moveAmount = math.normalize(this.position.x, this.position.y, moveTarget.x, moveTarget.y);
-
-            this.velocity.x += moveAmount.x * this.moveSpeed * seconds;
-            this.velocity.y += moveAmount.y * this.moveSpeed * seconds;
+            moveAmount = math.normalize(this.position.x, this.position.y, this.path[0].x, this.path[0].y);
+        } else if (this.moveTarget) {
+            moveAmount = math.normalize(this.position.x, this.position.y, this.moveTarget.x, this.moveTarget.y);
         }
+        this.velocity.x += moveAmount.x * this.moveSpeed * seconds;
+        this.velocity.y += moveAmount.y * this.moveSpeed * seconds;
     }
 
     this.position.x += this.velocity.x * seconds;
     this.position.y += this.velocity.y * seconds;
 
-    this.velocity.x *= 1 - this.moveFriction * seconds;
-    this.velocity.y *= 1 - this.moveFriction * seconds;
+    this.velocity.x -= this.velocity.x * this.moveFriction * seconds;
+    this.velocity.y -= this.velocity.y * this.moveFriction * seconds;
 };

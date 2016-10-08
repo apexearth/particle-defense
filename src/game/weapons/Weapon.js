@@ -40,8 +40,8 @@ function Weapon(options) {
     this.getAmmoConsumption = function () {
         return this.damage;
     };
-    this.fireRate = 10;
-    this.fireRateCount = 10;
+    this.fireRate = .2;
+    this.fireRateCount = .2;
     this.shotsPerShot = 1;
     this.accuracy = .05;
 
@@ -80,7 +80,7 @@ function Weapon(options) {
         var shots = this.shotsPerShot;
         while (shots--) {
             var projectile = this.createProjectile();
-            this.building.level.projectiles.push(projectile);
+            this.level.addProjectile(projectile);
         }
     };
     this.findTarget = function () {

@@ -13,7 +13,7 @@ function Behemoth(options) {
         level: this.level,
         building: this,
         range: 300,
-        fireRate: 60,
+        fireRate: 2,
         damage: 20,
         projectileSpeed: 6,
         shotsPerShot: 1,

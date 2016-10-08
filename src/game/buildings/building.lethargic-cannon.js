@@ -13,7 +13,7 @@ function LethargicCannon(options) {
         level: this.level,
         building: this,
         range: 200,
-        fireRate: 60,
+        fireRate: 1,
         damage: 5,
         projectileSpeed: 1.75,
         shotsPerShot: 1,

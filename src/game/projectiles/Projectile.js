@@ -7,14 +7,13 @@ function Projectile(options) {
     if (!options.level) throw new Error('Projectiles require a level option to be created.');
     if (!options.player) throw new Error('Projectiles require a player option to be created.');
     if (options.direction == null) throw new Error('Projectiles require a direction option to be created.');
-    if (options.velocity == null) throw new Error('Projectiles require a velocity option to be created.');
     if (!options.position) throw new Error('Projectiles require a position option to be created.');
     if (options.damage == null) throw new Error('Projectiles require a damage option to be created.');
+
     this.container = new PIXI.Container();
     this.level = options.level;
     this.player = options.player;
     this.direction = options.direction;
-    this.initialVelocity = options.velocity;
     Object.defineProperty(this, 'position', {
         get: function () {
             return this.container.position;
@@ -23,10 +22,6 @@ function Projectile(options) {
     this.position.x = options.position.x;
     this.position.y = options.position.y;
     this.damage = options.damage;
-    this.velocity = {
-        x: Math.cos(this.direction) * this.initialVelocity,
-        y: Math.sin(this.direction) * this.initialVelocity
-    };
 
     /**
      * @param unit Unit

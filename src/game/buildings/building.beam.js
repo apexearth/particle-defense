@@ -13,9 +13,9 @@ function Beam(options) {
         level: this.level,
         building: this,
         range: 100,
-        lifeSpan: 1,
+        lifespan: 1,
         damage: .05,
-        fireRate: 3,
+        fireRate: .3,
         accuracy: .95
     }));
 }

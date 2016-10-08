@@ -4,28 +4,27 @@ var math = require('../../util/math');
 
 module.exports = BeamProjectile;
 
-function BeamProjectile(weapon) {
-    Projectile.call(this, weapon);
+function BeamProjectile(options) {
+    Projectile.call(this, options);
 
     this.graphics = new PIXI.Graphics();
     this.container.addChild(this.graphics);
-    
-    this.lifespan = weapon.lifespan;
-    this.fadeTime = weapon.lifespan / 2;
+
+    this.lifespan = options.lifespan;
+    this.fadeTime = options.lifespan / 2;
     this.fadeTimeCount = 0;
-    this.damage = weapon.damage / weapon.lifespan;
+    this.damage = options.damage / options.lifespan;
     this.width = Math.max(1, this.damage * 10);
-    this.direction = weapon.getTargetAngle();
-    this.endX = this.position.x + Math.cos(this.direction) * this.weapon.range;
-    this.endY = this.position.y + Math.sin(this.direction) * this.weapon.range;
+    this.endX = this.position.x + Math.cos(options.direction) * options.range;
+    this.endY = this.position.y + Math.sin(options.direction) * options.range;
     
     this.graphics.lineStyle(this.width, 0xAAAAFF, .35);
     this.graphics.moveTo(0, 0);
-    this.graphics.lineTo(Math.cos(this.direction) * this.weapon.range, Math.sin(this.direction) * this.weapon.range);
+    this.graphics.lineTo(Math.cos(this.direction) * options.range, Math.sin(this.direction) * options.range);
 
     /** @returns Number */
     this.effectiveDamage = function (unit) {
-        return this.damage * math.distance(this.position.x - unit.position.x, this.position.y - unit.position.y) / this.weapon.range;
+        return this.damage * math.distance(this.position.x - unit.position.x, this.position.y - unit.position.y) / options.range;
     };
 
     this.projectileUpdate = this.update;

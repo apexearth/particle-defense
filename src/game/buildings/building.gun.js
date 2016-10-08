@@ -13,9 +13,9 @@ function Gun(options) {
         level: this.level,
         building: this,
         range: 150,
-        fireRate: 20,
+        fireRate: .5,
         damage: 5,
-        projectileSpeed: 6,
+        projectileSpeed: 50,
         shotsPerShot: 1,
         accuracy: .94
     }));

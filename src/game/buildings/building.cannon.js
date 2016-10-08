@@ -13,7 +13,7 @@ function Cannon(options) {
         level: this.level,
         building: this,
         range: 100,
-        fireRate: 30,
+        fireRate: 1,
         damage: 3,
         projectileSpeed: 2.5,
         shotsPerShot: 1,

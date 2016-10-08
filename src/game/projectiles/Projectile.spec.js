@@ -35,7 +35,6 @@ describe('Projectile', function () {
             'direction',
             'effectiveDamage',
             'hitTest',
-            'initialVelocity',
             'level',
             'lifespan',
             'lifespanCount',
@@ -44,7 +43,6 @@ describe('Projectile', function () {
             'radius',
             'unitHitCheck',
             'update',
-            'velocity',
             'width'
         ]);
     });

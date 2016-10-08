@@ -15,7 +15,7 @@ function Shocker(options) {
         range: 100,
         lifeSpan: 60,
         damage: 4,
-        fireRate: 45,
+        fireRate: .75,
         accuracy: .95
     }));
 }

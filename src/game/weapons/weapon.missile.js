@@ -14,13 +14,21 @@ function Missile(options) {
     this.fireRate = options.fireRate;
     this.fireRateCount = options.fireRate;
     this.acceleration = options.acceleration;
-    this.shotSpeedVariance = options.accuracy;
+    this.projectileClass = Projectiles.Missile;
+
     /** @return {number} **/
     this.getAmmoConsumption = function () {
         return this.damage / 1.5;
     };
     this.createProjectile = function () {
-        return new Projectiles.Missile(this);
+        return new this.projectileClass({
+            level: this.level,
+            player: this.player,
+            direction: this.rotation,
+            position: this.position,
+            velocity: this.projectileSpeed,
+            damage: this.damage
+        });
     };
 }
 Missile.prototype = Object.create(Weapon.prototype);

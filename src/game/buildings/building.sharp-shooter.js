@@ -13,7 +13,7 @@ function SharpShooter(options) {
         level: this.level,
         building: this,
         range: 200,
-        fireRate: 30,
+        fireRate: 1,
         damage: 20,
         projectileSpeed: 60,
         shotsPerShot: 1,

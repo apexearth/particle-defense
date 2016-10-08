@@ -13,9 +13,9 @@ function FastGun(options) {
         level: this.level,
         building: this,
         range: 100,
-        fireRate: 10,
+        fireRate: .25,
         damage: 3,
-        projectileSpeed: 6,
+        projectileSpeed: 65,
         shotsPerShot: 1,
         accuracy: .94
     }));

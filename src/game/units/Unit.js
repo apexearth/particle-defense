@@ -33,10 +33,9 @@ function Unit(options) {
     this.position.y = options.position.y;
     this.block = this.level.getBlock((this.position.x / Settings.BlockSize) ^ 0, (this.position.y / Settings.BlockSize) ^ 0);
     this.radius = 3;
-    this.moveSpeed = 1;
+    this.moveSpeed = 10;
     this.health = 10;
     this.target = null;
-    this.path = null;
     this.score = this.health * this.moveSpeed;
     this.dead = false;
 
@@ -93,8 +92,6 @@ function Unit(options) {
         this.level.getBlock(this.block.x, this.block.y).remove(this);
         this.level.removeUnit(this);
     };
-
-    this.moveTo({x: 300, y: 300});
 }
 Unit.prototype = Object.create(MovableObject.prototype);
 Unit.prototype.constructor = Unit;

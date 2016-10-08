@@ -13,7 +13,7 @@ function CrossEyes(options) {
         level: this.level,
         building: this,
         range: 150,
-        fireRate: 13,
+        fireRate: .3,
         damage: 8,
         projectileSpeed: 6,
         shotsPerShot: 2,

@@ -22,7 +22,7 @@ function Gun(options) {
     };
     /** @return {number} **/
     this.getAmmoConsumption = function () {
-        return this.damage / 2 * this.projectileSpeed / 3;
+        return this.damage / 2 * this.projectileSpeed / 30;
     };
     this.createProjectile = function () {
         return new this.projectileClass({

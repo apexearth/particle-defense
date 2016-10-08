@@ -312,6 +312,13 @@ function Level(options) {
         if (this.selector.started) {
             this.drawSelectorGraphic();
         }
+        if (this.inputs('moveSelection')) {
+            if (this.selections.length > 0) {
+                this.selections.forEach(function (selectable) {
+                    selectable.moveTo(this.mouse);
+                }.bind(this));
+            }
+        }
     };
     this.drawSelectorGraphic = function () {
         // Move to front.

@@ -55,7 +55,8 @@ describe('MovableObject', function () {
         expect(movable.path.length).to.be.greaterThan(0);
 
         movable.clearMove();
-        expect(movable.path).to.equal(null);
+        expect(movable.path).to.be.an('array');
+        expect(movable.path.length).to.equal(0);
     });
     it('.updatePath()', function () {
         movable.position.x = 100;
@@ -77,7 +78,7 @@ describe('MovableObject', function () {
         expect(movable.velocity.y).to.equal(0);
         movable.update(1);
         expect(movable.path.length).to.not.equal(0);
-        expect(movable.position.y).to.be.lessThan(100);
+        expect(movable.position.y).to.be.lessThan(40);
         expect(movable.velocity.y).to.be.lessThan(0);
         var limit = 100;
         while (limit-- > 0 && movable.path.length > 0) {
