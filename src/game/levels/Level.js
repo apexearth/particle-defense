@@ -215,10 +215,7 @@ function Level(options) {
     };
 
     this.getPath = function (start, finish) {
-        return _map.getPathByBlock(
-            this.getBlockFromCoords(start.x, start.y),
-            this.getBlockFromCoords(finish.x, finish.y)
-        );
+        return _map.getPath(start, finish);
     };
 
     // Returns true if all win conditions are true.

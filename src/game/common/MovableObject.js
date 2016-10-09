@@ -1,12 +1,11 @@
 var math = require('../../util/math');
-var PIXI = require('pixi.js');
+var GameObject = require('./GameObject');
 
 module.exports = MovableObject;
 
 function MovableObject(options) {
-    if (!options.level) throw new Error('A level is required to create a unit.');
-    this.level = options.level;
-    this.container = new PIXI.Container();
+    GameObject.call(this, options);
+
 
     this.moveSpeed = 10;
     this.moveFriction = .2;
@@ -19,11 +18,6 @@ function MovableObject(options) {
     this.moveTarget = null;
 
     Object.defineProperties(this, {
-        position: {
-            get: function () {
-                return this.container.position;
-            }.bind(this)
-        },
         velocity: {
             get: function () {
                 return velocity;
@@ -31,6 +25,8 @@ function MovableObject(options) {
         }
     });
 }
+MovableObject.prototype = Object.create(GameObject.prototype);
+MovableObject.prototype.constructor = MovableObject;
 
 MovableObject.prototype.moveTo = function (position) {
     this.path = this.findPath(position);
@@ -59,8 +55,8 @@ MovableObject.prototype.update = function (seconds) {
         throw new Error('Argument seconds must be provided and must be a number');
     }
     if (this.path.length > 0) {
-        if (Math.abs(this.position.x - this.path[0].x) < this.level.blockSize / 2 &&
-            Math.abs(this.position.y - this.path[0].y) < this.level.blockSize / 2) {
+        if (Math.abs(this.position.x - this.path[0][0]) <= this.level.blockSize / 2 &&
+            Math.abs(this.position.y - this.path[0][1]) <= this.level.blockSize / 2) {
             this.path.splice(0, 1);
         }
     }
@@ -68,7 +64,7 @@ MovableObject.prototype.update = function (seconds) {
     if (this.moveTarget) {
         var moveAmount;
         if (this.path.length > 0) {
-            moveAmount = math.normalize(this.position.x, this.position.y, this.path[0].x, this.path[0].y);
+            moveAmount = math.normalize(this.position.x, this.position.y, this.path[0][0], this.path[0][1]);
         } else if (this.moveTarget) {
             moveAmount = math.normalize(this.position.x, this.position.y, this.moveTarget.x, this.moveTarget.y);
         }

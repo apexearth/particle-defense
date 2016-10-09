@@ -1,6 +1,6 @@
 ﻿var PIXI = require('pixi.js');
+var PF = require('pathfinding');
 var Grid = require('../util/grid');
-var Pathfind = require('../util/grid/Pathfind');
 var BlockStatus = require('../util/grid/block-status');
 
 module.exports = Map;
@@ -21,7 +21,8 @@ function Map(level, width, height, blockSize, template) {
             right: width,
             bottom: height
         },
-        blockSize: this.blockSize
+        blockSize: this.blockSize,
+        template: template ? template.grid : null
     });
 
     this.blockStatus = function (x, y) {
@@ -50,29 +51,17 @@ function Map(level, width, height, blockSize, template) {
         return _grid.getBlockOrNull(x, y);
     };
 
-    this.getPathByBlock = function (blockStart, blockTarget) {
-        var path = Pathfind.getPathByBlock(_grid, blockStart, blockTarget);
-        var p = path.length;
-        while (p--) {
-            var coordinate = path[p];
-            coordinate.x = coordinate.x * this.blockSize + this.blockSize / 2;
-            coordinate.y = coordinate.y * this.blockSize + this.blockSize / 2;
+    this.getPath = function (start, finish) {
+        var path = _grid.getPath(
+            this.getBlockFromVector(start),
+            this.getBlockFromVector(finish)
+        );
+        for (var step = 0; step < path.length; step++) {
+            path[step][0] = path[step][0] * _grid.blockSize + _grid.blockSize / 2;
+            path[step][1] = path[step][1] * _grid.blockSize + _grid.blockSize / 2;
         }
         return path;
     };
-
-    if (template) {
-        if (template.buildableBlocks) {
-            var yCount = template.buildableBlocks.length;
-            while (yCount--) {
-                var row = template.buildableBlocks[yCount];
-                var xCount = row.length;
-                while (xCount--) {
-                    _grid.setBlockStatus(xCount, yCount, row[xCount]);
-                }
-            }
-        }
-    }
 
     // Add drawing related functionality.
     if (typeof document !== 'undefined') {

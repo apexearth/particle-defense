@@ -208,7 +208,7 @@ describe('Level', function () {
             {x: 5 * level.blockSize, y: 3 * level.blockSize}
         );
         expect(path).to.exist;
-        expect(path.length).to.equal(5);
+        expect(path.length).to.equal(6);
     });
     describe('.processKeyboardInput()', function () {
         it('escape, stop building placement', function () {

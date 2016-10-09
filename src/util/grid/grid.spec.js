@@ -1,6 +1,7 @@
 var coverage = require('../../../test/check-coverage');
 var expect = require('chai').expect;
 var Grid = require('./');
+var isEqual = require('lodash.isequal');
 
 describe('Grid', function () {
     it('new', function () {
@@ -225,6 +226,41 @@ describe('Grid', function () {
         expect(blocks[6].y).to.equal(2);
         expect(blocks[7].x).to.equal(3);
         expect(blocks[7].y).to.equal(3);
+    });
+    it('.generateWalkabilityGrid()', function () {
+        var grid = new Grid({
+            bounds: {
+                left: 0,
+                top: 0,
+                right: 3,
+                bottom: 1
+            },
+            template: [
+                [1, 2, 3, 4],
+                [4, 3, 2, 1]
+            ]
+        });
+        var walkabilityGrid = grid.generateWalkabilityGrid();
+        expect(walkabilityGrid.length).to.equal(2);
+        expect(walkabilityGrid[0].length).to.equal(4);
+        expect(walkabilityGrid[1].length).to.equal(4);
+        expect(isEqual(walkabilityGrid, [
+            [0, 0, 1, 1],
+            [1, 1, 0, 0]
+        ])).to.equal(true);
+    });
+    it('.getPath()', function () {
+        var grid = new Grid({
+            bounds: {
+                left: 0,
+                top: 0,
+                right: 10,
+                bottom: 10
+            }
+        });
+        var path = grid.getPath({x: 0, y: 0}, {x: 4, y: 5});
+        expect(path).to.exist;
+        expect(path.length).to.equal(6);
     });
     coverage(this, new Grid());
 });

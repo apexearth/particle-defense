@@ -38,7 +38,7 @@ var array = [
                 }
             ],
             mapTemplate: {
-                buildableBlocks: [
+                grid: [
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -68,7 +68,7 @@ var array = [
                 }
             ],
             mapTemplate: {
-                buildableBlocks: [
+                grid: [
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -108,7 +108,7 @@ var array = [
                 }
             ],
             mapTemplate: {
-                buildableBlocks: [
+                grid: [
                     [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -148,7 +148,7 @@ var array = [
                 }
             ],
             mapTemplate: {
-                buildableBlocks: [
+                grid: [
                     [3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
                     [3, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3],
                     [3, 2, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3],
@@ -190,9 +190,9 @@ function addToList(fn) {
 function createLevel(json) {
     var height = 10;
     var width = 10;
-    if (json.mapTemplate && json.mapTemplate.buildableBlocks) {
-        height = json.mapTemplate.buildableBlocks.length;
-        width = json.mapTemplate.buildableBlocks[0].length;
+    if (json.mapTemplate && json.mapTemplate.grid) {
+        height = json.mapTemplate.grid.length;
+        width = json.mapTemplate.grid[0].length;
     }
 
     var level = new Level({
