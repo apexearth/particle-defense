@@ -2,12 +2,14 @@
 
 module.exports = Player;
 
+var lastPlayerColor = 0xFF0000;
+
 function Player(options) {
     options = options || {};
     this.homeBase = null;
     this.buildings = [];
     this.units = [];
-    this.color = 0x88FF88;
+    this.color = options.color || (lastPlayerColor = lastPlayerColor >> 7);
     this.score = 0;
     this.resources = Object.assign({
         energy: 0,

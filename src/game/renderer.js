@@ -83,12 +83,12 @@ function animate() {
         renderer.resize(window.innerWidth, window.innerHeight);
     }
 
-    if (input('mouse2')) {
+    if (input('pan')) {
         stage.position.x += input('mouseX') - lastMouseX;
         stage.position.y += input('mouseY') - lastMouseY;
     }
 
-    var scrollSpeed = 6;
+    const scrollSpeed = 6;
     if (input('up')) {
         stage.position.y += scrollSpeed;
     }
@@ -101,7 +101,7 @@ function animate() {
     if (input('right')) {
         stage.position.x -= scrollSpeed;
     }
-    var zoomSpeed = .02;
+    const zoomSpeed = .02;
     if (input('zoomOut') && stage.scale.y > .2) {
         stage.position.x -= (stage.position.x - window.innerWidth / 2) * zoomSpeed / stage.scale.y;
         stage.position.y -= (stage.position.y - window.innerHeight / 2) * zoomSpeed / stage.scale.y;

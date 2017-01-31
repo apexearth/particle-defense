@@ -13,7 +13,7 @@ function createInitialState() {
     };
 }
 
-export default createStore((state = createInitialState(), action) => {
+let store = createStore((state = createInitialState(), action) => {
     if (action.type === 'INITIALIZE') {
         game.initialize();
         return createInitialState();
@@ -30,6 +30,7 @@ export default createStore((state = createInitialState(), action) => {
     throw new Error('Action ' + action.type + ' is undefined.');
 });
 
+export default store;
 
 var uiReducer = (state, action) => {
     switch (action.type) {
@@ -61,3 +62,9 @@ var gameReducer = (state, action) => {
         throw new Error('Action ' + action + ' is undefined.');
     }
 };
+
+// TODO: I'm a hack to auto start a level.
+store.dispatch({
+    type: 'UI_CHOOSE_LEVEL',
+    value: levels[3]
+});

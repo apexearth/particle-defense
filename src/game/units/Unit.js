@@ -41,7 +41,7 @@ function Unit(options) {
 
     this.graphics = new PIXI.Graphics();
     this.container.addChild(this.graphics);
-    this.graphics.beginFill(0xFFFFFF, .75);
+    this.graphics.beginFill(this.player.color, .75);
     this.graphics.drawCircle(0, 0, this.radius);
     this.graphics.endFill();
 

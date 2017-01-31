@@ -9,13 +9,18 @@ var array = [
         return createLevel({
             players: [
                 {
+                    color: 0xFF0000,
                     resources: {ammo: 0, energy: 200, metal: 100},
                     buildings: [
-                        {constructor: Buildings.HomeBase, template: {blockX: 5, blockY: 5}}
+                        {constructor: Buildings.HomeBase, template: {blockX: 2, blockY: 5}}
                     ]
                 },
                 {
-                    resources: {ammo: 0, energy: 200, metal: 100}
+                    color: 0x00FF00,
+                    resources: {ammo: 0, energy: 200, metal: 100},
+                    buildings: [
+                        {constructor: Buildings.HomeBase, template: {blockX: 8, blockY: 5}}
+                    ]
                 }
             ],
         });
@@ -58,13 +63,18 @@ var array = [
         return createLevel({
             players: [
                 {
+                    color: 0xFF0000,
                     resources: {ammo: 0, energy: 200, metal: 100},
                     buildings: [
-                        {constructor: Buildings.HomeBase, template: {blockX: 10, blockY: 10}}
+                        {constructor: Buildings.HomeBase, template: {blockX: 5, blockY: 10}}
                     ]
                 },
                 {
-                    resources: {ammo: 0, energy: 200, metal: 100}
+                    color: 0x0000FF,
+                    resources: {ammo: 0, energy: 200, metal: 100},
+                    buildings: [
+                        {constructor: Buildings.HomeBase, template: {blockX: 15, blockY: 10}}
+                    ]
                 }
             ],
             mapTemplate: {
@@ -90,86 +100,6 @@ var array = [
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-                ]
-            }
-        });
-    }),
-    addToList(function Two() {
-        return createLevel({
-            players: [
-                {
-                    resources: {ammo: 0, energy: 200, metal: 100},
-                    buildings: [
-                        {constructor: Buildings.HomeBase, template: {blockX: 3, blockY: 20}}
-                    ]
-                },
-                {
-                    resources: {ammo: 0, energy: 200, metal: 100}
-                }
-            ],
-            mapTemplate: {
-                grid: [
-                    [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1],
-                    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 5, 5],
-                    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 5, 5],
-                    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 5, 5],
-                    [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 5, 5],
-                    [1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1],
-                    [1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-                ]
-            }
-        });
-    }),
-    addToList(function Three() {
-        return createLevel({
-            players: [
-                {
-                    resources: {ammo: 0, energy: 200, metal: 100},
-                    buildings: [
-                        {constructor: Buildings.HomeBase, template: {blockX: 10, blockY: 15}}
-                    ]
-                },
-                {
-                    resources: {ammo: 0, energy: 200, metal: 100}
-                }
-            ],
-            mapTemplate: {
-                grid: [
-                    [3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-                    [3, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3],
-                    [3, 2, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 2, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 2, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 2, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 2, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 2, 5, 5, 5, 5, 5, 5, 3, 3, 3, 3, 5, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 2, 2, 2, 2, 2, 2, 5, 3, 3, 3, 3, 5, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 5, 5, 5, 5, 5, 2, 5, 3, 3, 3, 3, 5, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 3, 3, 3, 3, 5, 2, 5, 3, 3, 3, 3, 5, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 3, 3, 3, 3, 5, 2, 5, 3, 3, 3, 3, 5, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 3, 3, 3, 3, 5, 2, 5, 3, 3, 3, 3, 5, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 3, 3, 3, 3, 5, 3, 5, 3, 3, 3, 3, 5, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 3, 2, 3],
-                    [3, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 3],
-                    [3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3],
-                    [3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3],
-                    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
                 ]
             }
         });
@@ -243,19 +173,26 @@ function createRandomLevel(json) {
         }
     }
 
-    var level = new Level({
+    let level = new Level({
         width: width,
         height: height,
         mapTemplate: template
     });
 
-    level.addPlayer(new Player());
-    level.addPlayer(new Player());
+    for (let i = 0; i < 2 + Math.floor(Math.random() * 3); i++) {
+        let player = new Player();
+        level.addPlayer(player);
+        let randomX = Math.floor(Math.random() * width);
+        let randomY = Math.floor(Math.random() * height);
+        let building = new Buildings.HomeBase({
+            level,
+            player,
+            blockX: randomX,
+            blockY: randomY
+        });
+        level.addBuilding(building);
+    }
 
-    var randomX = Math.floor(Math.random() * width);
-    var randomY = Math.floor(Math.random() * height);
-    var building = new Buildings.HomeBase(level, level.players[0], {blockX: randomX, blockY: randomY});
-    level.addBuilding(building);
 
     level.initialize(json);
     return level;

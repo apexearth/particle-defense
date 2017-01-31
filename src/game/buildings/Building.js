@@ -1,6 +1,6 @@
-﻿var Settings = require('../Settings');
-var Attribute = require('../Attribute');
-var PIXI = require('pixi.js');
+﻿const Settings = require('../Settings');
+const Attribute = require('../Attribute');
+const PIXI = require('pixi.js');
 
 module.exports = Building;
 function Building(options) {
@@ -22,11 +22,12 @@ function Building(options) {
     this.selectionGraphics = new PIXI.Graphics();
     this.container.addChild(this.selectionGraphics);
 
-    this.graphics.beginFill(0x77FF77, .1);
-    this.graphics.drawRect(-Settings.BlockSize / 2, -Settings.BlockSize / 2, Settings.BlockSize, Settings.BlockSize);
+    // Player Color Outline
+    this.graphics.beginFill(this.player.color, .3);
+    this.graphics.drawRect(-Settings.BlockSize / 2 - 1, -Settings.BlockSize / 2 - 1, Settings.BlockSize + 2, Settings.BlockSize + 2);
     this.graphics.endFill();
 
-    var selected = false;
+    let selected = false;
     this.health = 1000;
     this.width = this.level.blockSize;
     this.height = this.level.blockSize;
@@ -94,7 +95,7 @@ function Building(options) {
     };
 
     this.removeWeapon = function (weapon) {
-        var index = this.weapons.indexOf(weapon);
+        let index = this.weapons.indexOf(weapon);
         if (index >= 0) {
             this.weapons.splice(index, 1);
         }
@@ -106,13 +107,13 @@ function Building(options) {
             return;
         }
 
-        for (var r in this.resourceGeneration) {
+        for (let r in this.resourceGeneration) {
             if (this.resourceGeneration.hasOwnProperty(r)) {
                 this.player.resources[r] += this.resourceGeneration[r] * seconds;
             }
         }
 
-        var i = this.updates.length;
+        let i = this.updates.length;
         while (i--) this.updates[i].call(this, seconds);
         i = this.weapons.length;
         while (i--) this.weapons[i].update(seconds);
@@ -123,15 +124,14 @@ function Building(options) {
             this.weapons.length > 0 &&
             (selected || this.level.placementBuilding === this)
         ) {
-            this.selectionGraphics.lineStyle(2, 0x7799FF, .2);
             i = this.weapons.length;
-            var weaponRadius = 0;
+            let weaponRadius = 0;
             while (i--) weaponRadius = Math.max(weaponRadius, this.weapons[i].range);
-            this.selectionGraphics.lineStyle(1, 0x7799FF, .25);
+            this.selectionGraphics.lineStyle(1, this.player.color, .25);
             this.selectionGraphics.drawCircle(0, 0, weaponRadius);
         }
         if (selected) {
-            this.selectionGraphics.lineStyle(2, 0x77FF77, .25);
+            this.selectionGraphics.lineStyle(2, this.player.color, .4);
             this.selectionGraphics.drawRect(-this.radius, -this.radius, this.width, this.height);
         }
     };
