@@ -3,6 +3,7 @@ import {expect} from 'chai';
 import App from '../src/app/components/App';
 
 import GameUI from '../src/app/components/GameUI';
+import actions from '../src/app/actions';
 
 
 describe('end2end', function () {
@@ -11,7 +12,7 @@ describe('end2end', function () {
         var app = new App();
         expect(app).to.exist;
 
-        app.Screen.chooseLevel(app.state.levels[0]);
+        actions.chooseLevel(app.state.levels[0]);
         app.game.unqueueUpdate(); // Prevent queued (async) updates.
         expect(app.Screen).to.equal(GameUI);
         expect(app.game.level).to.exist;

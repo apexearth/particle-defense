@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import store from '../store';
+import actions from '../actions';
 
 class MainMenu extends Component {
     constructor() {
@@ -14,7 +15,7 @@ class MainMenu extends Component {
         var levels = this.state.levels.map((level) =>
             <li key={level.name}
                 className='button'
-                onClick={() => MainMenu.chooseLevel(level)}>
+                onClick={() => actions.chooseLevel(level)}>
                 {level.name}
             </li>
         );
@@ -27,13 +28,6 @@ class MainMenu extends Component {
                 {levels}
             </ul>
         </div>;
-    }
-
-    static chooseLevel(level) {
-        store.dispatch({
-            type: 'UI_CHOOSE_LEVEL',
-            value: level
-        });
     }
 }
 

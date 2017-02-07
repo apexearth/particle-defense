@@ -62,9 +62,3 @@ var gameReducer = (state, action) => {
         throw new Error('Action ' + action + ' is undefined.');
     }
 };
-
-// TODO: I'm a hack to auto start a level.
-store.dispatch({
-    type: 'UI_CHOOSE_LEVEL',
-    value: levels[3]
-});

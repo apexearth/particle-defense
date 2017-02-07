@@ -41,7 +41,7 @@
     "eslint-plugin-react": "^6.2.0",
     "geom-collision": "^0.2.5",
     "lodash.isequal": "^4.4.0",
-    "mocha": "^3.0.2",
+    "mocha": "^3.2.0",
     "ng-grid": "^2.0.1",
     "pathfinding": "^0.4.18",
     "pixi.js": "git+https://github.com/apexearth/pixi.js.git",
