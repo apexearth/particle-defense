@@ -1,4 +1,3 @@
-const assert = require('assert');
 const Module = require('./Module');
 
 class BuilderModule extends Module {

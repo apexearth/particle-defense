@@ -1,4 +1,4 @@
-var VelocityProjectile = require('./projectile.velocity');
+const VelocityProjectile = require('./projectile.velocity');
 
 module.exports = AcceleratingProjectile;
 

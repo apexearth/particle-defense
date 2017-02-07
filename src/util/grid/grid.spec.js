@@ -1,7 +1,7 @@
-var coverage = require('../../../test/check-coverage');
-var expect = require('chai').expect;
-var Grid = require('./');
-var isEqual = require('lodash.isequal');
+const coverage = require('../../../test/check-coverage');
+const expect = require('chai').expect;
+const Grid = require('./');
+const isEqual = require('lodash.isequal');
 
 describe('Grid', function () {
     it('new', function () {

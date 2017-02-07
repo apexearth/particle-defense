@@ -1,7 +1,6 @@
-﻿var PIXI = require('pixi.js');
-var PF = require('pathfinding');
-var Grid = require('../util/grid');
-var BlockStatus = require('../util/grid/block-status');
+﻿const PIXI = require('pixi.js');
+const Grid = require('../util/grid');
+const BlockStatus = require('../util/grid/block-status');
 
 module.exports = Map;
 
@@ -14,7 +13,7 @@ function Map(level, width, height, blockSize, template) {
     this.pixelWidth = width * this.blockSize;
     this.pixelHeight = height * this.blockSize;
 
-    var _grid = new Grid({
+    let _grid = new Grid({
         bounds: {
             left: 0,
             top: 0,

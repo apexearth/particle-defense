@@ -1,13 +1,13 @@
-﻿var chai = require('chai');
-var expect = chai.expect;
+﻿const chai = require('chai');
+const expect = chai.expect;
 chai.use(require('chai-spies'));
 
-var inputs = require('../../../test/inputs');
+const inputs = require('../../../test/inputs');
 
-var renderer = require('../renderer');
-var ProjectileSpec = require('../projectiles/Projectile.spec');
-var UnitSpec = require('../units/Unit.spec');
-var BuildingSpec = require('../buildings/Building.spec');
+const renderer = require('../renderer');
+const ProjectileSpec = require('../projectiles/Projectile.spec');
+const UnitSpec = require('../units/Unit.spec');
+const BuildingSpec = require('../buildings/Building.spec');
 
 module.exports = {};
 

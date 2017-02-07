@@ -1,6 +1,6 @@
-﻿var PF = require('pathfinding');
-var BlockStatus = require('./block-status');
-var Block = require('./block');
+﻿const PF = require('pathfinding');
+const BlockStatus = require('./block-status');
+const Block = require('./block');
 
 module.exports = Grid;
 

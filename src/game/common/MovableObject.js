@@ -1,5 +1,5 @@
-var math = require('../../util/math');
-var GameObject = require('./GameObject');
+const math = require('../../util/math');
+const GameObject = require('./GameObject');
 
 module.exports = MovableObject;
 

@@ -1,5 +1,5 @@
-﻿var app = require('./app.js');
-var game = require('../game');
+﻿const app = require('./app.js');
+const game = require('../game');
 
 module.exports = app.controller('GameOver', ['$scope', GameOver]);
 

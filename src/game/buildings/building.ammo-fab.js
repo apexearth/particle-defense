@@ -1,12 +1,12 @@
-var Images = require('../../img');
-var Building = require('./Building');
+const Images = require('../../img');
+const Building = require('./Building');
 
 module.exports = AmmoFab;
 
 function AmmoFab(options) {
     Building.call(this, options);
     this.name = 'AmmoFab';
-    //this.container.addChild(Images.buildings.AmmoFab());
+    this.container.addChild(Images.buildings.AmmoFab());
     this.health = 20;
     this.resourceStorage.ammo = 50;
     this.addStorageToPlayer();

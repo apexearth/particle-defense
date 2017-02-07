@@ -1,4 +1,4 @@
-var collision = require('geom-collision');
+const collision = require('geom-collision');
 module.exports = Selector;
 
 function Selector() {

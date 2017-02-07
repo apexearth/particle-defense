@@ -1,7 +1,7 @@
-var Attribute = require('./Attribute');
+const Attribute = require('./Attribute');
 
-var coverage = require('../../test/check-coverage');
-var expect = require('chai').expect;
+const coverage = require('../../test/check-coverage');
+const expect = require('chai').expect;
 
 describe('Attribute', function () {
     function createInvalidAttribute() {

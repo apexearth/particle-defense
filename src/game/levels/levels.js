@@ -1,7 +1,7 @@
-﻿var Level = require('./Level');
-var Player = require('../player');
-var Buildings = require('../buildings');
-var Units = require('../units');
+﻿const Level = require('./Level');
+const Player = require('../player');
+const Buildings = require('../buildings');
+const Units = require('../units');
 
 var list = {};
 var array = [

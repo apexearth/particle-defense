@@ -1,8 +1,8 @@
-var PIXI = require('pixi.js');
-var math = require('../../util/math');
-var Attribute = require('../Attribute');
+const PIXI = require('pixi.js');
+const math = require('../../util/math');
+const Attribute = require('../Attribute');
 
-var pi2 = Math.PI * 2,
+const pi2 = Math.PI * 2,
     degree = pi2 / 360;
 
 module.exports = Weapon;

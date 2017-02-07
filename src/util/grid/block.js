@@ -1,4 +1,4 @@
-var BlockStatus = require('./block-status');
+const BlockStatus = require('./block-status');
 
 module.exports = Block;
 

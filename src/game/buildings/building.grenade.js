@@ -1,6 +1,6 @@
-var Images = require('../../img');
-var Weapons = require('../weapons');
-var Building = require('./Building');
+const Images = require('../../img');
+const Weapons = require('../weapons');
+const Building = require('./Building');
 
 module.exports = GrenadeLauncher;
 

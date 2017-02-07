@@ -1,4 +1,4 @@
-﻿var actions = require('./actions');
+﻿const actions = require('./actions');
 
 module.exports = Player;
 

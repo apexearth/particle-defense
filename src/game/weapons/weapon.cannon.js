@@ -1,5 +1,5 @@
-var Projectiles = require('../projectiles');
-var Gun = require('./weapon.gun');
+const Projectiles = require('../projectiles');
+const Gun = require('./weapon.gun');
 
 module.exports = Cannon;
 

@@ -1,5 +1,5 @@
-var Images = require('../../img');
-var Building = require('./Building');
+const Images = require('../../img');
+const Building = require('./Building');
 
 module.exports = Wall;
 

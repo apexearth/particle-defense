@@ -1,13 +1,13 @@
-﻿var PIXI = require('pixi.js');
-var renderer = require('../renderer');
-var Map = require('../Map');
-var General = require('../../util/General');
-var CommandQueue = require('../CommandQueue');
-var BlockStatus = require('../../util/grid/block-status');
-var inputs = require('../inputs');
-var common = require('../common');
-var Selector = require('./Selector');
-var Settings = common.Settings;
+﻿const PIXI = require('pixi.js');
+const renderer = require('../renderer');
+const Map = require('../Map');
+const General = require('../../util/General');
+const CommandQueue = require('../CommandQueue');
+const BlockStatus = require('../../util/grid/block-status');
+const inputs = require('../inputs');
+const common = require('../common');
+const Selector = require('./Selector');
+const Settings = common.Settings;
 
 module.exports = Level;
 Level.list = require('./levels');

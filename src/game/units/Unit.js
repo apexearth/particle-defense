@@ -1,8 +1,8 @@
-﻿var PIXI = require('pixi.js');
-var math = require('../../util/math');
-var Settings = require('../Settings');
-var collision = require('geom-collision');
-var MovableObject = require('../common').MovableObject;
+﻿const PIXI = require('pixi.js');
+const math = require('../../util/math');
+const Settings = require('../Settings');
+const collision = require('geom-collision');
+const MovableObject = require('../common').MovableObject;
 
 module.exports = Unit;
 

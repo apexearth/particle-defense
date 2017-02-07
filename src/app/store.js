@@ -32,7 +32,7 @@ let store = createStore((state = createInitialState(), action) => {
 
 export default store;
 
-var uiReducer = (state, action) => {
+const uiReducer = (state, action) => {
     switch (action.type) {
     case 'UI_CHANGE_SCREEN':
         return Object.assign({}, state, {
@@ -48,7 +48,7 @@ var uiReducer = (state, action) => {
     }
 };
 
-var gameReducer = (state, action) => {
+const gameReducer = (state, action) => {
     switch (action.type) {
     case 'GAME_PLACE_BUILDING_START':
         game.startBuildingPlacement(action.value);

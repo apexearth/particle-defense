@@ -1,6 +1,6 @@
-﻿var CommandQueue = require('./CommandQueue');
+﻿const CommandQueue = require('./CommandQueue');
 
-var game = {
+const game = {
     initialize: function () {
         this.frames = 0;
         this.level = null;

@@ -1,4 +1,4 @@
-var DisplayObject = require('./DisplayObject');
+const DisplayObject = require('./DisplayObject');
 module.exports = GameObject;
 
 function GameObject(options) {

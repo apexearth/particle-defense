@@ -1,4 +1,4 @@
-var queue = module.exports = [];
+const queue = module.exports = [];
 queue.Commands = {
     StopGame: 'StopGame'
 };

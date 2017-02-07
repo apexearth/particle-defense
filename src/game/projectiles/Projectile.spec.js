@@ -1,9 +1,9 @@
-var Level = require('../levels/Level');
-var Player = require('../player');
-var Projectile = require('../projectiles/Projectile');
-var UnitSpec = require('../units/Unit.spec');
-var coverage = require('../../../test/check-coverage');
-var expect = require('chai').expect;
+const Level = require('../levels/Level');
+const Player = require('../player');
+const Projectile = require('../projectiles/Projectile');
+const UnitSpec = require('../units/Unit.spec');
+const coverage = require('../../../test/check-coverage');
+const expect = require('chai').expect;
 
 module.exports = {
     createProjectile

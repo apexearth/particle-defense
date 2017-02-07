@@ -1,6 +1,6 @@
-var AcceleratingProjectile = require('./projectile.accelerating');
-var Explosion = require('./Explosion');
-var math = require('../../util/math');
+const AcceleratingProjectile = require('./projectile.accelerating');
+const Explosion = require('./Explosion');
+const math = require('../../util/math');
 
 module.exports = MissileProjectile;
 

@@ -9,9 +9,6 @@ class Module {
         this.player = options.player;
     }
 
-    update(seconds) {
-
-    }
 }
 
 module.exports = Module;

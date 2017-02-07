@@ -1,5 +1,4 @@
-var PIXI = require('pixi.js');
-var Settings = require('../Settings');
+const PIXI = require('pixi.js');
 
 module.exports = Explosion;
 
@@ -31,9 +30,9 @@ function Explosion(particle) {
         this.explosiveTimeCount += seconds;
         this.radius += this.explosiveSpeed * seconds;
 
-        var i = this.level.units.length;
+        let i = this.level.units.length;
         while (i--) {
-            var unit = this.level.units[i];
+            let unit = this.level.units[i];
             if (unit.hitTest(this)) {
                 unit.damage(this.damage * seconds);
             }

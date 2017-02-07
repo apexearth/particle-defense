@@ -1,5 +1,4 @@
-var PIXI = require('pixi.js');
-var Settings = require('../Settings');
+const PIXI = require('pixi.js');
 
 module.exports = Projectile;
 
@@ -62,9 +61,9 @@ function Projectile(options) {
         return unit.hitTest(this.position, this.width);
     };
     this.unitHitCheck = function () {
-        var u = this.level.units.length;
+        let u = this.level.units.length;
         while (u--) {
-            var unit = this.level.units[u];
+            let unit = this.level.units[u];
             if (this.hitTest(unit)) {
                 unit.damage(this.effectiveDamage(unit));
                 this.onHit();

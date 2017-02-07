@@ -1,6 +1,6 @@
-var Images = require('../../img');
-var weapons = require('../weapons');
-var Building = require('./Building');
+const Images = require('../../img');
+const weapons = require('../weapons');
+const Building = require('./Building');
 
 module.exports = Gun;
 

@@ -1,10 +1,10 @@
-var LevelSpec = require('./levels/Level.spec');
-var coverage = require('../../test/check-coverage');
-var chai = require('chai');
+const LevelSpec = require('./levels/Level.spec');
+const coverage = require('../../test/check-coverage');
+const chai = require('chai');
 chai.use(require('chai-spies'));
-var expect = chai.expect;
-var spy = chai.spy;
-var game = require('./game');
+const expect = chai.expect;
+const spy = chai.spy;
+const game = require('./game');
 
 describe('game', function () {
     beforeEach(function () {

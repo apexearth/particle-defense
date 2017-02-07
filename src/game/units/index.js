@@ -1,4 +1,4 @@
-var list = module.exports = {};
+const list = module.exports = {};
 list.Engineer = require('./Engineer');
 list.Array      = function (unitFunction, count) {
     var array = [];

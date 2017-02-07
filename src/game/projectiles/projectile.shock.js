@@ -1,6 +1,6 @@
-var PIXI = require('pixi.js');
-var Projectile = require('./Projectile');
-var math = require('../../util/math');
+const PIXI = require('pixi.js');
+const Projectile = require('./Projectile');
+const math = require('../../util/math');
 
 module.exports = ShockProjectile;
 

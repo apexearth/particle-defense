@@ -1,4 +1,4 @@
-var Unit = require('./Unit');
+const Unit = require('./Unit');
 
 module.exports = Engineer;
 

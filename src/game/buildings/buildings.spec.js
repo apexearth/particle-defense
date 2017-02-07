@@ -1,8 +1,8 @@
-var Player = require('../player');
-var Level = require('../levels/').Level;
+const Player = require('../player');
+const Level = require('../levels/').Level;
 
-var buildings = require('./');
-var expect = require('chai').expect;
+const buildings = require('./');
+const expect = require('chai').expect;
 
 describe('buildings', function () {
     for (var name in buildings) {

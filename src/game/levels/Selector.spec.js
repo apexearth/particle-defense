@@ -1,10 +1,10 @@
-var chai = require('chai');
-var expect = chai.expect;
+const chai = require('chai');
+const expect = chai.expect;
 chai.use(require('chai-spies'));
 
-var coverage = require('../../../test/check-coverage');
+const coverage = require('../../../test/check-coverage');
 
-var Selector = require('./Selector');
+const Selector = require('./Selector');
 
 module.exports = {};
 

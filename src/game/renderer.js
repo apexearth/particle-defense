@@ -1,13 +1,13 @@
-var PIXI = require('pixi.js');
-var input = require('./inputs');
-var math = require('../util/math');
-var raf = require('raf');
+const PIXI = require('pixi.js');
+const input = require('./inputs');
+const math = require('../util/math');
+const raf = require('raf');
 
 PIXI.Point = math.Vector;
-var stage = new PIXI.Container();
+const stage = new PIXI.Container();
 
-var lastMouseX = input('mouseX');
-var lastMouseY = input('mouseY');
+let lastMouseX = input('mouseX');
+let lastMouseY = input('mouseY');
 
 function width() {
     return typeof window !== 'undefined' ? window.innerWidth : 500;
@@ -16,7 +16,7 @@ function height() {
     return typeof window !== 'undefined' ? window.innerHeight : 500;
 }
 
-var renderer = typeof navigator !== 'undefined' && PIXI.autoDetectRenderer(width(), height(), {antialias: true});
+const renderer = typeof navigator !== 'undefined' && PIXI.autoDetectRenderer(width(), height(), {antialias: true});
 var enabled = false;
 
 module.exports = {
